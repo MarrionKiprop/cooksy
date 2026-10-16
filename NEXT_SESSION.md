@@ -5,7 +5,7 @@ Four regions, eight traditions/eight demo recipes, sixteen shared ingredients an
 sixteen steps are connected by typed edges. Ingredients/quantities and sample steps
 are projected from relationships; actual walker events are visible behind the scenes.
 The graph is request-local and explicitly labelled demo, not persisted user data.
-M2 commit hash is recorded in docs/PROGRESS.md after committing.
+M2 milestone commit: `e8f277376759d153ffa5d7f21aff6169c02aa3d6`; see docs/PROGRESS.md for verification.
 
 Read first:
 

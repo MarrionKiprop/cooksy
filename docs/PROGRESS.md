@@ -7,7 +7,7 @@ M0 foundation: `34e76eddfcbac857e8c3386b2a0db05790d9fc33`. M1 adds the runnable 
 | --- | --- | --- | --- | --- |
 | M0 | Complete | Inspect environment; recovery files and guide evidence; validate and commit | 34e76ed | No app yet; begin M1 next session |
 | M1 | Complete | Verified web-app scaffold, warm responsive shell, navigation, visible demo status; startup/check/browser evidence | 0be1768 | Culinary graph begins in M2 |
-| M2 | Complete | Real culinary nodes/edges; two regions and multiple traditions; DiscoveryWalker and traversal test through ingredients/steps | Recorded after milestone commit | Demo graph only; pantry/matching begins in M3 |
+| M2 | Complete | Real culinary nodes/edges; two regions and multiple traditions; DiscoveryWalker and traversal test through ingredients/steps | e8f2773 | Demo graph only; pantry/matching begins in M3 |
 | M3 | Not started | Pantry intake and deterministic matching; normalisation/dedupe/essential/optional/ranking tests | — | Respect confirmation boundary |
 | M4 | Not started | Recipe detail and cooking session; advance/reverse/recover progress | — | Verify persistence before implementation |
 | M5 | Not started | Structured by-llm enrichment and grounded help; reuse, provenance, malformed/duplicate/unavailable mocks | — | Provider/model not configured |
@@ -174,3 +174,6 @@ nutrition data or generated serving image integration exercised. WSL access note
 added after user confirmed browser access via the WSL address.
 
 Next: M3, confirmed pantry intake and deterministic recipe matching.
+
+M2 milestone commit: `e8f277376759d153ffa5d7f21aff6169c02aa3d6`. The follow-up documentation commit records this hash;
+all graph, type, build and browser checks passed before the checkpoint.
