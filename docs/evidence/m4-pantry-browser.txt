@@ -1,0 +1,1 @@
+PASS: real pantry RPC, aliases/deduplication, transparent scores, remove/filter, invalid entries, substitution boundary, tab recovery/isolation, offline retry/draft retention, clear, blocked-storage fallback and mobile layout.

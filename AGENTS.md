@@ -6,8 +6,8 @@ Read both preserved briefs in docs/briefs when resolving product requirements.
 
 ## Scope and milestone discipline
 
-Complete one milestone at a time, in M0–M8 order. M0–M2 are complete; the user authorized M3 with “proceed and handle approvals.”
-Complete M3 before moving to M4, preserving the milestone boundary. Follow the acceptance criteria in the implementation brief.
+Complete one milestone at a time, in M0–M8 order. M0–M3 are complete; the user authorized M4 with “yes.”
+Complete M4 before moving to M5, preserving the milestone boundary. Follow the acceptance criteria in the implementation brief.
 Before every milestone commit update progress, decisions, and restart instructions;
 run applicable checks, record exact outcomes and limitations, and commit only
 scoped files. Record the resulting milestone hash in a subsequent documentation
@@ -25,6 +25,14 @@ Guide evidence is under docs/evidence; M1 queries are in m1-guides. Read relevan
 guides before new features. The web-app scaffold is already complete: NEVER scaffold
 over this repository again. main.jac renders file-based route children; pages use
 JsxPage, layout uses JsxLayout/Outlet, and endpoints.shell_status / endpoints.discover are pinned server.
+M4 recipe detail is /recipes/:key; RecipeWalker assembles graph-backed views.
+CookingSession/SESSION_RECIPE/CURRENT_STEP/COMPLETED_STEP are real transient
+relationships. CookingWalker validates and transitions them; versioned browser
+snapshots recover progress. Never use transient jids for recovery or attach private
+anonymous sessions to shared roots. cook_session requires all five state arguments
+explicitly (the installed HTTP binder mishandled omitted intermediate defaults).
+Client CookingView annotations use import type to avoid duplicate generated codecs.
+Run all Jac tests with `jac test -d tests`; add cooking-smoke to browser gates.
 M3 pantry names live in browser sessionStorage with an in-memory fallback. They
 are sent to match_pantry and used in a transient graph; never write anonymous
 private pantries to root.shared. IntakeWalker enforces confirmation and aliases.

@@ -70,3 +70,12 @@ edge HAS_INGREDIENT: Pantry --> Ingredient {
         unit: str = "",
         notes: str = "Quantity not supplied";
 }
+
+node CookingSession {
+    has recipe_key: str;
+    has finished: bool = False;
+}
+
+edge SESSION_RECIPE: CookingSession --> Recipe {}
+edge CURRENT_STEP: CookingSession --> RecipeStep {}
+edge COMPLETED_STEP: CookingSession --> RecipeStep {}

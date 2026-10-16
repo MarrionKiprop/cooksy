@@ -1,3 +1,4 @@
+import from "@jac/runtime" { Link }
 import from .views { MatchView }
 
 def:pub MatchCard(candidate: MatchView) -> JsxElement {
@@ -38,6 +39,9 @@ def:pub MatchCard(candidate: MatchView) -> JsxElement {
                     </p>
                 </div>
             </div>
+            <Link to={"/recipes/" + candidate.recipe.key} className="inline-link">
+                View recipe →
+            </Link>
             <details>
                 <summary>Why this match?</summary>
                 <p className="fixture-note">

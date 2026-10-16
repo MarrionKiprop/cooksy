@@ -222,3 +222,40 @@ docstring; renamed locals to candidate/draft and kept module docstrings first.
 Seven pantry tests and four discovery regression tests subsequently passed.
 Browser storage uses a delimited list of validated names (no JSON casts); browser
 APIs remain inside Jac client code, with a working in-memory fallback if blocked.
+
+## D014 — M4 selected recipes and recoverable cooking graph
+
+User authorized M4 with “yes.” Queried installed persistence/auth/walker/routing/
+client interop/testing, node-edge and core/types guides before introducing features.
+Decision: RecipeWalker traverses catalogue/region/tradition/recipe and assembles the
+selected edge-backed recipe view. Detail includes M3 availability, quantities,
+ordered sample steps, provenance and honest unavailable nutrition/preview state.
+No model generation is implied by the existing unverified demo fixture.
+
+CookingSession connects to Recipe via SESSION_RECIPE, to its current RecipeStep via
+CURRENT_STEP and to completed steps via COMPLETED_STEP. CookingWalker actually visits
+recipe/step nodes, validates bounds and applies next/back/restart/resume transitions.
+A versioned stable-key/current-step/finished snapshot is stored per browser tab;
+server reconstructs/validates graph state per request, without shared root writes.
+A client module memory fallback carries the session across routes if storage is
+blocked; refresh recovery then is explicitly unavailable. Only one active session
+per tab; starting a new one replaces it. Browser restoration may preserve tab storage.
+Snapshots are progress conveniences, not authorization or proof a step was cooked.
+Timers and LLM help are deferred rather than simulated. Alternative: introduce
+account login/server-owned persisted sessions now; unnecessary for M4's isolated
+working demo, and a later deliberate migration can add account persistence.
+
+M4 verification corrections: removed a redundant assignment from RecipeWalker’s
+optional details into MatchView (both already use the same projection), resolving
+an Unknown boundary diagnostic. The first Vite build emitted both an import and
+an inline RPC codec named CookingView. The installed jac-types import-type section
+verifies annotation-only imports: client consumers now import CookingView as a type,
+letting the generated RPC codec supply its runtime binding. No generated JS was edited.
+
+M4 browser verification caught a real HTTP default-binding issue: a start request
+with omitted intermediate defaults arrived with a string in current_sequence. The
+UI now sends all five cooking arguments explicitly, and cook_session requires all
+fields so incomplete external requests fail validation rather than relying on the
+installed binder’s defaults. get_recipe likewise requires its ingredient list.
+Unit helpers supply defaults only for in-process test convenience; no framework
+or generated runtime files were modified. Added this failure to the verification log.

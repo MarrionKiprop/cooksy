@@ -1,3 +1,4 @@
+import from "@jac/runtime" { Link }
 import from graph.views { RecipeView }
 
 def:pub RecipeSeedCard(recipe: RecipeView) -> JsxElement {
@@ -10,6 +11,9 @@ def:pub RecipeSeedCard(recipe: RecipeView) -> JsxElement {
             <span className="small-tag">DEMO ADAPTATION · UNVERIFIED</span>
             <h3>{recipe.name}</h3>
             <p>{recipe.description}</p>
+            <Link to={"/recipes/" + recipe.key} className="inline-link">
+                View recipe →
+            </Link>
             <details>
                 <summary>Ingredients and sample steps</summary>
                 <p className="fixture-note">
@@ -40,7 +44,7 @@ def:pub RecipeSeedCard(recipe: RecipeView) -> JsxElement {
                     ]}
                 </ol>
                 <p className="fixture-note">
-                    Source: {recipe.provenance}. Use My pantry for ingredient matching. Guided cooking is coming later.
+                    Source: {recipe.provenance}. Use My pantry for ingredient matching. Open the recipe to try the demo cook-along.
                 </p>
             </details>
         </article>;

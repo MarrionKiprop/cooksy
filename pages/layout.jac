@@ -60,7 +60,7 @@ def:pub Shell() -> JsxLayout {
             <div className="demo-banner">
                 <span className="demo-badge">DEVELOPMENT PREVIEW</span>
                 <span>
-                    A little taste of Cooksy. Match your pantry with demo recipes. Guided cooking is coming next.
+                    A little taste of Cooksy. Match your pantry with demo recipes. Try a demo cook-along from any recipe.
                 </span>
             </div>
             <main id="main-content" tabIndex={-1}>

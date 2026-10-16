@@ -121,7 +121,7 @@ def:pub Home() -> JsxPage {
                             <p>
                                 Pick a meal and settle into a focused, one-step-at-a-time cooking experience.
                             </p>
-                            <span className="small-tag">Cook along · coming soon</span>
+                            <span className="small-tag">Cook along · ready to try</span>
                         </article>
                     </div>
                 </div>

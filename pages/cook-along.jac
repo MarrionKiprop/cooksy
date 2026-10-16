@@ -1,5 +1,5 @@
-import from ..components.EmptyKitchen { EmptyKitchen }
+import from ..cooking.CookingWorkspace { CookingWorkspace }
 
 def:pub CookAlongPage() -> JsxPage {
-    return <EmptyKitchen kind="cooking"/>;
+    return <CookingWorkspace/>;
 }

@@ -1,6 +1,6 @@
 # Cooksy progress
 
-Date: 2026-10-16 (Africa/Nairobi). Current milestone: M3 complete; next: M4.
+Date: 2026-10-16 (Africa/Nairobi). Current milestone: M4 complete; next: M5.
 M0 foundation: `34e76eddfcbac857e8c3386b2a0db05790d9fc33`. M1 adds the runnable shell.
 
 | Milestone | Status | Scope / acceptance | Commit | Risks / next action |
@@ -9,7 +9,7 @@ M0 foundation: `34e76eddfcbac857e8c3386b2a0db05790d9fc33`. M1 adds the runnable 
 | M1 | Complete | Verified web-app scaffold, warm responsive shell, navigation, visible demo status; startup/check/browser evidence | 0be1768 | Culinary graph begins in M2 |
 | M2 | Complete | Real culinary nodes/edges; two regions and multiple traditions; DiscoveryWalker and traversal test through ingredients/steps | e8f2773 | Demo graph only; pantry/matching begins in M3 |
 | M3 | Complete | Pantry intake and deterministic matching; normalisation/dedupe/essential/optional/ranking tests | ea65d48 | Names only; tab-scoped pantry, no account sync |
-| M4 | Not started | Recipe detail and cooking session; advance/reverse/recover progress | — | Verify persistence before implementation |
+| M4 | Complete | Recipe detail and cooking session; advance/reverse/recover progress | Recorded after milestone commit | Tab-scoped progress; no account sync or timers |
 | M5 | Not started | Structured by-llm enrichment and grounded help; reuse, provenance, malformed/duplicate/unavailable mocks | — | Provider/model not configured |
 | M6 | Not started | MobileNet adapter, upload/review/confirmation graph; validation and contract tests | — | Weights and dependencies unverified |
 | M7 | Not started | Selected-recipe SDXL preview, metadata/cache, label and error tests | — | Hosted/local inference unconfigured |
@@ -231,3 +231,49 @@ Final repeat: pantry suite passed again (7 tests in 9.98s).
 
 M3 milestone commit: `ea65d4854042c6034bec66b7c30354ab4e660780`; pushed successfully. The follow-up documentation
 commit records this checkpoint; graph/browser/build/type checks passed before it.
+
+## M4 — Recipe detail and cook-along foundations — 2026-10-16
+
+Added RecipeWalker, selected-recipe API/detail route, links from Explore/pantry,
+quantities/preparation/availability/substitution/sample steps and provenance context.
+Added CookingSession plus SESSION_RECIPE/CURRENT_STEP/COMPLETED_STEP, a validating
+restore helper and CookingWalker with actual recipe/step traversal. Browser-tab
+snapshot recovery plus module-memory fallback maintain one isolated active session.
+Cook-along has next/back/finish/restart/end, progress, empty/loading/error/retry and
+invalid saved-state handling. No fake timer/help/provider/nutrition/preview claims.
+
+Checks and outcomes:
+
+- Relevant installed guides queried/saved: PASS.
+- Initial optional-view assignment: FAIL, removed redundant same-projection copy.
+- First Vite build: FAIL, duplicate CookingView import/inline codec; annotation-only
+  import fixed it. No generated/runtime source edited.
+- Initial formatting: FAIL for RecipeWalker layout; formatted and final gate PASS
+  for all 34 sources.
+- `jac check .`: PASS, 34 files; final affected-contract check PASS, 7 files after
+  tightening HTTP arguments. Existing compiler warnings remain.
+- `jac test -d tests`: PASS, 15 tests together; cooking suite after final API fix
+  PASS, 4 tests. Covers selection, actual step edges, resume/finish/back/restart,
+  boundary validation, version/recipe/action rejection, isolation and bad ordering.
+- Production `jac build --as client`: PASS after codec/default-call fixes.
+- First cooking browser run: FAIL, omitted HTTP defaults misbound current_sequence
+  to a string. Required explicit fields and sent all five args; incomplete requests
+  now fail validation. A premature startup attempt hit connection refused; waited
+  for server readiness before the final passing run.
+- `COOKSY_SCREENSHOTS=1 node tests/cooking-smoke.mjs`: PASS, real selected-recipe
+  links/deep links and cooking RPC, next/back/finish/restart, reload/navigation
+  recovery, mobile overflow, failed-action preservation, session end, unknown
+  recipe, independent/corrupt session and blocked-storage fallback.
+- Existing shell, discovery and pantry browser suites: PASS.
+- Recovery/source/link/ignore and staged whitespace checks: PASS before commit.
+
+Visual review: desktop selected recipe and mobile focused cook-along screenshots
+show readable steps, clear demo status, missing/optional ingredients, progress and
+labelled controls. Evidence under docs/evidence and docs/screenshots.
+
+Limits: abbreviated unverified demo recipes; tab/origin scoped snapshots, no durable
+server/session account sync. Browser restoration may retain sessionStorage. Timers,
+contextual LLM help, nutrition and previews remain unimplemented. Retry resumes last
+saved progress rather than replaying a failed next action. No live model was used.
+
+Next milestone: M5 structured enrichment and grounded assistance (mock/provider gates).

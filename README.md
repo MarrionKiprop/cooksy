@@ -3,11 +3,11 @@
 Your Ingredients. The World's Kitchens.
 
 Cooksy is a Jac-native culinary discovery and cook-along application in development.
-**M3 adds pantry intake and deterministic matching.** Add names separated by commas
-or new lines, remove items, filter by region, and see which demo meals fit. Direct
-availability, missing essentials, optional missing items and possible substitutions
-are explained. Browser-tab pantry recovery works without an account; full cooking
-sessions and model inference remain future milestones. Recipes remain unverified demos.
+**M4 adds selected recipe details and recoverable cook-along sessions.** Open View
+recipe from Explore or a pantry match to see quantities, pantry status, preparation,
+substitutions, ordered sample steps and provenance. Start cook-along, mark steps done,
+go back, finish, restart or end a session. Progress recovers within the browser tab.
+Recipes remain abbreviated, unverified demos; model inference is a later milestone.
 
 ## Run locally
 
@@ -61,13 +61,11 @@ Browser binaries and Node are developer tooling, not application implementation.
 Run the isolated graph and pantry suites (no fixture attaches to root):
 
 ```bash
-jac test tests/discovery_tests.jac
-jac test tests/pantry_tests.jac
-jac test tests/pantry_tests.jac
+jac test -d tests
 ```
 
-With the dev server running, also run `node tests/pantry-smoke.mjs` and
-`node tests/discovery-smoke.mjs` for actual
+With the dev server running, also run `node tests/cooking-smoke.mjs`,
+`node tests/pantry-smoke.mjs` and `node tests/discovery-smoke.mjs` for actual
 HTTP discovery, 8→2→1 filtering, graph-backed quantities and steps, trace events,
 region-reset behavior, mobile layout, empty responses and retry. Use
 `COOKSY_SCREENSHOTS=1 node tests/discovery-smoke.mjs` for captures under
@@ -93,8 +91,8 @@ per request without persisting or modifying user state. Shared ingredients are r
 within each graph; step order comes from HAS_STEP sequence. The catalogue includes
 ownership edges to keep reverse-linked traditions/recipes reachable in transient memory.
 M3 adds Pantry/IntakeItem nodes, HAS_INGREDIENT edges, IntakeWalker and
-MatchingWalker. Later milestones add durable graph memory, cooking sessions,
-structured LLM enrichment and reference-based nutrition calculations. Candidate discovery proposes approximately five
+MatchingWalker. M4 adds recoverable cooking sessions; later milestones add durable account-owned
+graph memory, structured LLM enrichment and reference-based nutrition calculations. Candidate discovery proposes approximately five
 meals; full recipe generation follows selection. The M2 seed is test/demo data,
 not a manually maintained production catalogue. Python stays limited to specialised
 MobileNet and SDXL inference adapters.
@@ -124,6 +122,34 @@ verification are not checked. Results come from eight explicit demo adaptations.
 A failed submission retains the draft and previous pantry. Retry matching refreshes
 the committed pantry; submit the retained draft with Add & find meals when ready.
 
+## Recipe detail and cook-along
+
+Open `/recipes/gamja-jeon-demo` or select View recipe on any demo card. RecipeWalker
+traverses the culinary graph, and the detail view combines its shared projection
+with M3 availability. No nutrition or generated serving image is fabricated.
+
+Cook-along has one active session per tab/origin. Starting a new recipe replaces it.
+Snapshots contain the stable recipe key, fixture version, current sequence and
+finished flag. Jac validates those fields, reconstructs real CookingSession,
+CURRENT_STEP and COMPLETED_STEP relationships, traverses steps and applies the action.
+Back rewinds the completed prefix; finishing completes the last step; restart clears
+progress. Invalid keys/versions/bounds fail safely and can be discarded in the UI.
+Snapshots record user progress, not independently verified cooking completion.
+
+Progress is saved to sessionStorage; a client module memory fallback survives route
+navigation when storage is blocked, with a visible warning that refresh recovery
+will be lost. There is no server-owned durable session or cross-device account sync.
+Runtime report logs may include recipe/progress data. Timers and contextual AI help
+are deferred. Sample steps are not a complete cooking guide.
+
+`get_recipe` requires recipe_key and ingredients. `cook_session` requires all five
+fields: recipe_key, current_sequence, finished, action and version. Clients send
+these explicitly because omitted intermediate defaults were mishandled by the
+installed HTTP binder. Incomplete requests are tested as validation failures.
+
+`COOKSY_SCREENSHOTS=1 node tests/cooking-smoke.mjs` writes reviewed captures under
+/tmp/cooksy-m4-screenshots; stop the server before copying them into docs.
+
 ## Providers and limitations
 
 No provider is configured. `.env.example` lists proposed settings, explicitly not
@@ -141,7 +167,8 @@ The original [implementation guidance](docs/briefs/implementation-guidance.md) a
 Resume using [NEXT_SESSION.md](NEXT_SESSION.md); see [progress](docs/PROGRESS.md),
 [decisions](docs/DECISIONS.md), and [M1 verification](docs/evidence/m1-verification.md), and
 [M2 verification](docs/evidence/m2-verification.md), and
-[M3 verification](docs/evidence/m3-verification.md).
+[M3 verification](docs/evidence/m3-verification.md), and
+[M4 verification](docs/evidence/m4-verification.md).
 
 Remote: [MarrionKiprop/cooksy](https://github.com/MarrionKiprop/cooksy), branch main.
 SSH uses the existing ~/.ssh/id_ed25519 key through repository-local Git configuration.
