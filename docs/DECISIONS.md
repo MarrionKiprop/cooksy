@@ -96,3 +96,60 @@ with `git ls-remote origin`, then successfully ran `git push -u origin main`.
 Use the existing SSH remote and tracked main branch for future authorized pushes;
 verify remote main matches local HEAD after pushing. No plugin connection or new
 credentials were needed. Repository visibility was not inspected or changed.
+
+## D010 — M1 verified shell structure
+
+Evidence: `jac guide jac-core-cheatsheet`, `jac guide jac-types`,
+`jac guide jac-cl-components`, `jac guide jac-cl-routing`,
+`jac guide jac-cl-styling`, `jac guide jac-sv-endpoints`, `jac guide jac-config`,
+and `jac guide jac-cl-js-interop` queried before implementation.
+`jac create --kind web-app --skip` succeeded in cwd. Scaffold rewrote .gitignore;
+merged its editor ignores with all original credential/model/runtime exclusions.
+Decision: file-based pages returning JsxPage; shared layout returns JsxLayout and
+renders Outlet. main.app(children) wraps children in JSX. Link/useLocation supply
+navigation and active state. Shared CSS imported once; no UI dependency added.
+Remove only generated guestbook files, replace endpoints with a read-only typed
+status function, and exercise RPC in the shell. Reactive has state and typed
+ChangeEvent/MouseEvent handlers follow the component guide.
+Alternative: retain guestbook or add manual Router alongside pages; rejected as
+unrelated scope/mixed routing. Consequence: M1 has navigable honest empty states,
+no pantry mutations, graph seed, recipe results or model calls.
+
+M1 correction: the initial callback annotation was rejected by the compiler.
+`jac guide reference/agent-patterns/jac-cl-components --section props` verifies
+`Callable[[MouseEvent], None]`, which replaces the invalid arrow form. The effects
+section verifies `async can with entry { await ...; }` for initial RPC loading.
+
+M1 placement verification: inspecting compiled/endpoints.js showed the pure status
+function had been pulled into the client. `jac guide jac-codespaces` verifies that
+anchor-free pure public functions can relocate; added an explicit server pin for
+endpoints.shell_status so connectivity uses actual RPC. This prevents a static
+local return from being mistaken for server connectivity. `jac fmt --help` is the
+installed formatting command; `jac format` is removed despite older guide wording.
+
+## D011 — Browser acceptance and development-tool sequencing
+
+Context: the guide's jac browse could not find Chromium; installed Chromium with
+Playwright. Added @playwright/test 1.64.1 as an npm dev dependency through
+`jac install --npm --dev @playwright/test`, then pinned the verified version.
+Decision: persist tests/shell-smoke.mjs with actual route, keyboard, responsive and
+RPC/offline assertions; screenshots are optional via COOKSY_SCREENSHOTS=1.
+Alternative: only inspect markup or a constant endpoint unit test; insufficient
+to verify routing and server/client placement. Consequence: browser binary is a
+developer prerequisite, no JavaScript application logic is introduced.
+
+Observed concurrent compilation/check/build/HMR rewrites generated modules and can
+produce temporary missing exports, navigation aborts, screenshot timeouts or a
+server refresh error. Run checks/build/install with server stopped, then restart
+before browser QA. No graph/cache reset was needed. A stable-server browser run
+passed. Keep that sequence in README and AGENTS. The dev template hard-codes its
+initial title; React 19 title/link metadata in main.jac sets Cooksy's title/favicon,
+verified by browser assertions. This adds known intrinsic-typing warnings only.
+
+M1 region selection is local UI state, not graph-backed discovery. The home artwork
+is decorative CSS illustration labelled as such. No generation integration is implied.
+
+Further M1 diagnosis: Jac's watcher also reacted to PNG writes under docs/screenshots,
+not just source edits. The screenshot test was triggering its own HMR. Capture to
+/tmp/cooksy-m1-screenshots outside the app; copy into docs only after stopping the
+server. This is the concrete fix for repeatable screenshot acceptance.

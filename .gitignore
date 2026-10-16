@@ -22,3 +22,7 @@ models/
 *.safetensors
 *.pt
 *.pth
+
+# Jac scaffold editor artifacts
+.vscode/
+.idea/

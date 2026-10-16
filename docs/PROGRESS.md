@@ -1,12 +1,12 @@
 # Cooksy progress
 
-Date: 2026-10-16 (Africa/Nairobi). Current milestone: M0 complete, foundation commit
-`34e76eddfcbac857e8c3386b2a0db05790d9fc33`; next: M1. This repository contains documentation only.
+Date: 2026-10-16 (Africa/Nairobi). Current milestone: M1 complete; next: M2.
+M0 foundation: `34e76eddfcbac857e8c3386b2a0db05790d9fc33`. M1 adds the runnable shell.
 
 | Milestone | Status | Scope / acceptance | Commit | Risks / next action |
 | --- | --- | --- | --- | --- |
 | M0 | Complete | Inspect environment; recovery files and guide evidence; validate and commit | 34e76ed | No app yet; begin M1 next session |
-| M1 | Not started | Verified web-app scaffold, warm responsive shell, navigation, visible demo status; startup/check/browser evidence | — | Install dependencies; preserve recovery files |
+| M1 | Complete | Verified web-app scaffold, warm responsive shell, navigation, visible demo status; startup/check/browser evidence | Recorded after milestone commit | Culinary graph begins in M2 |
 | M2 | Not started | Real culinary nodes/edges; two regions and multiple traditions; DiscoveryWalker and traversal test through ingredients/steps | — | Seed is demo/test data only |
 | M3 | Not started | Pantry intake and deterministic matching; normalisation/dedupe/essential/optional/ranking tests | — | Respect confirmation boundary |
 | M4 | Not started | Recipe detail and cooking session; advance/reverse/recover progress | — | Verify persistence before implementation |
@@ -80,3 +80,50 @@ and Git configuration commits through 2a7972a. Main now tracks origin/main.
 Updated recovery documents to remove the creation blocker. `git diff --check`
 passed before committing this handoff. Push this documentation commit and verify
 remote main equals local HEAD. Next application milestone remains M1.
+
+## M1 — Verified Jac application skeleton and polished shell — 2026-10-16
+
+Completed: scaffolded web-app in place, preserved original ignores, removed only
+generated guestbook code, added main.jac, endpoints.jac, five file-based routes,
+shared layout, typed components, warm responsive CSS, labelled decorative artwork,
+local regional selection, accessible nav/skip link, development disclosure, real
+server status/retry, metadata, browser smoke suite and four reviewed screenshots.
+Updated README, AGENTS, decisions, progress and restart brief. Dependency config and
+jac.lock are committed; runtime, keys and generated data remain ignored.
+
+Checks and outcomes (details: docs/evidence/m1-verification.md):
+
+- `jac create --kind web-app --skip`: PASS, scaffold in existing repo.
+- Installed guide queries: PASS; eleven relevant outputs saved in m1-guides.
+- Initial `jac install`: FAIL under network sandbox; authorized retry PASS.
+- Initial check: FAIL on invalid callback annotation; corrected using props guide.
+- Final `jac check .`: PASS, 11 files; warnings disclosed, not zero-warning claim.
+- `jac fmt . --check`: PASS, all 11 Jac sources formatted.
+- `jac run --show`: PASS, web-app serve plan.
+- `jac run --dev`: PASS, UI 8000/API 8001; real status POST returned 200.
+- `jac build --as client`: PASS, production browser bundle.
+- Initial jac browse: FAIL, no browser installed; installed Chromium.
+- Initial browser runs while tooling rewrote modules: FAIL, transient reload /
+  screenshot/navigation errors. Restarting with no concurrent compilation resolved.
+- `node tests/shell-smoke.mjs`: PASS, all routes, keyboard, SPA refresh/404,
+  actual RPC, offline/reconnect, 390px/320px overflow and no page errors.
+- `COOKSY_SCREENSHOTS=1 node tests/shell-smoke.mjs`: PASS; screenshots saved.
+- `git diff --check` and recovery/link/source validation: PASS before commit.
+
+Manual verification: inspected desktop Home and mobile Home/Explore screenshots;
+confirmed branding, visible preview notice, section spacing and real connected
+footer. Tightened region title sizing to fit narrow cards. Screenshot files are
+under docs/screenshots. Automated checks cover keyboard interactions but do not
+constitute a full accessibility audit.
+
+Known limitations: region cards are static shell content; selection is transient.
+Pantry/cooking explicitly unavailable; graph, persistence, recipe results and models
+are later milestones. Jac emits JSX/runtime typing/lint warnings. Run check/build
+with dev server stopped to avoid generated-module reload races. Local runtime
+provides admin defaults; production hardening is unimplemented and this is not a
+public deployment. Next milestone: M2, real culinary graph and traversal tests.
+
+Final M1 verification: `jac fmt . --check` passed, production client build passed,
+and the isolated screenshot-enabled smoke suite passed after moving PNG writes
+outside the watched app. Server stopped cleanly; copied four final screenshots
+into docs/screenshots. Confirmed .env/key/model/runtime exclusions remain active.

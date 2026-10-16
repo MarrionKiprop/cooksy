@@ -6,9 +6,8 @@ Read both preserved briefs in docs/briefs when resolving product requirements.
 
 ## Scope and milestone discipline
 
-Complete one milestone at a time, in M0–M8 order. The initial request explicitly
-permits only M0 this session. Do not build features until the recovery foundation
-is committed. Follow the acceptance criteria in the implementation brief.
+Complete one milestone at a time, in M0–M8 order. The initial M0-only session is complete; the user authorized M1 with “okay next.”
+M1 is the current milestone; do not skip ahead into M2 in the same milestone. Follow the acceptance criteria in the implementation brief.
 Before every milestone commit update progress, decisions, and restart instructions;
 run applicable checks, record exact outcomes and limitations, and commit only
 scoped files. Record the resulting milestone hash in a subsequent documentation
@@ -22,12 +21,18 @@ Jac executable: `/home/langstkip/workspace/jac/bin/jac` (0.37.25 at M0).
 Use `export PATH="/home/langstkip/workspace/jac/bin:$PATH"` for the commands below.
 Installed `jac guide` is authoritative. Query each relevant topic before introducing
 its feature; record command, pattern, alternatives and consequence in DECISIONS.
-M0 evidence is under docs/evidence. Read jac-core-cheatsheet and jac-types before
-writing Jac, then specialist guides as needed. Use the installed scaffold rather
-than inventing jac.toml. For M1 use the no-name `jac create --kind web-app --skip`
-inside this repository, inspect generated files and reconcile any documentation
-it changes. Never use --force. Then `jac install`, `jac check .`, `jac run --show`,
-and `jac run --dev`. These are verified guide instructions, not M0 runtime results.
+Guide evidence is under docs/evidence; M1 queries are in m1-guides. Read relevant
+guides before new features. The web-app scaffold is already complete: NEVER scaffold
+over this repository again. main.jac renders file-based route children; pages use
+JsxPage, layout uses JsxLayout/Outlet, and endpoints.shell_status is pinned server.
+Commands: `jac install`, `jac fmt . --check`, `jac check .`, `jac build --as client`,
+`jac run --show`, `jac run --dev`. Stop the server before fmt/check/build/install to
+avoid generated-module/HMR races; restart before browser verification. Browser smoke:
+`node tests/shell-smoke.mjs` (install Chromium through the local Playwright CLI first).
+Use COOKSY_SCREENSHOTS=1 to capture outside the app at /tmp/cooksy-m1-screenshots;
+stop the server before copying captures to docs/screenshots (writes trigger HMR). The installed formatter is
+`jac fmt`; `jac format` was removed. Compiler warning limits are recorded in the
+M1 verification report; do not silently suppress or claim zero warnings.
 Read jac-testing before writing feature tests; run `jac test` once tests exist.
 Use `jac browse` per the fullstack guide for browser verification and screenshots.
 Do not report type/build/browser/provider success unless actually exercised.

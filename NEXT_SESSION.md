@@ -1,7 +1,9 @@
-# Resume at: M1
+# Resume at: M2
 
-M0 is complete: Cooksy has a committed recovery foundation and preserved briefs;
-no application has been scaffolded. See docs/PROGRESS.md for the milestone hash.
+M1 is complete: Cooksy has a runnable Jac web shell, file-based navigation, responsive
+styles, interactive regional preview, honest Pantry/Cook Along empty states, and
+server connectivity with retry. No culinary graph or model inference exists yet.
+The M1 commit hash is recorded in docs/PROGRESS.md after committing.
 
 First commands:
 
@@ -12,29 +14,40 @@ cat AGENTS.md docs/PROGRESS.md docs/DECISIONS.md NEXT_SESSION.md
 git status --short
 git log -5 --oneline
 jac --version
-jac guide jac-core-cheatsheet
-jac guide jac-types
-jac guide jac-scaffold
-jac guide jac-cl-components
-jac guide jac-cl-routing
-jac guide jac-cl-styling
+jac guide jac-node-edge-patterns
+jac guide jac-walker-patterns
+jac guide jac-has-fields
+jac guide jac-sv-persistence
+jac guide jac-testing
 ```
 
-Exact next task: scaffold the web-app in this repository with
-`jac create --kind web-app --skip` (no name, no --force), inspect/reconcile generated
-files without losing this documentation, then `jac install`. Record verified syntax
-in decisions before implementing the warm responsive shell, accessible navigation,
-basic pages, and visible development/demo status.
+Exact next task: define the real culinary graph and seed an explicitly labelled
+fixture covering at least two regions, multiple traditions, recipes, ingredient
+requirements on typed edges, and ordered steps. Implement DiscoveryWalker with
+actual traversal. Query installed guides and log verified patterns before writing
+Jac graph code. Reuse the shell; do not scaffold again.
 
-Definition of done: app starts with documented commands; core navigation works;
-applicable type/build/tests pass; browser/manual evidence is recorded; recovery
-files updated; focused M1 commit and clean tree. Follow the full M1 acceptance
-criteria in docs/briefs/implementation-guidance.md. Stop at the milestone boundary.
+Definition of done: a test proves Region → Tradition → Recipe → Ingredient/Step
+traversal, quantities/essentiality live on REQUIRES edges, discovery can filter
+regions/traditions or traverse all cuisines, tests use isolated fixtures and pass
+on repeat runs, applicable checks pass, documents updated, focused M2 commit pushed
+and remote hash verified. Do not implement M3 matching/intake in the M2 milestone.
 
-Blockers/configuration: none for M0; M1 dependency installation may need network
-permission. No provider needed for shell. GitHub SSH authentication works as MarrionKiprop; origin is configured for
-MarrionKiprop/cooksy. Initial push succeeded and main tracks origin/main.
-After each checked commit, run `git push` and compare `git rev-parse HEAD` with
-`git ls-remote origin refs/heads/main`. Ongoing pushes are authorized. Provider/weights/GPU setup belongs
-to later milestones. No uncommitted files are expected after final ledger commit;
-verify git status before starting.
+Commands for the existing shell (stop server before checks/build/install):
+
+```bash
+jac fmt . --check
+jac check .
+jac build --as client
+jac run --dev
+# Separate terminal, after server is ready:
+node tests/shell-smoke.mjs
+```
+
+Blockers: none for M2. Jac compiler has JSX/runtime typing warnings; see the M1
+verification report. Concurrent check/build/install with HMR can corrupt transient
+client module linking; stop server first and restart, preserving graph data.
+Screenshot output must stay outside the app until server shutdown (see README).
+No credentials are needed for graph fixture work. Provider/weights/GPU setup belongs
+to M5–M7. GitHub SSH and tracking work; ongoing `git push` is authorized.
+No uncommitted files are expected after milestone/ledger commits; verify status.
