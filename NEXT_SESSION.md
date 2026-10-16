@@ -3,7 +3,7 @@
 M1 is complete: Cooksy has a runnable Jac web shell, file-based navigation, responsive
 styles, interactive regional preview, honest Pantry/Cook Along empty states, and
 server connectivity with retry. No culinary graph or model inference exists yet.
-The M1 commit hash is recorded in docs/PROGRESS.md after committing.
+M1 milestone commit: `0be176888fb5d3e39fc30453f06168fa4212d8ba`; see docs/PROGRESS.md for evidence.
 
 First commands:
 

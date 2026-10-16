@@ -6,7 +6,7 @@ M0 foundation: `34e76eddfcbac857e8c3386b2a0db05790d9fc33`. M1 adds the runnable 
 | Milestone | Status | Scope / acceptance | Commit | Risks / next action |
 | --- | --- | --- | --- | --- |
 | M0 | Complete | Inspect environment; recovery files and guide evidence; validate and commit | 34e76ed | No app yet; begin M1 next session |
-| M1 | Complete | Verified web-app scaffold, warm responsive shell, navigation, visible demo status; startup/check/browser evidence | Recorded after milestone commit | Culinary graph begins in M2 |
+| M1 | Complete | Verified web-app scaffold, warm responsive shell, navigation, visible demo status; startup/check/browser evidence | 0be1768 | Culinary graph begins in M2 |
 | M2 | Not started | Real culinary nodes/edges; two regions and multiple traditions; DiscoveryWalker and traversal test through ingredients/steps | — | Seed is demo/test data only |
 | M3 | Not started | Pantry intake and deterministic matching; normalisation/dedupe/essential/optional/ranking tests | — | Respect confirmation boundary |
 | M4 | Not started | Recipe detail and cooking session; advance/reverse/recover progress | — | Verify persistence before implementation |
@@ -127,3 +127,6 @@ Final M1 verification: `jac fmt . --check` passed, production client build passe
 and the isolated screenshot-enabled smoke suite passed after moving PNG writes
 outside the watched app. Server stopped cleanly; copied four final screenshots
 into docs/screenshots. Confirmed .env/key/model/runtime exclusions remain active.
+
+M1 milestone commit: `0be176888fb5d3e39fc30453f06168fa4212d8ba`. All checks and screenshots were recorded before this
+checkpoint. The following documentation commit records this immutable hash.
