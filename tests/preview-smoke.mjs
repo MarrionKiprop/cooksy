@@ -7,19 +7,19 @@ const calls=[];page.on('request',r=>{if(r.url().endsWith('/function/serving_prev
 try{
  await page.goto(base+'/recipes/gamja-jeon-demo');
  await expect(page.getByRole('heading',{name:'Picture your plate.'})).toBeVisible();
- await expect(page.locator('.serving-preview [role="status"]')).toContainText(/Nothing is generated automatically\.|DEMO: layout only/);
+ await expect(page.locator('.serving-preview [role="status"]')).toContainText(/Create an illustration|Sample layout only/);
  expect(calls.every(c=>c.generate===false)).toBe(true);
  await page.getByRole('button',{name:'Generate serving preview',exact:true}).click();
- await expect(page.locator('.serving-preview [role="status"]')).toContainText('SDXL is not configured.');
+ await expect(page.locator('.serving-preview [role="status"]')).toContainText('Serving previews aren’t available right now.');
  await expect(page.getByRole('button',{name:'Start cook-along',exact:false})).toBeEnabled();
- await page.getByRole('button',{name:'Try demo layout',exact:true}).click();
- await expect(page.getByRole('img',{name:'Demo plate layout; no AI image generated'})).toBeVisible();
- await expect(page.locator('.preview-demo')).toContainText('AI-generated serving preview; illustrative, not an exact photograph.');
+ await page.getByRole('button',{name:'View sample layout',exact:true}).click();
+ await expect(page.getByRole('img',{name:'Sample serving layout; no image generated'})).toBeVisible();
+ await expect(page.locator('.preview-demo')).toContainText('No image generated');
  await page.getByText('About this preview', {exact:true}).click();
- await expect(page.locator('.preview-prompt')).toContainText('potato');
- await expect(page.locator('.preview-prompt')).toContainText('Gamja');
- await page.getByRole('button',{name:'Try demo layout',exact:true}).click();
- await expect(page.locator('.serving-preview details')).toContainText('Reused cached result');
+ await expect(page.locator('.serving-preview details')).toContainText('recipe details are sent');
+ const reused=page.waitForResponse(r=>r.url().endsWith('/function/serving_preview')&&r.request().postDataJSON().generate&&r.request().postDataJSON().demo);
+ await page.getByRole('button',{name:'View sample layout',exact:true}).click();
+ const cached=(await (await reused).json()).data.result;expect(cached.cached).toBe(true);expect(cached.prompt).toContain('potato');
  const before=calls.filter(c=>c.generate).length;
  await page.reload();await expect(page.locator('.preview-demo')).toBeVisible();
  expect(calls.filter(c=>c.generate)).toHaveLength(before);

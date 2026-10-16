@@ -199,3 +199,18 @@ tests and11browser suites pass. Clean install/test/build and no-key fulljourney 
 Axe7routes:zero reported violations; exact incomplete decorative/pseudo-background
 color checks retained in evidence. No claim of full accessibility certification.
 M0–M8 complete as local demo. Consult FOLLOW_UPS.md and user direction for new work.
+
+## Product copy after the milestone sequence
+
+User explicitly requested removal of development walkthrough commentary from normal
+screens and milestone-heavy public README/push subjects. Keep normal UI product-
+focused; short AI-generated/Sample recipe labels, sources/provenance in collapsed
+Recipe information, no generic development banner or repeated unverified paragraphs.
+Keep partial-nutrition exclusions, explicit sample labels, mandatory photo review,
+user-relevant data sharing/storage and real generated-image illustrative caption.
+A sample CSS plate has no AI-generated image; label it sample/no image generated.
+Do not expose graph traces/model IDs/seed/timestamps/setup notes by default. Metadata
+and validation remain unchanged. Root README is concise; DEVELOPMENT.md preserves
+technical setup. Use feature/change-based conventional commit subjects from here;
+this user direction supersedes the earlier milestone-subject convention. Preserve
+existing Git history, recovery records and untracked user photos; no force push.

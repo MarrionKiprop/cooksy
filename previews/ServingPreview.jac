@@ -29,7 +29,13 @@ def:pub ServingPreview(recipeKey: str, version: str, name: str) -> JsxElement {
                 or state.status == "not_requested" {
                 state = received;
             }
-            message = received.message;
+            message = "Serving previews aren’t available right now."
+                if received.status == "unavailable"
+                else (
+                    "We couldn’t create a preview. Try again later."
+                        if received.status == "error"
+                        else ""
+                );
         } except Exception {
             message = "We couldn’t create that preview. Your recipe and cooking progress are unchanged; try again later.";
         }
@@ -42,9 +48,7 @@ def:pub ServingPreview(recipeKey: str, version: str, name: str) -> JsxElement {
                 <span className="eyebrow">A LITTLE INSPIRATION</span>
                 <h2 id="serving-preview-title">Picture your plate.</h2>
             </div>
-            <p>
-                Optional illustration of this selected recipe. Generation uses the recipe’s ingredients and method. A configured hosted provider receives that recipe information only when you request a preview.
-            </p>
+            <p>A serving illustration based on your recipe.</p>
             {<figure>
                 <img
                     src={preview.image}
@@ -57,14 +61,11 @@ def:pub ServingPreview(recipeKey: str, version: str, name: str) -> JsxElement {
             {<div
                 className="preview-demo"
                 role="img"
-                aria-label="Demo plate layout; no AI image generated"
+                aria-label="Sample serving layout; no image generated"
             >
                 <div className="preview-plate" aria-hidden="true">✳</div>
                 <strong>{name}</strong>
-                <p>DEMO layout · No SDXL image generated</p>
-                <p>
-                    AI-generated serving preview; illustrative, not an exact photograph.
-                </p>
+                <p>Sample layout · No image generated</p>
             </div>
                 if preview is not None and preview.status == "demo"
                 else None}
@@ -83,35 +84,28 @@ def:pub ServingPreview(recipeKey: str, version: str, name: str) -> JsxElement {
                     disabled={busy or loading}
                     onClick={lambda (e: MouseEvent) { request(True); }}
                 >
-                    Try demo layout
+                    View sample layout
                 </button>
             </div>
             <p role="status">
                 {message
                     if message
                     else (
-                        preview.message
-                            if preview is not None
-                            else "Checking for a saved preview…"
+                        "Sample layout only. No image generated."
+                            if preview is not None and preview.status == "demo"
+                            else (
+                                "Create an illustration of your finished dish."
+                                    if preview is not None
+                                        and preview.status == "not_requested"
+                                    else ""
+                            )
                     )}
             </p>
-            {<details>
+            <details>
                 <summary>About this preview</summary>
                 <p>
-                    {preview.model
-                        + " · "
-                        + preview.provider
-                        + (" · Reused cached result" if preview.cached else "")}
+                    Serving illustrations may differ from the finished meal. When image generation is available, recipe details are sent to the image provider only when you request a preview.
                 </p>
-                <p>
-                    {"Created: " + preview.created_at + " · Seed: " + str(preview.seed)}
-                </p>
-                <p className="preview-prompt">{preview.prompt}</p>
             </details>
-                if preview is not None and preview.status in ["ready", "demo"]
-                else None}
-            <p className="fixture-note">
-                Illustrative appearance, not verification of portions, ingredients or cultural authenticity. Preview cache lasts for this server process; a restart expires it.
-            </p>
         </section>;
 }

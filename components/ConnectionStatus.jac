@@ -1,16 +1,17 @@
 import from endpoints { shell_status }
 
 def:pub ConnectionStatus() -> JsxElement {
-    has message: str = "Checking the Jac kitchen…",
+    has message: str = "Connecting…",
         checking: bool = True,
         failed: bool = False;
 
     async def checkConnection {
         checking = True;
         failed = False;
-        message = "Checking the Jac kitchen…";
+        message = "Connecting…";
         try {
-            message = await shell_status();
+            await shell_status();
+            message = "Connected";
         } except Exception {
             message = "The kitchen is offline. Try connecting again.";
             failed = True;

@@ -13,8 +13,7 @@ def:pub PhotoIntake(
         message: str = "",
         receipt: str = "",
         predictions: list[PredictionView] = [],
-        selections: list[str] = [],
-        model: str = "";
+        selections: list[str] = [];
 
     def set_busy(value: bool) {
         busy = value;
@@ -46,7 +45,7 @@ def:pub PhotoIntake(
             data = str(reader.result);
             preview = data;
             set_busy(False);
-            message = "Photo ready. Choose Review photo to classify locally; nothing is added automatically.";
+            message = "Photo ready to review.";
         };
         reader.onerror = lambda (event: any) {
             set_busy(False);
@@ -68,8 +67,13 @@ def:pub PhotoIntake(
             predictions = result.predictions;
             selections = ["" for p in result.predictions];
             receipt = result.receipt;
-            model = result.model;
-            message = result.message;
+            message = "Sample suggestions—not recognised from your photo."
+                if result.status == "demo"
+                else (
+                    "Check these suggestions before adding them."
+                        if result.status == "predictions_available"
+                        else result.message
+                );
         } except Exception {
             message = "Photo review failed. Your confirmed pantry is unchanged; try again or type ingredients.";
         }
@@ -101,7 +105,7 @@ def:pub PhotoIntake(
         <div className="photo-intake">
             <h3>Or start with a photo</h3>
             <p className="fixture-note">
-                Choose or take a photo of one prominent ingredient. The baseline supports only some ingredients, such as banana, orange, broccoli and cabbage. Classification suggests alternatives, not a complete inventory. Review every name. Photos are processed locally on this server, not sent to the LLM or saved.
+                Choose a clear photo of one ingredient. Recognition can make mistakes, so check each suggestion.
             </p>
             <label htmlFor="pantry-photo">Take or upload an ingredient photo</label>
             <input
@@ -134,15 +138,20 @@ def:pub PhotoIntake(
                     disabled={busy or disabled or not data}
                     onClick={lambda (e: MouseEvent) { analyse(True); }}
                 >
-                    Try demo suggestions
+                    Try sample suggestions
                 </button>
             </div>
             <p role="status">{message}</p>
+            <details className="photo-info">
+                <summary>About photo suggestions</summary>
+                <p>
+                    Recognition can miss or misidentify ingredients. Scores are not certainty. Your photo is processed on this server, not sent to OpenAI or saved.
+                </p>
+            </details>
             {<div className="photo-review">
                 <h3>Review photo suggestions</h3>
                 <p className="fixture-note">
-                    {model
-                        + ". Scores are model confidence, not certainty. Fields start blank: accept a suggestion, edit its name, or leave blank to reject."}
+                    Accept a suggestion, edit its name, or leave it blank to skip it.
                 </p>
                 {[
                     <div className="photo-prediction" key={str(index)}>

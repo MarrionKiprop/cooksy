@@ -138,7 +138,7 @@ def build_demo_graph() -> CulinaryCatalogue {
         kenyan,
         "sukuma-wiki-demo",
         "Sukuma wiki",
-        "A simple kale-and-tomato demo adaptation.",
+        "Kale and tomato cooked into a simple, savoury side.",
         20
     );
     require(
@@ -160,11 +160,7 @@ def build_demo_graph() -> CulinaryCatalogue {
     );
 
     mchicha = add_recipe(
-        tanzanian,
-        "mchicha-demo",
-        "Mchicha",
-        "Spinach in coconut milk, shown as an illustrative adaptation.",
-        25
+        tanzanian, "mchicha-demo", "Mchicha", "Spinach simmered in coconut milk.", 25
     );
     require(
         mchicha,
@@ -185,11 +181,7 @@ def build_demo_graph() -> CulinaryCatalogue {
     );
 
     pancake = add_recipe(
-        korean,
-        "gamja-jeon-demo",
-        "Gamja-jeon",
-        "A potato pancake demo; quantities are fixture data.",
-        25
+        korean, "gamja-jeon-demo", "Gamja-jeon", "A crisp, golden potato pancake.", 25
     );
     require(pancake, potato, 300.0, "g", preparation="peeled and grated");
     require(pancake, oil, 15.0, "ml");
@@ -204,7 +196,7 @@ def build_demo_graph() -> CulinaryCatalogue {
         japanese,
         "tamagoyaki-demo",
         "Tamagoyaki",
-        "A simplified rolled-egg demo adaptation.",
+        "Soft layers of egg rolled into a light omelette.",
         15
     );
     require(omelette, egg, 4.0, "piece");
@@ -220,7 +212,7 @@ def build_demo_graph() -> CulinaryCatalogue {
         indian,
         "aloo-palak-demo",
         "Aloo palak",
-        "An illustrative potato-and-spinach adaptation.",
+        "Potatoes and spinach cooked together with warming spices.",
         30
     );
     require(palak, potato, 300.0, "g", preparation="diced");
@@ -238,7 +230,7 @@ def build_demo_graph() -> CulinaryCatalogue {
         sri_lankan,
         "parippu-demo",
         "Parippu",
-        "A coconut-and-lentil demo adaptation, not a verified traditional formula.",
+        "Red lentils simmered with coconut milk.",
         30
     );
     require(dal, lentil, 150.0, "g", preparation="rinsed");
@@ -255,7 +247,7 @@ def build_demo_graph() -> CulinaryCatalogue {
         greek,
         "revithia-demo",
         "Revithia",
-        "A cooked-chickpea stew demo with lemon.",
+        "A comforting chickpea stew brightened with lemon.",
         35
     );
     require(stew, chickpea, 400.0, "g", preparation="already cooked");
@@ -272,7 +264,7 @@ def build_demo_graph() -> CulinaryCatalogue {
         turkish,
         "menemen-demo",
         "Menemen",
-        "A tomato, pepper and egg demo adaptation.",
+        "Eggs gently cooked with tomatoes and peppers.",
         20
     );
     require(menemen, egg, 3.0, "piece");

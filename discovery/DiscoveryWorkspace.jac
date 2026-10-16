@@ -100,13 +100,15 @@ def:pub DiscoveryWorkspace(initial_mode: str) -> JsxElement {
         }
         busy = True;
         error = "";
-        message = "Checking graph memory and discovering five choices…";
+        message = "Finding meals for your ingredients…";
         meal_plan = None;
         clear_choices();
         try {
             response = await recommend_meals(names, mode, region, kitchen, demo);
             meal_plan = response;
-            message = response.message;
+            message = "Your five meals are ready."
+                if response.ready
+                else "We couldn’t find five meals this time. Try again or choose another region.";
             if response.ready and len(response.choices) == 5 {
                 save_choices(
                     context(region, kitchen, demo),
@@ -174,10 +176,12 @@ def:pub DiscoveryWorkspace(initial_mode: str) -> JsxElement {
         }
         busy = True;
         error = "";
-        message = "Preparing only the meal you selected…";
+        message = "Preparing your recipe…";
         try {
             prepared = await prepare_candidate(key);
-            message = prepared.message;
+            message = "Your recipe is ready."
+                if prepared.ready
+                else "We couldn’t prepare this recipe. Try again or choose another meal.";
             if prepared.ready {
                 navigate("/recipes/" + prepared.key);
             }
@@ -188,7 +192,7 @@ def:pub DiscoveryWorkspace(initial_mode: str) -> JsxElement {
     }
 
     active = meal_plan;
-    selected_description = "All 15 culinary regions are available; choose a lens or explore without a regional filter.";
+    selected_description = "Choose a region, or explore them all.";
     for region in regions {
         if region.key == selected {
             selected_description = region.subtitle;
@@ -207,9 +211,7 @@ def:pub DiscoveryWorkspace(initial_mode: str) -> JsxElement {
                             else "Start with what you have."}
                     </em>
                 </h1>
-                <p>
-                    One shared pantry. Five meal choices. A full recipe only after you choose.
-                </p>
+                <p>Find something delicious with what you have.</p>
             </div>
             <nav className="discovery-mode-nav" aria-label="Discovery modes">
                 <Link
@@ -244,9 +246,7 @@ def:pub DiscoveryWorkspace(initial_mode: str) -> JsxElement {
                             else "A little adventure for dinner"}
                     </h2>
                     {<>
-                        <p>
-                            15 culinary lenses, with traditions underneath. These are starting points, not claims that cuisines are uniform.
-                        </p>
+                        <p>Explore 15 regions and their culinary traditions.</p>
                         <button
                             type="button"
                             className={"region-choice selected"
@@ -305,15 +305,10 @@ def:pub DiscoveryWorkspace(initial_mode: str) -> JsxElement {
                         else <div className="worldwide-intro">
                             <span className="worldwide-mark" aria-hidden="true">◎</span>
                             <p>
-                                Discover is your “surprise me” path: worldwide dishes with deliberate variety across culinary traditions, while prioritizing ingredients you have.
+                                Discover dishes from around the world, picked for the ingredients you have.
                             </p>
-                            <p>
-                                No regional filter. The same confirmed pantry and recipe flow.
-                            </p>
+                            <p>A little variety for your next meal.</p>
                         </div>}
-                    <p className="fixture-note">
-                        Finding meals or changing a region/tradition sends confirmed ingredient names and scope to OpenAI GPT-4.1 mini when graph coverage is insufficient. Sentences are interpreted only when you request review. AI dishes remain unverified.
-                    </p>
                     <button
                         type="button"
                         className="button primary"
@@ -338,9 +333,7 @@ def:pub DiscoveryWorkspace(initial_mode: str) -> JsxElement {
                 if error
                 else None}
             <p role="status" className="discovery-message">{message}</p>
-            {<p role="status" className="matching-progress">
-                Working on your culinary journey…
-            </p>
+            {<p role="status" className="matching-progress">Finding your next meal…</p>
                 if busy
                 else None}
             {<section
@@ -357,16 +350,16 @@ def:pub DiscoveryWorkspace(initial_mode: str) -> JsxElement {
                         </h2>
                     </div>
                     <span className="result-count">
-                        {str(len(active.choices)) + " / 5 validated"}
+                        {str(len(active.choices)) + " / 5 meals"}
                     </span>
                 </div>
                 {<p className="demo-disclosure">
-                    Developer demo fixtures · not live AI discovery.
+                    Sample recipes · not personalised AI suggestions.
                 </p>
                     if active.demo
                     else None}
                 <p className="match-disclosure">
-                    Readiness compares ingredient names, not quantities or dietary suitability. Missing essentials remain visible; substitutions are never silently counted as available.
+                    Compare what you have and what you’ll need. Check amounts in the full recipe.
                 </p>
                 <div className="five-meal-grid">
                     {[
@@ -383,19 +376,16 @@ def:pub DiscoveryWorkspace(initial_mode: str) -> JsxElement {
                 </div>
                 <details>
                     <summary>Why these choices?</summary>
-                    <ol>
-                        {[
-                            <li key={str(index)}>{active.events[index]}</li>
-                            for index in range(len(active.events))
-                        ]}
-                    </ol>
+                    <p>
+                        Meals are ranked by ingredients on hand, missing essentials and cooking time. Worldwide discovery also looks for variety.
+                    </p>
                 </details>
             </section>
                 if active is not None
                 else None}
             {<div className="discovery-fallback">
                 <p>
-                    Five valid choices are needed before recipe selection. Retry, explore a broader region, or try a clearly labelled demo.
+                    Try a broader region or browse our sample recipes while we find more choices.
                 </p>
                 <button
                     type="button"
@@ -411,13 +401,19 @@ def:pub DiscoveryWorkspace(initial_mode: str) -> JsxElement {
                     disabled={busy or len(names) == 0}
                     onClick={demoMeals}
                 >
-                    Try demo choices
+                    Browse sample recipes
                 </button>
             </div>
                 if not busy and (error or (active is not None and not active.ready))
                 else None}
-            <p className="storage-note">
-                Your confirmed pantry is private to this browser tab. Generated culinary memory currently lasts for this server process; restarting may expire saved choices. Photo suggestions need your confirmation. Optional serving previews are on your selected recipe page; live SDXL needs setup. Reference-based nutrition, where supported, is on the recipe page.
-            </p>
+            <details className="discovery-info">
+                <summary>About discovery and your pantry</summary>
+                <p>
+                    When needed, Cooksy sends your ingredient list and chosen region to OpenAI to suggest meals. AI-generated recipes should be checked before cooking.
+                </p>
+                <p>
+                    Your pantry is saved in this browser tab. Some meal choices may become unavailable later; you can search again with the same ingredients.
+                </p>
+            </details>
         </div>;
 }

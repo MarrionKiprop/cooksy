@@ -11,7 +11,7 @@ def:pub RecipeDetail(recipeKey: str) -> JsxElement {
         busy: bool = True,
         error: str = "",
         starting: bool = False,
-        pantry_note: str = "Ingredient names only; your amounts have not been checked.";
+        pantry_note: str = "Check you have enough of each ingredient.";
     navigate = useNavigate();
 
     async def loadRecipe {
@@ -71,15 +71,14 @@ def:pub RecipeDetail(recipeKey: str) -> JsxElement {
         return
             <div className="page-width recipe-detail">
                 <h1>Recipe not found.</h1>
-                <p>
-                    That recipe is unavailable or its server cache expired. Search again in Explore.
-                </p>
+                <p>This recipe is no longer available. Find another meal in Explore.</p>
                 <Link to="/explore" className="button primary">
                     Explore the kitchens
                 </Link>
             </div>;
     }
     available = [item.name for item in selected.available];
+    sample = selected.recipe.key.endswith("-demo");
     return
         <div className="page-width recipe-detail">
             <Link to="/explore" className="inline-link">← Back to Explore</Link>
@@ -95,9 +94,8 @@ def:pub RecipeDetail(recipeKey: str) -> JsxElement {
                 <span>{selected.recipe.servings} servings</span>
                 <span>{selected.score}% essential coverage</span>
             </div>
-            <p className="demo-disclosure">
-                {selected.recipe.verification
-                    + ". Demo recipes have abbreviated steps; AI recipes need independent verification."}
+            <p className="recipe-kind">
+                {"Sample recipe" if sample else "AI-generated recipe"}
             </p>
             <div className="recipe-detail-grid">
                 <section
@@ -128,7 +126,7 @@ def:pub RecipeDetail(recipeKey: str) -> JsxElement {
                                 </span>
                                 <p>{item.preparation}</p>
                                 {<p>
-                                    Demo swap options: {", ".join(
+                                    Possible substitutions: {", ".join(
                                         item.substitutes
                                     )}. Confirm suitability; these do not count as available.
                                 </p>
@@ -165,13 +163,22 @@ def:pub RecipeDetail(recipeKey: str) -> JsxElement {
                     </p>
                 </section>
             </div>
-            <section className="recipe-context">
-                <h2>A little context.</h2>
+            <details className="recipe-context">
+                <summary>Recipe information</summary>
                 <p>
-                    This recipe is associated with the {selected.recipe.tradition} kitchen in {selected.recipe.region}. The preparation is an illustrative adaptation; cultural authenticity and quantities have not been independently verified.
+                    {selected.recipe.tradition
+                        + "-inspired · "
+                        + selected.recipe.region}
                 </p>
-                <p className="fixture-note">Source: {selected.recipe.provenance}.</p>
-            </section>
+                <p>
+                    {"Sample recipe with abbreviated instructions."
+                        if sample
+                        else "Created with AI. Check ingredient amounts and cooking instructions before starting."}
+                </p>
+                <p className="fixture-note">
+                    {"Source: " + selected.recipe.provenance}
+                </p>
+            </details>
             <NutritionPanel
                 key={selected.recipe.key + selected.recipe.version}
                 recipeKey={selected.recipe.key}
@@ -184,9 +191,7 @@ def:pub RecipeDetail(recipeKey: str) -> JsxElement {
                 name={selected.recipe.name}
             />
             <div className="recipe-unavailable">
-                <p>
-                    AI can quote relevant wording from the active cook-along step. Timers are not available.
-                </p>
+                <p>Have a question while cooking? Open cook-along for step help.</p>
             </div>
         </div>;
 }

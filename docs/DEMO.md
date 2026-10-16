@@ -8,7 +8,7 @@ then `jac run --dev`. UI8000, API8001. In Windows/WSL, use the first WSL address
 
 For a no-paid-call demo, set `COOKSY_LLM_MODE=demo` in ignored `.env` and restart.
 No OpenAI key is required for the deterministic demo. Live SDXL remains off;
-“Try demo layout” works without model weights. Photo demo needs a Python worker
+“View sample layout” works without model weights. Photo demo needs a Python worker
 with Pillow (configured optional vision environment); manual typed intake always
 works if vision is unavailable.
 
@@ -19,7 +19,7 @@ works if vision is unavailable.
 2. **Confirm & find meals**. Switch between Explore and Discover to show the same
    basket. Explore has15regions and optional traditions; Discover is Surprise Me.
 3. With providers disabled, live discovery honestly has insufficient coverage.
-   Choose **Try demo choices** explicitly. Show five labelled developer fixtures;
+   Choose **Browse sample recipes** explicitly. Show five labelled developer fixtures;
    no fixture is presented as a live AI recommendation.
 4. Select **Gamja-jeon**. Only selection opens/prepares a full recipe. Inspect
    quantities, pantry availability and ordered method. Demo instructions are abbreviated.
@@ -27,8 +27,8 @@ works if vision is unavailable.
    salt have supported gram references; generic cooking oil in millilitres is
    excluded rather than assumed zero or assigned an invented density. Expand
    references and follow an ingredient's USDA source link.
-6. In **Picture your plate**, select **Try demo layout**. Show the explicit
-   no-SDXL-image disclosure and recipe-grounded prompt under About this preview.
+6. In **Picture your plate**, select **View sample layout**. Show the explicit
+   no-image-generated disclosure. The recipe-grounded prompt remains in server metadata.
    Reload to demonstrate cached state without generation. Real SDXL is deferred.
 7. **Start cook-along**, mark step1done, reload at step2, then finish the session.
    Back/restart/recovery controls work. Help requires live provider or browser-test

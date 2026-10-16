@@ -535,3 +535,35 @@ so suite order does not incorrectly assume an empty public process cache.
 Handoff docs include demo, architecture and nutrition methodology. LiveSDXL, better
 food/multi-object vision, durability, richer references and production readiness
 are explicitly deferred in FOLLOW_UPS. M8 does not claim these are complete.
+
+## D021 — Product-facing copy instead of development commentary
+
+User objected to the app reading like a developer walkthrough, including development
+banner, repeated verification/cultural disclaimers, raw model/timestamp provenance,
+and milestone-heavy README and push subjects. Treat this as a presentation cleanup,
+not permission to remove validation, hide sample content or rewrite Git history.
+Consulted installed component/styling guides; evidence under product-copy-guides.
+
+Remove the global DEVELOPMENT PREVIEW banner. Use short AI-generated/Sample recipe
+labels, with full source/recipe context in keyboard-accessible collapsed details.
+Replace canned cultural-context paragraphs with concise inspired-by context. Keep
+API verification, provenance and trace metadata intact. Sample descriptions now use culinary copy. Normal discovery
+has product language and a ranking explanation; raw walker events stay in backend
+metadata rather than filling Why these choices. Model IDs, timestamps and provider
+setup/graph/process commentary leave normal product surfaces.
+
+Share vendor/privacy/tab scope in secondary details; confirmation and meaningful
+failure states remain. Keep incomplete nutrition subtotal warning prominent, move
+full methodological disclosure to existing references details. A real generated
+image still carries the exact illustrative caption. Sample CSS plate is labelled
+sample/no image generated, without an inaccurate AI-generated image caption.
+All sample controls remain explicit; no data generation, ranking, cache, safety
+validation or privacy boundary changes. Step help still uses checked quotations.
+
+README now introduces the product, features, quick start and honest current limits.
+Detailed former README is preserved in DEVELOPMENT.md with corrected links. Existing
+PROGRESS/DECISIONS/commit history remains historical. Future commit subjects name the
+feature/change rather than milestones, as requested; never force-push old history.
+Browser regressions assert product copy and collapsed but accessible provenance;
+preview prompt/cache reuse is tested via response metadata instead of rendering
+technical diagnostics in the product. Paid inference remains mocked.

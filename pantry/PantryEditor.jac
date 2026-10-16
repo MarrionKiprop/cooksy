@@ -11,7 +11,7 @@ def:pub PantryEditor(
         busy: bool = False,
         message: str = "",
         uncertainty: list[str] = [],
-        storage_note: str = "One shared pantry for Explore, Discover and your recipes. Saved in this browser tab.";
+        storage_note: str = "Saved in this browser tab.";
 
     def notify(updated: list[str]) {
         callback = onConfirmed as any;
@@ -41,7 +41,9 @@ def:pub PantryEditor(
             proposed = ", ".join(result.names);
             uncertainty = result.uncertain;
             reviewing = result.status == "review";
-            message = result.message;
+            message = "Check the names below, then add them to your pantry."
+                if result.status == "review"
+                else result.message;
         } except Exception {
             message = "We couldn’t review that text. Your confirmed pantry is unchanged. Try again.";
         }
@@ -66,7 +68,7 @@ def:pub PantryEditor(
                 proposed = "";
                 draft = "";
                 uncertainty = [];
-                message = "Confirmed pantry saved. Discovery uses only these names.";
+                message = "Pantry updated.";
             }
         } except Exception {
             message = "We couldn’t save these names. Your previous pantry and review are unchanged; try again.";
@@ -83,7 +85,7 @@ def:pub PantryEditor(
             storage_note = "Storage unavailable; this pantry lasts while this app remains open.";
         }
         notify(remaining);
-        message = "Pantry updated. Previous meal choices have been cleared.";
+        message = "Pantry updated.";
     }
     def clear(e: MouseEvent) {
         write_pantry([]);
@@ -112,7 +114,7 @@ def:pub PantryEditor(
                     onChange={lambda (e: ChangeEvent) { draft = e.target.value; }}
                 />
                 <p className="fixture-note">
-                    Use a sentence or comma-separated names. AI interprets sentences; review and confirm before anything enters your pantry. Quantities are not stored yet. No staples are assumed.
+                    Write a sentence or list ingredients separated by commas. Review the names before adding them.
                 </p>
                 <button
                     type="submit"

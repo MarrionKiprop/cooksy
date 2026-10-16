@@ -513,3 +513,22 @@ started; M0–M8 local-demo checkpoint is complete pending immutable commit ledg
 
 M8 implementation checkpoint: `db79b21cd3bb83b66618d14a1e4473b6d4029dee`; pushed and remote main verified.
 M0–M8 local-demo milestones complete. No deferred follow-up has been started.
+
+
+## 2026-10-17 — Product copy and documentation cleanup
+
+Removed development banner, repeated verification/process commentary and visible
+provider diagnostics from normal UI. Short AI/Sample labels remain, with accessible
+collapsed recipe sources and useful secondary privacy information. Preserved
+nutrition subtotal warnings, mandatory photo confirmation and exact real-image
+illustrative caption. Sample preview explicitly says no image generated. Sample
+recipe descriptions now describe the food. No ranking/provider/cache changes.
+README now introduces Cooksy; detailed setup retained in DEVELOPMENT.md. Future
+commit subjects name features; historical records remain unchanged.
+
+53 backend tests PASS (22.00s); full69-file check PASS (142.17s); final sample
+seed check and4 discovery tests PASS; production build PASS (3.9s). All12 browser
+suites PASS, including product-copy and accessibility. Desktop/mobile screenshots
+reviewed;320/390px overflow checks pass. No paid inference. An initial shell run
+used an obsolete text assertion (fixed); another started before server readiness
+(connection refused), then passed after readiness. Evidence includes details.

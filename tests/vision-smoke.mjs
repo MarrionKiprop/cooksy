@@ -11,9 +11,9 @@ try{
  await expect(page.getByText('Choose a JPEG or PNG image up to 5 MiB.')).toBeVisible();
  await page.getByLabel('Take or upload an ingredient photo').setInputFiles({name:'ingredient.png',mimeType:'image/png',buffer:payload});
  await expect(page.getByRole('button',{name:'Review photo',exact:true})).toBeEnabled();
- await page.getByRole('button',{name:'Try demo suggestions',exact:true}).click();
+ await page.getByRole('button',{name:'Try sample suggestions',exact:true}).click();
  await expect(page.getByRole('heading',{name:'Review photo suggestions'})).toBeVisible();
- await expect(page.getByText(/DEMO: fixed potato\/tomato suggestions/)).toBeVisible();
+ await expect(page.getByText(/Sample suggestions—not recognised from your photo/)).toBeVisible();
  await expect(page.locator('.pantry-chips li')).toHaveCount(0);expect(state.calls).toHaveLength(0);
  await expect(page.getByRole('button',{name:'Confirm photo ingredients',exact:true})).toBeDisabled();
  await page.getByRole('button',{name:'Accept potato',exact:true}).click();

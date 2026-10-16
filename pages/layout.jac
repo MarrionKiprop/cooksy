@@ -68,12 +68,6 @@ def:pub Shell() -> JsxLayout {
                     My pantry
                 </Link>
             </header>
-            <div className="demo-banner" role="region" aria-label="Development preview">
-                <span className="demo-badge">DEVELOPMENT PREVIEW</span>
-                <span>
-                    Your shared pantry → Explore or Discover → five choices → cook along. AI suggestions need verification.
-                </span>
-            </div>
             <main id="main-content" tabIndex={-1}>
                 <Outlet/>
             </main>
@@ -83,7 +77,9 @@ def:pub Shell() -> JsxLayout {
                     <p>Your ingredients. The world’s kitchens.</p>
                 </div>
                 <ConnectionStatus/>
-                <span className="footer-note">Made with Jac · Culinary discovery</span>
+                <span className="footer-note">
+                    Your ingredients. More possibilities.
+                </span>
             </footer>
         </div>;
 }

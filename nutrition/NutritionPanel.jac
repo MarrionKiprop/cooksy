@@ -103,9 +103,9 @@ def:pub NutritionPanel(recipeKey: str, version: str) -> JsxElement {
                 </table>
                     if nutrition.status != "unavailable"
                     else None}
-                <p className="fixture-note">{nutrition.disclosure}</p>
                 <details className="nutrition-sources">
                     <summary>References, assumptions and missing amounts</summary>
+                    <p className="fixture-note">{nutrition.disclosure}</p>
                     <ul>
                         {[
                             <li key={str(index)}>

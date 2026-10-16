@@ -21,7 +21,7 @@ def:pub MealCard(
             </span>
             <h3>{item.name}</h3>
             <p>{item.description}</p>
-            <p>{str(item.score) + "% named essential ingredients covered"}</p>
+            <p>{str(item.score) + "% ingredient match"}</p>
             <p>
                 {"On hand: " + ", ".join(choice.available)
                     if len(choice.available) > 0
@@ -30,12 +30,14 @@ def:pub MealCard(
             <p>
                 {"Missing essentials: " + ", ".join(item.missing)
                     if len(item.missing) > 0
-                    else "All named essentials are present; amounts still need checking."}
+                    else "You have the essential ingredients."}
             </p>
             {<p>{"Optional: " + ", ".join(choice.optional)}</p>
                 if len(choice.optional) > 0
                 else None}
-            <p className="fixture-note">{item.verification + ". " + item.provenance}</p>
+            <span className="recipe-kind">
+                {"Sample recipe" if item.key.endswith("-demo") else "AI-generated"}
+            </span>
             <button
                 type="button"
                 className="button primary"

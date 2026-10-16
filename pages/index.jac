@@ -101,7 +101,7 @@ def:pub Home() -> JsxPage {
                                 Tell us what’s on hand. Photo suggestions will always be yours to confirm.
                             </p>
                             <span className="small-tag">
-                                Pantry intake · ready to try
+                                Your ingredients, together
                             </span>
                         </article>
                         <article className="journey-card">
@@ -121,7 +121,7 @@ def:pub Home() -> JsxPage {
                             <p>
                                 Pick a meal and settle into a focused, one-step-at-a-time cooking experience.
                             </p>
-                            <span className="small-tag">Cook along · ready to try</span>
+                            <span className="small-tag">One step at a time</span>
                         </article>
                     </div>
                 </div>

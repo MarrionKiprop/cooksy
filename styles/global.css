@@ -1397,3 +1397,7 @@ summary { cursor: pointer; }
 .step-number { color: #536246; }
 .small-tag { color: #58614f; }
 .footer-note { color: #59634f; }
+
+.recipe-kind { display: inline-block; align-self: flex-start; font-size: .75rem; color: #536047; background: #edf0e4; padding: .25rem .6rem; border-radius: 1rem; margin: .5rem 0; }
+.recipe-context summary { font-weight: 600; }
+.discovery-info, .photo-info { margin-top: 1rem; color: #59634f; font-size: .85rem; }

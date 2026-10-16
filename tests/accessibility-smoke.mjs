@@ -14,7 +14,7 @@ try{
   if(route.includes('/recipes/')){
    await expect(page.locator('.nutrition-table')).toBeVisible();
    const summary=page.getByText('References, assumptions and missing amounts',{exact:true});await summary.focus();await expect(summary).toBeFocused();await summary.press('Enter');await expect(page.locator('.nutrition-sources')).toHaveAttribute('open','');
-   await page.getByRole('button',{name:'Try demo layout',exact:true}).click();await expect(page.locator('.preview-demo')).toBeVisible();
+   await page.getByRole('button',{name:'View sample layout',exact:true}).click();await expect(page.locator('.preview-demo')).toBeVisible();
   }
   if(route==='/cook-along')await expect(page.locator('.active-step')).toBeVisible();
   await page.addScriptTag({path:axePath});

@@ -10,7 +10,7 @@ try{
  await expect(page.getByLabel('Edit proposed ingredient names')).toHaveValue('cooking oil, potato, salt');
  await page.getByRole('button',{name:'Confirm & find meals',exact:true}).click();await expect(page.locator('.pantry-chips li')).toHaveCount(3);
  await page.getByRole('link',{name:'Discover worldwide',exact:true}).click();await page.getByRole('button',{name:'Find five meals',exact:true}).click();
- await expect(page.locator('.meal-card')).toHaveCount(process.env.COOKSY_OFFLINE_JOURNEY?0:3);await page.getByRole('button',{name:'Try demo choices',exact:true}).click();await expect(page.locator('.meal-card')).toHaveCount(5);
+ await expect(page.locator('.meal-card')).toHaveCount(process.env.COOKSY_OFFLINE_JOURNEY?0:3);await page.getByRole('button',{name:'Browse sample recipes',exact:true}).click();await expect(page.locator('.meal-card')).toHaveCount(5);
  await page.locator('.meal-card').first().getByRole('button').click();await expect(page).toHaveURL(base+'/recipes/gamja-jeon-demo');
  await expect(page.locator('.nutrition-panel')).toContainText('Known-ingredient subtotal only');
  await expect(page.locator('.nutrition-coverage')).toContainText('2 of 3');
@@ -18,7 +18,7 @@ try{
  await page.getByText('References, assumptions and missing amounts',{exact:true}).click();
  await expect(page.locator('.nutrition-sources')).toContainText('cooking oil');
  await expect(page.locator('.nutrition-sources a').first()).toHaveAttribute('href',/fdc.nal.usda.gov/);
- await page.getByRole('button',{name:'Try demo layout',exact:true}).click();await expect(page.locator('.preview-demo')).toBeVisible();
+ await page.getByRole('button',{name:'View sample layout',exact:true}).click();await expect(page.locator('.preview-demo')).toBeVisible();
  await page.route('**/function/recipe_nutrition',route=>route.fulfill({status:503,body:'offline'}));await page.reload();
  await expect(page.locator('.nutrition-panel')).toContainText('Nutrition estimates are unavailable');
  await expect(page.getByRole('button',{name:'Start cook-along',exact:true})).toBeEnabled();

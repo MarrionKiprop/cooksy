@@ -12,7 +12,7 @@ def:pub CookingWorkspace() -> JsxElement {
         current: int = 1,
         finished: bool = False,
         version: str = "cooksy-demo-v1",
-        storage_note: str = "Progress is saved in this browser tab; no account sync.";
+        storage_note: str = "Progress saved in this tab.";
 
     async def updateSession(action: str) {
         busy = True;
@@ -120,7 +120,11 @@ def:pub CookingWorkspace() -> JsxElement {
             {<section className="cook-session" aria-labelledby="active-recipe">
                 <div className="cook-session-heading">
                     <div>
-                        <span className="small-tag">RECIPE · UNVERIFIED</span>
+                        <span className="small-tag">
+                            {"SAMPLE RECIPE"
+                                if active.recipe_key.endswith("-demo")
+                                else "AI-GENERATED RECIPE"}
+                        </span>
                         <h2 id="active-recipe">{active.recipe_name}</h2>
                     </div>
                     <Link to={"/recipes/" + active.recipe_key} className="inline-link">
@@ -128,7 +132,7 @@ def:pub CookingWorkspace() -> JsxElement {
                     </Link>
                 </div>
                 <p className="fixture-note">
-                    Recipe instructions are unverified; demo recipes use abbreviated sample steps.
+                    Check ingredient amounts and doneness as you cook.
                 </p>
                 <div className="cook-progress">
                     <span aria-live="polite">

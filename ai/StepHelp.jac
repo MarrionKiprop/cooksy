@@ -27,7 +27,9 @@ def:pub StepHelp(
                 and sequence == asked_sequence
                 and finished == asked_finished {
                 quotes = result.quotes;
-                message = result.message;
+                message = "From this step:"
+                    if result.status == "grounded"
+                    else result.message;
             }
         } except Exception {
             message = "Help is unavailable. Your cooking progress is unchanged.";
@@ -38,7 +40,7 @@ def:pub StepHelp(
         <section className="step-help" aria-labelledby="step-help-title">
             <h3 id="step-help-title">A little clarity for this step</h3>
             <p>
-                AI can point to relevant wording in the current instruction. If the recipe does not contain an answer, it will say so.
+                Ask about the current instruction. Answers stay within what the recipe says.
             </p>
             <label>
                 Question about this step

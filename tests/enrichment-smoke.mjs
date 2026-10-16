@@ -7,8 +7,8 @@ const page=await context.newPage();const errors=[];page.on('pageerror',e=>errors
 try{
  await page.goto(`${base}/explore`);await expect(page.getByRole('button',{name:'Find five meals',exact:true})).toBeEnabled();
  await page.getByRole('button',{name:'Find five meals',exact:true}).click();await expect(page.locator('.meal-card')).toHaveCount(3);
- await page.getByRole('button',{name:'Try demo choices',exact:true}).click();await expect(page.locator('.meal-card')).toHaveCount(5);
- await expect(page.locator('.demo-disclosure')).toContainText('Developer demo fixtures');
+ await page.getByRole('button',{name:'Browse sample recipes',exact:true}).click();await expect(page.locator('.meal-card')).toHaveCount(5);
+ await expect(page.locator('.demo-disclosure')).toContainText('Sample recipes');
  await expect(page.locator('.meal-card').first()).toContainText('Gamja-jeon');
  const before=state.calls.length;await page.reload();await expect(page.locator('.meal-card')).toHaveCount(5);expect(state.calls).toHaveLength(before);
  await page.locator('.meal-card').first().getByRole('button').click();await expect(page).toHaveURL(`${base}/recipes/gamja-jeon-demo`);
