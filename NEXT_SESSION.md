@@ -5,7 +5,7 @@ Explore and pantry cards link to it. CookingWalker maintains real current/comple
 step relationships, with tab-scoped snapshot recovery and a route-memory fallback.
 Next/back/finish/restart/end, bounds, version checks, failed actions, isolation and
 blocked storage were tested. No timers, model inference, nutrition or images yet.
-M4 milestone hash is recorded in PROGRESS.md after committing.
+M4 milestone commit: `337fc3a3aa99a13d9ae73dffd506107d0d4b9af7`; pushed. See PROGRESS.md for evidence.
 
 Read first:
 

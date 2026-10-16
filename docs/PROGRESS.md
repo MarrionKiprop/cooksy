@@ -9,7 +9,7 @@ M0 foundation: `34e76eddfcbac857e8c3386b2a0db05790d9fc33`. M1 adds the runnable 
 | M1 | Complete | Verified web-app scaffold, warm responsive shell, navigation, visible demo status; startup/check/browser evidence | 0be1768 | Culinary graph begins in M2 |
 | M2 | Complete | Real culinary nodes/edges; two regions and multiple traditions; DiscoveryWalker and traversal test through ingredients/steps | e8f2773 | Demo graph only; pantry/matching begins in M3 |
 | M3 | Complete | Pantry intake and deterministic matching; normalisation/dedupe/essential/optional/ranking tests | ea65d48 | Names only; tab-scoped pantry, no account sync |
-| M4 | Complete | Recipe detail and cooking session; advance/reverse/recover progress | Recorded after milestone commit | Tab-scoped progress; no account sync or timers |
+| M4 | Complete | Recipe detail and cooking session; advance/reverse/recover progress | 337fc3a | Tab-scoped progress; no account sync or timers |
 | M5 | Not started | Structured by-llm enrichment and grounded help; reuse, provenance, malformed/duplicate/unavailable mocks | — | Provider/model not configured |
 | M6 | Not started | MobileNet adapter, upload/review/confirmation graph; validation and contract tests | — | Weights and dependencies unverified |
 | M7 | Not started | Selected-recipe SDXL preview, metadata/cache, label and error tests | — | Hosted/local inference unconfigured |
@@ -277,3 +277,6 @@ contextual LLM help, nutrition and previews remain unimplemented. Retry resumes 
 saved progress rather than replaying a failed next action. No live model was used.
 
 Next milestone: M5 structured enrichment and grounded assistance (mock/provider gates).
+
+M4 milestone commit: `337fc3a3aa99a13d9ae73dffd506107d0d4b9af7`; pushed successfully. This follow-up documentation
+commit records the checkpoint. Verification evidence was recorded before committing.
