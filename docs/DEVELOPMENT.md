@@ -328,18 +328,8 @@ hosted calls, no money); graph tests are included in `jac test -d tests`;
 `node tests/preview-smoke.mjs` covers actual demo/cache RPC and mocked image success.
 Do not run paid image/provider smoke checks without explicit authorization.
 
-## Project memory and GitHub
+## Source repository
 
-The original [implementation guidance](briefs/implementation-guidance.md) and
-[architecture](briefs/technical-architecture.md) are preserved verbatim.
-Resume using [NEXT_SESSION.md](../NEXT_SESSION.md); see [progress](PROGRESS.md),
-[decisions](DECISIONS.md), and [M1 verification](evidence/m1-verification.md), and
-[M2 verification](evidence/m2-verification.md), and
-[M3 verification](evidence/m3-verification.md), and
-[M4 verification](evidence/m4-verification.md), and
-[M5 verification](evidence/m5-verification.md).
-
-Remote: [MarrionKiprop/cooksy](https://github.com/MarrionKiprop/cooksy), branch main.
-SSH uses the existing ~/.ssh/id_ed25519 key through repository-local Git configuration.
-After checked feature and recovery commits, `git push` and verify remote main equals
-local HEAD. Never commit keys, .env, generated runtime/data, models or user uploads.
+Source: [MarrionKiprop/cooksy](https://github.com/MarrionKiprop/cooksy).
+Keep credentials, model weights, user photos and generated runtime files out of Git.
+Historical development notes, evidence and design references are local-only.

@@ -1,8 +1,0 @@
-$ jac test tests/discovery_tests.jac
-4 passed in 6.29s
-
-$ jac test tests/discovery_tests.jac
-4 passed in 2.95s
-
-Final type check: 17 passed. Production client build passed.
-See m2-verification.md for failures diagnosed before these passing runs.

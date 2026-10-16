@@ -26,3 +26,16 @@ models/
 # Jac scaffold editor artifacts
 .vscode/
 .idea/
+
+# Local development history and design references
+/docs/evidence/
+/docs/screenshots/
+/docs/briefs/
+/docs/PROGRESS.md
+/docs/DECISIONS.md
+/NEXT_SESSION.md
+/AGENTS.md
+/Cooksy Global Recipe Discovery Workflow.png
+
+# Local WSL download metadata
+*:Zone.Identifier

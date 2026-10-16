@@ -39,6 +39,18 @@ local GPU setup. The sample layout does not generate a food image. Pantry and
 cooking progress are saved in the current browser tab; generated recipes and
 preview memory currently expire when the server restarts.
 
+## Project structure
+
+`jac.toml` selects `main.jac` as the entry point. Its `app()` renders the routed
+page content. `pages/` defines screens and the shared layout; feature folders
+contain their components and services. `endpoints.jac` exposes server operations,
+and `graph/` plus `walkers/` hold the culinary graph and its traversal logic.
+There is no separate `app.jac` requirement.
+
+`.env.example` documents configuration without secrets; copy it to a local `.env`.
+Generated `.jac/` files, installed dependencies, model weights and local development
+records are excluded from Git. Tests and setup documentation remain in the repository.
+
 ## Documentation
 
 - [Getting started and walkthrough](docs/DEMO.md)

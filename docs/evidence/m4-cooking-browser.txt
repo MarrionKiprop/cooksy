@@ -1,1 +1,0 @@
-PASS: selected recipe/deep link, real cooking RPC, next/back/finish/restart, reload and route recovery, mobile layout, failed-action preservation, end/unknown recipe, isolated/corrupt sessions and blocked-storage fallback.

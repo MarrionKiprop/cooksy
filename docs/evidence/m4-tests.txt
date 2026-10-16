@@ -1,6 +1,0 @@
-Full suite: 15 passed in 7.07s
-Cooking after explicit HTTP contract fix: 4 passed in 7.72s
-Full type gate: 34 passed in 54.48s
-Affected final contract/type consumers: 7 passed in 4.65s
-Final format: 34/34 formatted
-Final production client build: passed

@@ -61,4 +61,4 @@ Optional adapter Python runs `tests/vision_adapter_tests.py` and
 without fresh explicit authorization. Do not commit .env, user photos or weights.
 
 See [architecture](ARCHITECTURE.md), [nutrition methodology](NUTRITION.md),
-[follow-ups](FOLLOW_UPS.md), and [progress](PROGRESS.md) for exact scope and limits.
+and [follow-ups](FOLLOW_UPS.md) for scope and limits.
