@@ -39,3 +39,6 @@ sys.executable(Jac launcher). Existing visionenvironment is langstEnv/bin/python
 weights remain ignored. Source provider settings preserved. Leave preview running
 at http://172.26.123.103:8000 (WSL IP maychange). Main pushes authorized; verifyremote
 hash, noforcepush. Implementationcheckpoint recorded in progress after commit.
+
+M8 implementation checkpoint: `db79b21cd3bb83b66618d14a1e4473b6d4029dee`; pushed and remote main verified.
+M0–M8 local-demo milestones complete. No deferred follow-up has been started.

@@ -510,3 +510,6 @@ recipes remain unverified. LiveSDXL, improved food/multi-object vision, durable 
 memory/account sync, richer references and production readiness are deferred in
 FOLLOW_UPS.md. User JPG/Zone.Identifier remain untouched/untracked. No next milestone
 started; M0–M8 local-demo checkpoint is complete pending immutable commit ledger.
+
+M8 implementation checkpoint: `db79b21cd3bb83b66618d14a1e4473b6d4029dee`; pushed and remote main verified.
+M0–M8 local-demo milestones complete. No deferred follow-up has been started.
