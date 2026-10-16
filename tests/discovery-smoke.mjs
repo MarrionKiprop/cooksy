@@ -13,7 +13,7 @@ page.on('response', response => {
   if (response.url().includes('/function/discover')) responses.push(response.status());
 });
 try {
-  await page.goto(`${baseURL}/explore`);
+  await page.goto(`${baseURL}/demo`);
   await expect(page.locator('.seed-card')).toHaveCount(8);
   await expect(page.locator('.demo-disclosure')).toContainText('No AI inference');
   expect(responses).toContain(200);
@@ -67,7 +67,7 @@ try {
   const retryContext = await browser.newContext();
   const retryPage = await retryContext.newPage();
   await retryPage.route('**/function/discover', route => route.fulfill({ status: 503, contentType: 'application/json', body: JSON.stringify({ ok: false, error: { message: 'Test unavailable' } }) }));
-  await retryPage.goto(`${baseURL}/explore`);
+  await retryPage.goto(`${baseURL}/demo`);
   await expect(retryPage.getByRole('alert')).toContainText('We couldn’t reach the demo kitchen.');
   await retryPage.unroute('**/function/discover');
   await retryPage.getByRole('button', { name: 'Retry discovery' }).click();

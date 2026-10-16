@@ -37,6 +37,17 @@ def:pub Shell() -> JsxLayout {
                         Explore
                     </Link>
                     <Link
+                        to="/discover"
+                        className={"nav-link active"
+                            if location.pathname == "/discover"
+                            else "nav-link"}
+                        aria-current={"page"
+                            if location.pathname == "/discover"
+                            else None}
+                    >
+                        Discover
+                    </Link>
+                    <Link
                         to="/cook-along"
                         className={"nav-link active"
                             if location.pathname == "/cook-along"
@@ -60,7 +71,7 @@ def:pub Shell() -> JsxLayout {
             <div className="demo-banner">
                 <span className="demo-badge">DEVELOPMENT PREVIEW</span>
                 <span>
-                    A little taste of Cooksy. Browse demo recipes or discover unverified AI dishes in Explore.
+                    Your shared pantry → Explore or Discover → five choices → cook along. AI suggestions need verification.
                 </span>
             </div>
             <main id="main-content" tabIndex={-1}>
@@ -72,7 +83,7 @@ def:pub Shell() -> JsxLayout {
                     <p>Your ingredients. The world’s kitchens.</p>
                 </div>
                 <ConnectionStatus/>
-                <span className="footer-note">Made with Jac · Demo graph preview</span>
+                <span className="footer-note">Made with Jac · Culinary discovery</span>
             </footer>
         </div>;
 }

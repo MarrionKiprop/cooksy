@@ -151,3 +151,38 @@ def:pub cooking_help(
         request_catalogue(), recipe_key, current_sequence, finished, version, question
     );
 }
+
+import from discovery.views { NavigationCatalogue, IntakeReview, MealPlan }
+import from discovery.taxonomy { navigation }
+import from discovery.intake { review_text }
+import from discovery.service { plan, restore }
+import from pantry.views { IntakeResult }
+
+def:pub culinary_regions() -> NavigationCatalogue {
+    return navigation();
+}
+
+def:pub review_ingredients(text: str) -> IntakeReview {
+    return review_text(text);
+}
+
+def:pub confirm_ingredients(ingredients: list[str]) -> IntakeResult {
+    return match_pantry(ingredients, "", "").intake;
+}
+
+def:pub recommend_meals(
+    ingredients: list[str], mode: str, region_key: str, tradition_key: str, demo: bool
+) -> MealPlan {
+    return plan(ingredients, mode, region_key, tradition_key, demo);
+}
+
+def:pub restore_meals(
+    ingredients: list[str],
+    keys: list[str],
+    mode: str,
+    region_key: str,
+    tradition_key: str,
+    demo: bool
+) -> MealPlan {
+    return restore(ingredients, keys, mode, region_key, tradition_key, demo);
+}

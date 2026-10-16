@@ -1,3 +1,4 @@
+import from ..pantry.client_state { read_pantry }
 import from "@jac/runtime" { Link, useNavigate }
 import from endpoints { get_recipe, cook_session }
 import from pantry.views { MatchView }
@@ -14,15 +15,7 @@ def:pub RecipeDetail(recipeKey: str) -> JsxElement {
     async def loadRecipe {
         busy = True;
         error = "";
-        names: list[str] = [];
-        try {
-            stored = sessionStorage.getItem("cooksy.pantry.v1");
-            if stored {
-                names = str(stored).split("|");
-            }
-        } except Exception {
-            pantry_note = "Pantry storage is unavailable; ingredient availability is shown for an empty pantry.";
-        }
+        names = read_pantry();
         try {
             detail = await get_recipe(recipeKey, names);
         } except Exception {

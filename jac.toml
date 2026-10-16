@@ -49,5 +49,11 @@ theme_color = "#f8f6ef"
 "endpoints.prepare_candidate" = "server"
 "endpoints.cooking_help" = "server"
 
+"endpoints.culinary_regions" = "server"
+"endpoints.review_ingredients" = "server"
+"endpoints.confirm_ingredients" = "server"
+"endpoints.recommend_meals" = "server"
+"endpoints.restore_meals" = "server"
+
 [byllm.model]
 default_model = "gpt-4.1-mini"

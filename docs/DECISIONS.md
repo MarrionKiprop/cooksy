@@ -361,3 +361,41 @@ is mocked. No additional paid calls were made. Browser testing exposed empty arr
 remaining truthy in a JSX condition; explicit len checks now hide empty discoveries,
 prevent AI after entirely rejected entry, and clear stale empty-state UI. Existing
 pantry private-storage, failed-draft and graph boundaries are preserved. M6 remains next.
+
+## D017 — Unified discovery contract — 2026-10-16
+
+Completed the user's requested M5 additions before M6: structured natural-language
+ingredient review, editable explicit confirmation, one shared pantry across Explore,
+Discover, Pantry and recipe detail; graph-backed navigation for 15 regions and 45
+example traditions; worldwide Discover as Surprise Me; one five-choice result flow.
+Jac validates, deduplicates, scopes and ranks results. Discover prefers variety
+within readiness bands. Only the selected dish gets a full recipe. One initial
+summary request plus at most one repair; partial results cannot be selected.
+Exact-key saved-choice restoration does not invoke inference. Normal discovery
+uses taxonomy plus AI graph memory; seed recipes appear only in explicit demo flows.
+
+Verification: 36 Jac tests PASS; 54-file Jac check PASS (existing warnings retained);
+client build PASS; all seven browser suites PASS: global-discovery, pantry,
+pantry-discovery, enrichment, discovery, cooking and shell. Tests include actual
+metadata/confirmation/demo graph RPC, all 15 scopes/traditions, shared state,
+failures, exact-five gate, selected-only preparation, restoration, blocked storage
+and 390/320px layouts. All inference mocked; no additional paid model requests.
+Desktop Explore/mobile Discover screenshots reviewed: clearly labelled fixtures.
+Initial browser attempt before server readiness failed connection; after readiness
+all suites passed. Final formatting and whitespace checks must pass before commit.
+
+Limits: ingredient names only, no quantity sufficiency/allergy/authenticity checks.
+AI graph cache remains process-scoped and expires on restart. Regions/traditions
+are navigation metadata, not an exhaustive food database. M6 vision, M7 images,
+M8 nutrition and durable account data remain unimplemented. M6 has not started.
+
+Guide queries: jac-cl-components, jac-cl-routing, jac-by-llm, jac-testing; evidence
+in docs/evidence/m5-alignment-guides. Also consulted client interop/types guidance.
+Structured extract_ingredients and propose_options use typed schemas and sem
+annotations. Simple lists remain deterministic. Never save raw model proposals
+before explicit confirmation or silently add staples. Shared client_state provides
+tab storage plus module-memory route fallback; full refresh loses that fallback.
+A localized `as any` Callable.call bridge handles the installed JS typing boundary.
+MockLLM.seen counts inference; wrapping by-llm functions breaks metadata reflection.
+No generated/framework files were edited. The latest Cooksy direction supersedes
+old names/static-food-database proposals in supplied reference documents.

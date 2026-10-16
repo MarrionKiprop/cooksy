@@ -6,7 +6,7 @@ Read both preserved briefs in docs/briefs when resolving product requirements.
 
 ## Scope and milestone discipline
 
-Complete one milestone at a time, in M0–M8 order. M0–M5 are complete. Await the user’s next milestone instruction before M6.
+Complete one milestone at a time, in M0–M8 order. M0–M4 are complete. M5 is reopened by the user to complete natural-language intake, shared pantry, 15 regions/traditions, worldwide Discover and one five-choice result flow. Finish these additions before M6.
 Preserve milestone boundaries and follow the acceptance criteria in the implementation brief.
 Before every milestone commit update progress, decisions, and restart instructions;
 run applicable checks, record exact outcomes and limitations, and commit only
@@ -108,10 +108,19 @@ invent missing information or advance progress. Run the five browser suites incl
 enrichment-smoke; enrichment-live is opt-in and paid. Stop all old preview sessions
 before starting a new server to prevent port conflicts. M6 vision remains unimplemented.
 
-Pantry discovery follow-up: run all six browser suites, including
-`node tests/pantry-discovery-smoke.mjs`. Pantry submission/removal/region actions call
-server discover_pantry after deterministic intake/matching. Its coverage threshold
-is 100 (all essential names); Explore’s browse threshold remains 0. Normal reload
-and retry matching must not trigger model calls. Keep inference mocked in pantry
-browser tests. Use explicit list length checks for empty client state. CandidateCard
-is shared between Explore and pantry; preserve actual verification labels.
+## M5 unified workflow supersedes earlier pantry integration
+
+DiscoveryWorkspace and PantryEditor share client_state across Explore/Discover/Pantry
+and RecipeDetail. Review structured natural-language proposals, edit and explicitly
+confirm before pantry mutation. Simple lists normalize deterministically. Names only.
+Canonical 15 regions/45 example traditions are graph navigation metadata, no recipes.
+Discover is Surprise Me. Normal discovery uses AI graph memory, never implicit seed
+fallback. Exactly five distinct valid choices unlock selected-only preparation;
+partial sets stay disabled. Allow initial + one repair request, never unbounded retry.
+Restore exact five saved keys without inference; cache expiry requires explicit search.
+Demo is explicit, isolated from AI cache and no-inference. Legacy fixtures: /demo.
+CandidateCard/DiscoveryWorkbench were replaced by MealCard/DiscoveryWorkspace.
+Run all seven browser suites: shell, discovery, cooking, pantry, pantry-discovery,
+global-discovery, enrichment (tests/<name>-smoke.mjs). Inference must be mocked;
+enrichment-live remains paid and opt-in. Cache durability remains unimplemented.
+M6 is not started; wait for the user's next module request.

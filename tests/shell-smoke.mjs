@@ -43,17 +43,18 @@ try {
   await region.focus();
   await page.keyboard.press('Enter');
   await expect(region).toHaveAttribute('aria-pressed', 'true');
-  await expect(page.locator('#selection-title')).toHaveText('East Africa');
+  await expect(page.locator('.selected-region-context')).toContainText('coastal');
+  await expect(page.locator('.region-choice-grid button')).toHaveCount(15);
   await page.getByRole('button', { name: 'All regions', exact: true }).click();
   await expect(region).toHaveAttribute('aria-pressed', 'false');
-  await expect(page.locator('#selection-title')).toHaveText('All regions');
+  await expect(page.locator('.selected-region-context')).toContainText('All 15');
   if (process.env.COOKSY_SCREENSHOTS) await page.screenshot({ path: `${screenshotDir}/m1-explore-desktop.png`, fullPage: true, animations: 'disabled' });
 
-  await page.getByRole('link', { name: 'Visit my pantry' }).click();
+  await page.getByRole('link', { name: 'My pantry', exact: true }).click();
   await expect(page).toHaveURL(`${baseURL}/pantry`);
-  await expect(page.getByRole('heading', { level: 1 })).toContainText('Your pantry,');
+  await expect(page.getByRole('heading', { level: 1 })).toContainText('A world of kitchens.');
   await page.reload(); // SPA deep-link fallback.
-  await expect(page.getByRole('heading', { level: 1 })).toContainText('Your pantry,');
+  await expect(page.getByRole('heading', { level: 1 })).toContainText('A world of kitchens.');
   await page.getByRole('link', { name: 'Cook along', exact: true }).click();
   await expect(page).toHaveURL(`${baseURL}/cook-along`);
   await expect(page.getByRole('heading', { level: 1 })).toContainText('One step');
@@ -64,7 +65,7 @@ try {
 
   for (const width of [390, 320]) {
     await page.setViewportSize({ width, height: 844 });
-    for (const route of ['/', '/explore', '/pantry', '/cook-along', '/missing-kitchen']) {
+    for (const route of ['/', '/explore', '/discover', '/pantry', '/cook-along', '/missing-kitchen']) {
       await page.goto(baseURL + route);
       await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
       await noOverflow();

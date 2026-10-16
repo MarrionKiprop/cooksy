@@ -11,7 +11,7 @@ page.on('response', response => { if (response.url().includes('/function/cook_se
 try {
   const incomplete = await page.request.post(`${baseURL}/function/cook_session`, { data: { recipe_key: 'gamja-jeon-demo' } });
   expect([400, 422]).toContain(incomplete.status());
-  await page.goto(`${baseURL}/explore`);
+  await page.goto(`${baseURL}/demo`);
   const pancake = page.locator('.seed-card').filter({ has: page.getByRole('heading', { name: 'Gamja-jeon', exact: true }) });
   await pancake.getByRole('link', { name: 'View recipe' }).click();
   await expect(page).toHaveURL(`${baseURL}/recipes/gamja-jeon-demo`);

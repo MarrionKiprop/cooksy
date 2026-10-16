@@ -3,11 +3,11 @@
 Your Ingredients. The World's Kitchens.
 
 Cooksy is a Jac-native culinary discovery and cook-along application in development.
-**M5 adds graph-first AI discovery, selected-recipe preparation and grounded step help.**
-Explore checks existing dishes before asking GPT-4.1 mini for approximately five
-unverified candidates. Select one to prepare its full recipe, then start cook-along.
-Pantry matching and coverage/ranking remain deterministic Jac code. Demo fixtures
-remain available without a provider. Every generated dish needs verification.
+**M5 completes the shared typed-ingredient discovery workflow.** Review and edit
+natural-language ingredient suggestions, explicitly confirm one pantry, then Explore
+15 culinary regions/traditions or Discover varied meals worldwide (Surprise Me).
+Five distinct validated choices unlock selection; only the chosen dish gets a full
+recipe. Jac computes matching/ranking. AI content remains unverified.
 
 ## Run locally
 
@@ -91,8 +91,8 @@ per request without persisting or modifying user state. Shared ingredients are r
 within each graph; step order comes from HAS_STEP sequence. The catalogue includes
 ownership edges to keep reverse-linked traditions/recipes reachable in transient memory.
 M3 adds Pantry/IntakeItem nodes, HAS_INGREDIENT edges, IntakeWalker and
-MatchingWalker. M4 adds recoverable cooking sessions; later milestones add durable account-owned
-graph memory, structured LLM enrichment and reference-based nutrition calculations. Candidate discovery proposes approximately five
+MatchingWalker. M4 adds recoverable cooking sessions; M5 implements structured enrichment. Durable account-owned
+graph memory and reference-based nutrition remain future work. Candidate discovery proposes approximately five
 meals; full recipe generation follows selection. The M2 seed is test/demo data,
 not a manually maintained production catalogue. Python stays limited to specialised
 MobileNet and SDXL inference adapters.
@@ -102,7 +102,8 @@ MobileNet and SDXL inference adapters.
 Names are stored in sessionStorage for this browser tab/origin and sent to the
 server for matching. Closing the tab normally ends this storage; reopening/duplicating
 or browser session restoration may restore it. Clear pantry removes the saved list.
-When storage is unavailable, the pantry works in memory until leaving the page.
+When storage is unavailable, module memory preserves pantry state across routes;
+a full refresh loses this fallback.
 The server constructs request-local nodes and does not persist pantries to the shared
 guest root. Runtime report logs may include supplied names. Account sync and
 durable pantry persistence are not implemented.
@@ -117,17 +118,18 @@ types). Optional items do not reduce it. Optional-only recipes receive 100; reci
 with no requirements are omitted. Ranking uses fewer missing essentials, higher
 coverage, shorter time, then stable recipe key. Edge-listed substitutes are suggestions,
 never automatic availability. Amounts, dietary/allergy suitability and full recipe
-verification are not checked. Results include eight demo adaptations and any prepared AI recipes cached by this server.
+verification are not checked. Normal results use validated AI graph content; fixtures require an explicit demo action.
 
-Add & find meals and region changes also discover new candidate dishes using the
-confirmed pantry. Jac checks for five dishes whose named essential ingredients are
-available before asking AI to fill gaps. New discoveries show above prepared matches;
-select one to prepare its recipe. AI failure preserves saved ingredients and prepared
-matches. Reloading a saved pantry does not invoke the model. The pantry browser
-regression is `node tests/pantry-discovery-smoke.mjs`; its inference is mocked.
-
-A failed submission retains the draft and previous pantry. Retry matching refreshes
-the committed pantry; submit the retained draft with Add & find meals when ready.
+Explore, Discover and Pantry use one editor and confirmed list. Review ingredients,
+edit proposed names, then “Confirm & find meals”. Sentences use structured LLM
+interpretation; simple lists use deterministic aliases. No implicit staples.
+Discovery uses graph cache and at most initial + one repair model request. Fewer
+than five valid distinct choices remain visible but nonselectable: retry, broaden
+scope or explicitly use labelled demo fixtures. Discover favors variety within
+readiness bands. Back/reload restore exact graph keys without inference; expired
+keys require an explicit search. Normal results never silently use demo recipes.
+The 15 regions/45 example traditions are navigation metadata, not a food database.
+Legacy developer fixtures remain at `/demo`.
 
 ## Recipe detail and cook-along
 
@@ -169,7 +171,8 @@ COOKSY_LLM_MODE=live
 Never put a real key in `.env.example` or client code. Restart Jac after editing
 `.env`. Set `COOKSY_LLM_MODE=demo` to disable provider calls. Model identity is
 `gpt-4.1-mini` in ai/provider.jac and jac.toml; `jac install` installs its optional
-LLM capability. Requests use a 35-second provider timeout and no output retries.
+LLM capability. Each provider call uses a 35-second timeout and no automatic retries; discovery
+orchestration permits one bounded repair request.
 No provider call runs on page load: discovery, preparation and help are explicit
 user actions. Ingredient names/cuisine or question/current step go to OpenAI.
 
@@ -183,7 +186,8 @@ Help accepts only exact quotations from the current instruction, and states when
 that instruction lacks an answer. It does not provide an open-ended cooking chat.
 
 Run `jac test -d tests` for deterministic MockLLM tests (no paid calls), and
-`node tests/enrichment-smoke.mjs` alongside the four existing browser suites. Browser
+all seven browser suites: shell, discovery, cooking, pantry, pantry-discovery,
+global-discovery and enrichment (each `node tests/<name>-smoke.mjs`). Browser
 help success is mocked; the graph-first RPC/navigation are real. Provider errors
 leave existing graph content and progress available. This is local development;
 public deployment needs authentication, spending limits and durable cache design.

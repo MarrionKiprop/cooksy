@@ -1,6 +1,16 @@
 """Explicit name aliases; no heuristic stemming, quantities, or assumed staples."""
 glob ALIASES: dict[str, str] = {
          "potatoes": "potato",
+         "carrots": "carrot",
+         "bananas": "banana",
+         "cabbages": "cabbage",
+         "lemons": "lemon",
+         "limes": "lime",
+         "apples": "apple",
+         "mushrooms": "mushroom",
+         "lentils": "lentil",
+         "beans": "bean",
+         "sweet potatoes": "sweet potato",
          "eggs": "egg",
          "onions": "onion",
          "tomatoes": "tomato",

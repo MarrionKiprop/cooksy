@@ -5,13 +5,29 @@ import from ai.models { RecipeCandidate, HAS_CANDIDATE }
 import from ai.views { CandidateView, EnrichmentResult }
 import from ai.memory { identity, valid_candidate, insert_candidate, candidate_view }
 import ai.provider as provider;
+import from discovery.taxonomy {
+    in_scope,
+    region_identity,
+    region_name,
+    tradition_name,
+    REGION_DATA,
+    plain
+}
+import from discovery.selection { choose_five }
 
 walker EnrichmentWalker {
     has cache: CulinaryCatalogue,
         pantry: list[str],
         cuisine: str;
 
-    has coverage_score: int = 0;
+    has coverage_score: int = 0,
+        scoped: bool = False,
+        region_key: str = "",
+        tradition_key: str = "",
+        varied: bool = False,
+        allow_inference: bool = True;
+
+    has result: EnrichmentResult | None = None;
     has candidates: list[CandidateView] = [],
         known: set[str] = set(),
         known_names: list[str] = [],
@@ -72,20 +88,35 @@ walker EnrichmentWalker {
     }
 
     def accepts(region: str, tradition: str) -> bool {
+        if self.scoped {
+            return in_scope(region, tradition, self.region_key, self.tradition_key);
+        }
         return not self.cuisine
             or self.cuisine.lower() in (region + " " + tradition).lower();
     }
 
     can finish with CulinaryCatalogue exit {
-        if len(
-            [
-                item
-                for item in self.candidates
-                if item.score >= self.coverage_score
-            ]
-        )
-            < 5 {
-            if not provider.enabled() {
+        qualifying = [
+            item
+            for item in self.candidates
+            if item.score >= self.coverage_score
+        ];
+        enough = len(qualifying) >= 5;
+        if self.scoped
+            and self.varied
+            and len(
+                set(
+                    [
+                        region_identity(item.region, item.tradition)
+                        for item in qualifying
+                    ]
+                )
+            )
+                < 3 {
+            enough = False;
+        }
+        if not enough {
+            if not self.allow_inference or not provider.enabled() {
                 self.status = "unavailable";
                 self.message = "AI is not configured or is disabled. Existing graph results remain available.";
             } elif len([self.cache->:HAS_CANDIDATE:->]) >= 100 {
@@ -96,9 +127,23 @@ walker EnrichmentWalker {
                     self.events.append(
                         "Coverage below five qualifying candidates; requested structured proposals."
                     );
-                    batch = provider.propose(
-                        self.pantry, self.cuisine, self.known_names
-                    );
+                    if self.scoped {
+                        needed = 5 - len(self.candidates)
+                            if len(self.candidates) < 5
+                            else 5;
+                        batch = provider.propose_options(
+                            self.pantry,
+                            region_name(self.region_key),
+                            tradition_name(self.region_key, self.tradition_key),
+                            [row[1] for row in REGION_DATA],
+                            self.known_names,
+                            needed
+                        );
+                    } else {
+                        batch = provider.propose(
+                            self.pantry, self.cuisine, self.known_names
+                        );
+                    }
                     if len(batch.candidates) > 5 {
                         raise ValueError("Too many candidates");
                     }
@@ -108,6 +153,15 @@ walker EnrichmentWalker {
                         key = identity(draft.name, draft.tradition);
                         if not valid_candidate(draft)
                             or key in self.known
+                            or (
+                                self.scoped
+                                and any(
+                                    [
+                                        plain(draft.name) == plain(name)
+                                        for name in self.known_names
+                                    ]
+                                )
+                            )
                             or not self.accepts(draft.region, draft.tradition) {
                             rejected += 1;
                             continue;
@@ -115,12 +169,18 @@ walker EnrichmentWalker {
                         if len([self.cache->:HAS_CANDIDATE:->]) >= 100 {
                             break;
                         }
+                        if self.scoped {
+                            draft.region = region_name(
+                                region_identity(draft.region, draft.tradition)
+                            );
+                        }
                         candidate = insert_candidate(
                             self.cache,
                             draft,
                             "OpenAI gpt-4.1-mini · structured culinary proposal"
                         );
                         self.known.add(key);
+                        self.known_names.append(draft.name);
                         self.candidates.append(candidate_view(candidate, self.pantry));
                         accepted += 1;
                     }
@@ -151,11 +211,15 @@ walker EnrichmentWalker {
                 item.key
             ); }
         );
-        report EnrichmentResult(
+        if self.scoped {
+            self.candidates = choose_five(self.candidates, self.varied);
+        }
+        self.result = EnrichmentResult(
             candidates=self.candidates[:5],
             status=self.status,
             message=self.message,
             events=self.events
         );
+        report self.result as EnrichmentResult;
     }
 }
