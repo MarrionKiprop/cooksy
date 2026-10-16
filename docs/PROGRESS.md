@@ -332,3 +332,22 @@ No M6 photo, M7 image generation or M8 nutrition integration was added.
 M5 implementation commit: `524e785800a63396cc8e4d696ecc9bb0c81d2c4e`; pushed successfully and remote main verified.
 This follow-up ledger commit records the checkpoint.
 Next: M6 photo suggestions with explicit review/confirmation before pantry mutation.
+
+## M5 follow-up — Pantry entry and regional AI discovery
+
+Fixed the missing connection from pantry submission/region selection to M5 discovery.
+Pantry normalization and saving precede discovery; names and readable region scope
+reach a new pantry-specific server endpoint. Five fully covered essential-name
+candidates skip inference, rather than five unrelated catalogue dishes. Shared
+candidate cards preserve provenance and prepare only the selected dish; duplicate
+prepared results are omitted. AI failures preserve saved names/prepared matches.
+Reload does not invoke AI; empty/rejected pantries do not trigger discovery.
+
+Verification: all 26 Jac tests PASS (50.80s); affected 7-file type check PASS (27.84s),
+follow-up empty-state component check PASS (2.80s), final production build PASS (3.4s).
+All six browser suites PASS, including the new pantry-discovery regression for
+normalized ingredients, East Asia/Mediterranean scopes, no provider on reload,
+AI failure recovery, selection/navigation, empty/rejected input and 320px layouts.
+All inference in the new browser flow is mocked; no additional paid API calls.
+Initial new browser test failed on the stale empty discovery panel; explicit length
+guards fixed it. Existing compiler warnings remain. This is an M5 repair, not M6.

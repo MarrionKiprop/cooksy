@@ -11,6 +11,7 @@ walker EnrichmentWalker {
         pantry: list[str],
         cuisine: str;
 
+    has coverage_score: int = 0;
     has candidates: list[CandidateView] = [],
         known: set[str] = set(),
         known_names: list[str] = [],
@@ -76,7 +77,14 @@ walker EnrichmentWalker {
     }
 
     can finish with CulinaryCatalogue exit {
-        if len(self.candidates) < 5 {
+        if len(
+            [
+                item
+                for item in self.candidates
+                if item.score >= self.coverage_score
+            ]
+        )
+            < 5 {
             if not provider.enabled() {
                 self.status = "unavailable";
                 self.message = "AI is not configured or is disabled. Existing graph results remain available.";
@@ -86,7 +94,7 @@ walker EnrichmentWalker {
             } else {
                 try {
                     self.events.append(
-                        "Coverage below five candidates; requested structured proposals."
+                        "Coverage below five qualifying candidates; requested structured proposals."
                     );
                     batch = provider.propose(
                         self.pantry, self.cuisine, self.known_names

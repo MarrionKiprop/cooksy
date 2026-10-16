@@ -3,6 +3,9 @@ import { mkdir } from 'node:fs/promises';
 const baseURL = process.env.COOKSY_TEST_URL || 'http://localhost:8000';
 const browser = await chromium.launch();
 const context = await browser.newContext({ viewport: { width: 1440, height: 1000 } });
+// Keep automatic discovery deterministic and free of paid provider calls in this suite.
+const mockDiscovery = route => route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ ok: true, type: 'response', data: { result: { candidates: [], status: 'graph', message: 'Existing prepared matches available.', events: [] }, reports: [] }, error: null }) });
+await context.route('**/function/discover_pantry', mockDiscovery);
 const page = await context.newPage();
 const errors = [];
 const requests = [];
@@ -84,6 +87,7 @@ try {
 
   // Disabled storage must not prevent a working in-memory pantry.
   const blockedContext = await browser.newContext();
+  await blockedContext.route('**/function/discover_pantry', mockDiscovery);
   await blockedContext.addInitScript(() => {
     Object.defineProperty(window, 'sessionStorage', { get() { throw new Error('Storage disabled for test'); } });
   });

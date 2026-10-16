@@ -335,3 +335,29 @@ rather than treating the stable dish identity as an instruction version. A regre
 covers projection, generated cooking, stale fixture-version rejection and changed
 instructions. This extends M4's version checks to generated content without changing
 its explicit-argument RPC contract or private tab storage boundaries.
+
+## D016 — Pantry discovery integration follow-up
+
+User reported Explore worked but pantry entry/region selection did not. Inspection
+confirmed PantryWorkspace only invoked prepared-recipe matching; it never invoked
+M5 enrichment. Re-ran installed jac-cl-components and jac-testing guides before
+changing the component/contract tests. Extracted CandidateCard so Explore and pantry
+share provenance, missing essentials, score and selection controls.
+
+Explicit pantry submission, ingredient removal and region changes now normalize/save
+through match_pantry first, then call discover_pantry with confirmed names and a
+readable culinary scope. “The Mediterranean” maps to “Mediterranean”; region slugs
+are not model prompts. Added a pantry-specific coverage policy: five candidates
+with all essential ingredient names available skip inference. Five unrelated/poorly
+covered catalogue entries do not block pantry enrichment. Explore retains its
+browse-oriented existing policy. Both routes use the same validated walker/provider;
+Jac still computes scores and ranking. Prepared results remain available if AI fails.
+Only a selected proposal invokes full preparation; cached matches are not duplicated
+in candidate cards. Prepared MatchCard uses actual verification metadata.
+
+Reload/retry matching does not automatically invoke AI. The pantry browser suites
+intercept every discovery request, and inference/preparation in the new flow regression
+is mocked. No additional paid calls were made. Browser testing exposed empty arrays
+remaining truthy in a JSX condition; explicit len checks now hide empty discoveries,
+prevent AI after entirely rejected entry, and clear stale empty-state UI. Existing
+pantry private-storage, failed-draft and graph boundaries are preserved. M6 remains next.

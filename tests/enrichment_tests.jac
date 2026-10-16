@@ -262,3 +262,33 @@ test "generated recipe content versions survive projection and reject stale prog
     draft.steps[1] = "Cook slowly in tomato juices until tender.";
     assert resolve_candidate(second, draft).version != recipe.version;
 }
+
+
+test "pantry discovery requires covered essentials rather than five unrelated cached dishes" {
+    cache = CulinaryCatalogue();
+    with patch.object(provider, "enabled", return_value=True), patch.object(
+        provider, "propose", return_value=CandidateBatch(candidates=[])
+    ) as call {
+        found = build_demo_graph() spawn EnrichmentWalker(
+            cache=cache, pantry=["banana"], cuisine="", coverage_score=100
+        );
+        assert found.reports[0].status == "no_new_candidates";
+        assert len(found.reports[0].candidates) == 5;
+        call.assert_called_once();
+    }
+    for index in range(5) {
+        draft = proposal();
+        draft.name = "Rice adaptation " + str(index);
+        insert_candidate(cache, draft, "Mock / unverified");
+    }
+    with patch.object(provider, "propose") as call {
+        found = build_demo_graph() spawn EnrichmentWalker(
+            cache=cache,
+            pantry=["rice", "tomato"],
+            cuisine="Italian",
+            coverage_score=100
+        );
+        assert found.reports[0].status == "graph";
+        call.assert_not_called();
+    }
+}

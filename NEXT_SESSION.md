@@ -20,8 +20,9 @@ HAS_INGREDIENT edges via IntakeWalker. Add graph relationships for image/detecti
 confirmation per the architecture and meaningful mocked/adapter contract tests.
 Keep missing weights/unconfigured mode honest. Do not implement M7 SDXL in M6.
 
-Current completed checks: 25 Jac tests, full 43-file check, formatter 43/43, production
-client build and all five browser suites pass. M5 evidence/screenshots are recorded.
+M5 baseline checks: 25 Jac tests, full 43-file check and five browser suites passed.
+Pantry follow-up: 26 Jac tests, affected 7-file type check plus final component check,
+production build and all six browser suites pass. Evidence is recorded.
 Existing warnings remain. Use MockLLM for normal tests, not live paid calls.
 
 Important contracts:
@@ -46,3 +47,13 @@ WSL browser previously works at http://172.26.123.103:8000 (hostname -I if chang
 Leave one running preview at handoff. GitHub origin/main pushes are already authorized;
 commit scoped milestones/recovery docs, push, record milestone hash in a second
 ledger commit, push and verify remote HEAD equals local HEAD. Never force push.
+
+Pantry follow-up: Add & find meals, removals and region selection invoke discovery
+from confirmed names after deterministic matching. discover_pantry uses essential
+coverage_score=100; Explore enrich retains browse coverage_score=0. Both share
+run_enrichment and EnrichmentWalker. Use readable cuisine names; strip the leading
+“The ” from the Mediterranean display label. Reload/retry matching makes no AI call.
+CandidateCard is shared; do not duplicate candidate rendering in the two screens.
+Run tests/pantry-discovery-smoke.mjs in addition to the five baseline browser suites.
+Pantry smoke intercepts discover_pantry to avoid accidental paid model requests.
+Empty client lists require explicit length checks in conditionals/JSX.

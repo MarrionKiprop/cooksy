@@ -97,7 +97,9 @@ import from ai.service { prepare_selected, assist }
 import from walkers.enrichment { EnrichmentWalker }
 import from pantry.normalisation { normalise_name }
 
-def:pub enrich(ingredients: list[str], cuisine: str) -> EnrichmentResult {
+def run_enrichment(
+    ingredients: list[str], cuisine: str, coverage_score: int
+) -> EnrichmentResult {
     if len(ingredients) > 100
         or sum([len(raw) for raw in ingredients]) > 8000
         or len(cuisine) > 80 {
@@ -117,10 +119,22 @@ def:pub enrich(ingredients: list[str], cuisine: str) -> EnrichmentResult {
     }
     with cache_lock {
         discovery = request_catalogue() spawn EnrichmentWalker(
-            cache=memory, pantry=sorted(names), cuisine=cuisine.strip()
+            cache=memory,
+            pantry=sorted(names),
+            cuisine=cuisine.strip(),
+            coverage_score=coverage_score
         );
         return discovery.reports[0];
     }
+}
+
+
+def:pub enrich(ingredients: list[str], cuisine: str) -> EnrichmentResult {
+    return run_enrichment(ingredients, cuisine, 0);
+}
+
+def:pub discover_pantry(ingredients: list[str], cuisine: str) -> EnrichmentResult {
+    return run_enrichment(ingredients, cuisine, 100);
 }
 
 

@@ -1,10 +1,15 @@
-import from "@jac/runtime" { Link }
-import from endpoints { match_pantry, discover }
+import from ..ai.CandidateCard { CandidateCard }
+import type from ..ai.views { CandidateView }
+import from "@jac/runtime" { Link, useNavigate }
+import from endpoints { match_pantry, discover, discover_pantry, prepare_candidate }
 import from graph.views { RegionView }
 import from .views { MatchView }
 import from .MatchCard { MatchCard }
 
 def:pub PantryWorkspace() -> JsxElement {
+    navigate = useNavigate();
+    has ai_candidates: list[CandidateView] = [],
+        ai_message: str = "";
     has names: list[str] = [],
         matches: list[MatchView] = [],
         regions: list[RegionView] = [],
@@ -12,7 +17,7 @@ def:pub PantryWorkspace() -> JsxElement {
         selected: str = "",
         error: str = "",
         notice: str = "",
-        storage_note: str = "Saved in this browser tab. Sent to Jac only for matching.",
+        storage_note: str = "Saved in this browser tab. Confirmed names are used for matching and discovery.",
         busy: bool = False;
 
     def saveNames {
@@ -23,19 +28,47 @@ def:pub PantryWorkspace() -> JsxElement {
         }
     }
 
-    async def refreshMatches(proposed: list[str]) -> bool {
+    async def refreshMatches(
+        proposed: list[str], request_discovery: bool = False
+    ) -> bool {
         busy = True;
         error = "";
         notice = "";
         try {
-            response = await match_pantry(proposed, selected);
+            response = await match_pantry(proposed, selected, "");
             names = response.intake.names;
             matches = response.matches;
-            if response.intake.rejected {
+            if len(response.intake.rejected) > 0 {
                 notice = "Please enter names only for: "
                     + ", ".join(response.intake.rejected);
             }
             saveNames();
+            ai_candidates = [];
+            ai_message = "";
+            if request_discovery and len(names) > 0 {
+                cuisine = "";
+                for region in regions {
+                    if region.key == selected {
+                        cuisine = region.name;
+                    }
+                }
+                if cuisine[:4] == "The " {
+                    cuisine = cuisine[4:];
+                }
+                ai_message = "Checking graph coverage for your pantry and region…";
+                try {
+                    discovery = await discover_pantry(names, cuisine);
+                    prepared_keys = [item.recipe.key for item in matches];
+                    ai_candidates = [
+                        item
+                        for item in discovery.candidates
+                        if item.key not in prepared_keys
+                    ];
+                    ai_message = discovery.message;
+                } except Exception {
+                    ai_message = "AI discovery is unavailable. Your pantry is saved and prepared matches remain below. Try Discover more dishes again.";
+                }
+            }
             return True;
         } except Exception {
             error = "We couldn’t match your pantry. Your ingredients are still here; try again.";
@@ -58,7 +91,7 @@ def:pub PantryWorkspace() -> JsxElement {
         try {
             discovery = await discover();
             regions = discovery.regions;
-            if names {
+            if len(names) > 0 {
                 await refreshMatches(names);
             }
         } except Exception {
@@ -73,12 +106,12 @@ def:pub PantryWorkspace() -> JsxElement {
 
     async def submit(e: FormEvent) {
         e.preventDefault();
-        if not draft.strip() and not names {
+        if not draft.strip() and len(names) == 0 {
             notice = "Add at least one ingredient name to get started.";
             return;
         }
         proposed = names + [draft] if draft.strip() else names;
-        if await refreshMatches(proposed) {
+        if await refreshMatches(proposed, True) {
             draft = "";
         }
     }
@@ -89,11 +122,13 @@ def:pub PantryWorkspace() -> JsxElement {
             for item in names
             if item != name
         ];
-        if remaining {
-            await refreshMatches(remaining);
+        if len(remaining) > 0 {
+            await refreshMatches(remaining, True);
         } else {
             names = [];
             matches = [];
+            ai_candidates = [];
+            ai_message = "";
             notice = "";
             error = "";
             saveNames();
@@ -101,6 +136,8 @@ def:pub PantryWorkspace() -> JsxElement {
     }
 
     def clearPantry(e: MouseEvent) {
+        ai_candidates = [];
+        ai_message = "";
         names = [];
         matches = [];
         draft = "";
@@ -111,17 +148,36 @@ def:pub PantryWorkspace() -> JsxElement {
 
     async def changeRegion(e: ChangeEvent) {
         selected = e.target.value;
-        if names {
-            await refreshMatches(names);
+        if len(names) > 0 {
+            await refreshMatches(names, True);
         }
     }
 
     async def retry {
-        if names {
+        if len(names) > 0 {
             await refreshMatches(names);
         } else {
             await loadInitial();
         }
+    }
+
+    async def discoverMore {
+        await refreshMatches(names, True);
+    }
+
+    async def selectCandidate(key: str) {
+        busy = True;
+        ai_message = "Preparing your selected recipe…";
+        try {
+            result = await prepare_candidate(key);
+            ai_message = result.message;
+            if result.ready {
+                navigate("/recipes/" + result.key);
+            }
+        } except Exception {
+            ai_message = "Recipe preparation is unavailable. Your pantry and candidates are unchanged; try again.";
+        }
+        busy = False;
     }
 
     return
@@ -156,7 +212,7 @@ def:pub PantryWorkspace() -> JsxElement {
                             aria-describedby="ingredient-hint"
                         />
                         <p id="ingredient-hint">
-                            Separate names with commas or new lines. Leave out amounts for now. No salt or oil is assumed.
+                            Separate names with commas or new lines. Leave out amounts for now. No salt or oil is assumed. Finding meals or changing region may send confirmed names and the region to OpenAI for unverified dish suggestions.
                         </p>
                         <button
                             type="submit"
@@ -173,7 +229,7 @@ def:pub PantryWorkspace() -> JsxElement {
                         <button
                             type="button"
                             className="text-button"
-                            disabled={busy or not names}
+                            disabled={busy or len(names) == 0}
                             onClick={clearPantry}
                         >
                             Clear pantry
@@ -199,7 +255,7 @@ def:pub PantryWorkspace() -> JsxElement {
                     {<p className="pantry-empty">
                         A few simple ingredients can open up a world of meals.
                     </p>
-                        if not names
+                        if len(names) == 0
                         else None}
                     <p className="pantry-notice" role="status">{notice}</p>
                     <p className="photo-note">
@@ -254,6 +310,41 @@ def:pub PantryWorkspace() -> JsxElement {
                     </p>
                         if busy
                         else None}
+                    {<section
+                        className="ai-workbench pantry-discovery"
+                        aria-labelledby="pantry-discovery-title"
+                    >
+                        <h3 id="pantry-discovery-title">Discoveries for your pantry</h3>
+                        <p>
+                            Uses your saved ingredients and selected region. Existing graph dishes are checked first; AI fills gaps. Only a selected candidate becomes a full recipe.
+                        </p>
+                        <button
+                            type="button"
+                            className="button secondary"
+                            onClick={discoverMore}
+                            disabled={busy}
+                        >
+                            Discover more dishes
+                        </button>
+                        <p role="status" className="ai-message">{ai_message}</p>
+                        <div className="ai-candidates">
+                            {[
+                                <CandidateCard
+                                    key={item.key}
+                                    candidate={item}
+                                    busy={busy}
+                                    onSelect={lambda (e: MouseEvent) { selectCandidate(
+                                        item.key
+                                    ); }}
+                                /> for item in ai_candidates
+                            ]}
+                        </div>
+                        <p className="fixture-note">
+                            AI dishes need verification. Generated content expires when the server restarts. Prepared matches are listed below.
+                        </p>
+                    </section>
+                        if len(names) > 0 and not error
+                        else None}
                     {<div className="match-list">
                         {[
                             <MatchCard
@@ -262,7 +353,7 @@ def:pub PantryWorkspace() -> JsxElement {
                             /> for candidate in matches
                         ]}
                     </div>
-                        if not busy and not error and names
+                        if not busy and not error and len(names) > 0
                         else None}
                     {<div className="matching-empty">
                         <span aria-hidden="true">❋</span>
@@ -275,12 +366,15 @@ def:pub PantryWorkspace() -> JsxElement {
                             <span aria-hidden="true">↗</span>
                         </Link>
                     </div>
-                        if not names and not busy and not error
+                        if len(names) == 0 and not busy and not error
                         else None}
                     {<p className="discovery-status">
                         No prepared recipes in this region yet. Try all regions.
                     </p>
-                        if names and not matches and not busy and not error
+                        if len(names) > 0
+                            and len(matches) == 0
+                            and not busy
+                            and not error
                         else None}
                 </section>
             </div>

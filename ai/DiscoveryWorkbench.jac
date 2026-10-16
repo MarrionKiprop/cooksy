@@ -1,3 +1,4 @@
+import from .CandidateCard { CandidateCard }
 import from "@jac/runtime" { useNavigate }
 import from endpoints { enrich, prepare_candidate }
 import type from .views { CandidateView }
@@ -88,38 +89,12 @@ def:pub DiscoveryWorkbench() -> JsxElement {
             <p role="status" className="ai-message">{message}</p>
             <div className="ai-candidates">
                 {[
-                    <article className="ai-candidate" key={item.key}>
-                        <span className="small-tag">{item.verification}</span>
-                        <h3>{item.name}</h3>
-                        <p>{item.description}</p>
-                        <p>
-                            {item.region
-                                + " · "
-                                + item.tradition
-                                + " · about "
-                                + str(item.minutes)
-                                + " min"}
-                        </p>
-                        <p>
-                            {str(item.score) + "% direct essential ingredient coverage"}
-                        </p>
-                        <p>
-                            {"Missing essentials: " + ", ".join(item.missing)
-                                if len(item.missing)
-                                else "All named essential ingredients available"}
-                        </p>
-                        <p className="fixture-note">{item.provenance}</p>
-                        <button
-                            type="button"
-                            className="button secondary"
-                            disabled={busy}
-                            onClick={lambda (e: MouseEvent) { select(item.key); }}
-                        >
-                            {"View prepared recipe"
-                                if item.prepared
-                                else "Prepare this recipe"}
-                        </button>
-                    </article> for item in candidates
+                    <CandidateCard
+                        key={item.key}
+                        candidate={item}
+                        busy={busy}
+                        onSelect={lambda (e: MouseEvent) { select(item.key); }}
+                    /> for item in candidates
                 ]}
             </div>
             {<details>

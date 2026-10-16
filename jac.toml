@@ -45,6 +45,7 @@ theme_color = "#f8f6ef"
 "endpoints.cook_session" = "server"
 
 "endpoints.enrich" = "server"
+"endpoints.discover_pantry" = "server"
 "endpoints.prepare_candidate" = "server"
 "endpoints.cooking_help" = "server"
 

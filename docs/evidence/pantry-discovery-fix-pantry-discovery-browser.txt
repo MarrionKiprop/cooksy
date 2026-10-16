@@ -1,0 +1,1 @@
+PASS: pantry submission/region discovery, normalized names + readable scope, duplicate removal, no provider on reload, AI failure preserves saved pantry/matches, selected preparation/navigation, clear and 320px layout. All inference mocked.

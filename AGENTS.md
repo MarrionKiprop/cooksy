@@ -107,3 +107,11 @@ StepHelp only accepts exact quotations from the current graph instruction; it ca
 invent missing information or advance progress. Run the five browser suites including
 enrichment-smoke; enrichment-live is opt-in and paid. Stop all old preview sessions
 before starting a new server to prevent port conflicts. M6 vision remains unimplemented.
+
+Pantry discovery follow-up: run all six browser suites, including
+`node tests/pantry-discovery-smoke.mjs`. Pantry submission/removal/region actions call
+server discover_pantry after deterministic intake/matching. Its coverage threshold
+is 100 (all essential names); Explore’s browse threshold remains 0. Normal reload
+and retry matching must not trigger model calls. Keep inference mocked in pantry
+browser tests. Use explicit list length checks for empty client state. CandidateCard
+is shared between Explore and pantry; preserve actual verification labels.

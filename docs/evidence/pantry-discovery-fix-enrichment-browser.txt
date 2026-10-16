@@ -1,0 +1,1 @@
+PASS M5: real graph-first RPC and navigation; grounded-help UI mock; step reset; failure preservation; 320px layout; no browser errors.

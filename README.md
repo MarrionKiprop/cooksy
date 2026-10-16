@@ -119,6 +119,13 @@ coverage, shorter time, then stable recipe key. Edge-listed substitutes are sugg
 never automatic availability. Amounts, dietary/allergy suitability and full recipe
 verification are not checked. Results include eight demo adaptations and any prepared AI recipes cached by this server.
 
+Add & find meals and region changes also discover new candidate dishes using the
+confirmed pantry. Jac checks for five dishes whose named essential ingredients are
+available before asking AI to fill gaps. New discoveries show above prepared matches;
+select one to prepare its recipe. AI failure preserves saved ingredients and prepared
+matches. Reloading a saved pantry does not invoke the model. The pantry browser
+regression is `node tests/pantry-discovery-smoke.mjs`; its inference is mocked.
+
 A failed submission retains the draft and previous pantry. Retry matching refreshes
 the committed pantry; submit the retained draft with Add & find meals when ready.
 

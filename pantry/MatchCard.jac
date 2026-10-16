@@ -12,7 +12,7 @@ def:pub MatchCard(candidate: MatchView) -> JsxElement {
                     {candidate.score}% essential coverage
                 </span>
             </div>
-            <span className="small-tag">DEMO ADAPTATION · UNVERIFIED</span>
+            <span className="small-tag">{candidate.recipe.verification}</span>
             <h3>{candidate.recipe.name}</h3>
             <p className="match-readiness">
                 {"Essential ingredient types present"
