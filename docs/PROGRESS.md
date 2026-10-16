@@ -8,7 +8,7 @@ M0 foundation: `34e76eddfcbac857e8c3386b2a0db05790d9fc33`. M1 adds the runnable 
 | M0 | Complete | Inspect environment; recovery files and guide evidence; validate and commit | 34e76ed | No app yet; begin M1 next session |
 | M1 | Complete | Verified web-app scaffold, warm responsive shell, navigation, visible demo status; startup/check/browser evidence | 0be1768 | Culinary graph begins in M2 |
 | M2 | Complete | Real culinary nodes/edges; two regions and multiple traditions; DiscoveryWalker and traversal test through ingredients/steps | e8f2773 | Demo graph only; pantry/matching begins in M3 |
-| M3 | Complete | Pantry intake and deterministic matching; normalisation/dedupe/essential/optional/ranking tests | Recorded after milestone commit | Names only; tab-scoped pantry, no account sync |
+| M3 | Complete | Pantry intake and deterministic matching; normalisation/dedupe/essential/optional/ranking tests | ea65d48 | Names only; tab-scoped pantry, no account sync |
 | M4 | Not started | Recipe detail and cooking session; advance/reverse/recover progress | — | Verify persistence before implementation |
 | M5 | Not started | Structured by-llm enrichment and grounded help; reuse, provenance, malformed/duplicate/unavailable mocks | — | Provider/model not configured |
 | M6 | Not started | MobileNet adapter, upload/review/confirmation graph; validation and contract tests | — | Weights and dependencies unverified |
@@ -228,3 +228,6 @@ Cook-along is M4, AI discovery is M5, photo classification is M6.
 Next milestone: M4 recipe selection/details and recoverable cook-along sessions.
 
 Final repeat: pantry suite passed again (7 tests in 9.98s).
+
+M3 milestone commit: `ea65d4854042c6034bec66b7c30354ab4e660780`; pushed successfully. The follow-up documentation
+commit records this checkpoint; graph/browser/build/type checks passed before it.

@@ -6,7 +6,7 @@ with in-memory fallback, and builds transient HAS_INGREDIENT relationships for
 MatchingWalker. Results show direct essential-type coverage, missing essentials,
 missing optional items and explicit substitution suggestions, with stable ranking.
 No server-side shared pantry or account persistence is implemented.
-M3 commit hash is recorded in PROGRESS.md after the milestone commit.
+M3 milestone commit: `ea65d4854042c6034bec66b7c30354ab4e660780`; pushed. See PROGRESS.md for checks.
 
 Read first:
 
