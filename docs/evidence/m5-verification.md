@@ -72,3 +72,7 @@ Final content-version gates supersede the earlier counts:
   unit regression rejects stale fixture-version progress for generated recipes.
 - No live paid test repeated after final consistency/version changes. Live provider
   transport and output parsing were verified by the earlier approved three calls.
+
+Implementation checkpoint: `524e785800a63396cc8e4d696ecc9bb0c81d2c4e`; pushed to origin/main and
+remote hash matched local HEAD. Staged whitespace/ignore/secret-value checks passed.
+The following documentation ledger records this immutable milestone hash.

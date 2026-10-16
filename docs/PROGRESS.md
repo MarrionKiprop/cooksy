@@ -10,7 +10,7 @@ M0 foundation: `34e76eddfcbac857e8c3386b2a0db05790d9fc33`. M1 adds the runnable 
 | M2 | Complete | Real culinary nodes/edges; two regions and multiple traditions; DiscoveryWalker and traversal test through ingredients/steps | e8f2773 | Demo graph only; pantry/matching begins in M3 |
 | M3 | Complete | Pantry intake and deterministic matching; normalisation/dedupe/essential/optional/ranking tests | ea65d48 | Names only; tab-scoped pantry, no account sync |
 | M4 | Complete | Recipe detail and cooking session; advance/reverse/recover progress | 337fc3a | Tab-scoped progress; no account sync or timers |
-| M5 | Complete | Graph-first structured enrichment, selected preparation, grounded help, provenance/validation and content-version recovery | Ledger below | GPT-4.1 mini verified; process cache expires on restart |
+| M5 | Complete | Graph-first structured enrichment, selected preparation, grounded help, provenance/validation and content-version recovery | 524e785 | GPT-4.1 mini verified; process cache expires on restart |
 | M6 | Not started | MobileNet adapter, upload/review/confirmation graph; validation and contract tests | — | Weights and dependencies unverified |
 | M7 | Not started | Selected-recipe SDXL preview, metadata/cache, label and error tests | — | Hosted/local inference unconfigured |
 | M8 | Not started | Nutrition references/disclosure, accessibility/responsive polish, full journey and demo handoff | — | Full runtime validation still required |
@@ -329,5 +329,6 @@ the measured-water rule cannot prove all natural-language ingredient correctness
 authenticity, allergy suitability or nutrition. Help quotes only the current step.
 No M6 photo, M7 image generation or M8 nutrition integration was added.
 
-M5 implementation commit is recorded in the following ledger commit.
+M5 implementation commit: `524e785800a63396cc8e4d696ecc9bb0c81d2c4e`; pushed successfully and remote main verified.
+This follow-up ledger commit records the checkpoint.
 Next: M6 photo suggestions with explicit review/confirmation before pantry mutation.

@@ -4,7 +4,7 @@ M5 is complete: graph-first structured candidates, selected recipe preparation a
 extractive active-step help use Jac by llm() with GPT-4.1 mini. The saved server-only
 key is in ignored .env; never display it. Exactly three fixed-payload paid checks
 were explicitly approved and completed. Do not silently repeat that paid smoke.
-Implementation hash is recorded in the following ledger commit.
+M5 implementation commit: `524e785800a63396cc8e4d696ecc9bb0c81d2c4e`; pushed and remote hash verified.
 
 Read AGENTS.md, docs/PROGRESS.md, docs/DECISIONS.md, both briefs as needed, status/log
 and relevant installed guides before edits. The Jac environment is
