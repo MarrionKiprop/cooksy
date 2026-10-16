@@ -32,3 +32,6 @@ is known and deliberately deferred. Cache durability also deliberately deferred.
 M8 nutrition/final polish is next only on user's request. Normal checked pushes
 authorized to origin/main; verify remote hash, no forcepush. See progress for hash.
 Leave preview running at http://172.26.123.103:8000 (WSL IP may change).
+
+M7 implementation checkpoint: `290d49ebd37638dec07528d25139d9d0c6ae9087`; pushed and remote main verified.
+Final formatter/whitespace/credential exclusion checks and final copy build passed.

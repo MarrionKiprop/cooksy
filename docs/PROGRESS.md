@@ -457,3 +457,6 @@ JSON bridge contract; vendor-specific APIs need an adapter/bridge. Cache/images 
 process-lifetime, not durable. Seed does not guarantee cross-platform determinism.
 Nutrition and final M8 polish remain unimplemented. User's pre-existing JPG and
 Zone.Identifier remain untouched and untracked, outside this milestone commit.
+
+M7 implementation checkpoint: `290d49ebd37638dec07528d25139d9d0c6ae9087`; pushed and remote main verified.
+Final formatter/whitespace/credential exclusion checks and final copy build passed.
