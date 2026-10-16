@@ -1,0 +1,4 @@
+$ /home/langstkip/workspace/jac/bin/jac --version
+Exit: 0
+
+jac 0.37.25  (Linux x86_64)

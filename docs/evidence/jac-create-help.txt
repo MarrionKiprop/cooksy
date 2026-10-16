@@ -1,0 +1,81 @@
+$ /home/langstkip/workspace/jac/bin/jac create --help
+Exit: 0
+
+usage: jac create [-h] [-f | --force | --no-force] [-k KIND] [--app APP]
+                  [--path PATH] [-u USE] [-a | --awesome | --no-awesome]
+                  [--awetiny | --no-awetiny] [-l | --list | --no-list]
+                  [-s | --skip | --no-skip] [--style STYLE]
+                  [--baseColor BASECOLOR] [--theme THEME] [--font FONT]
+                  [--radius RADIUS] [--menuAccent MENUACCENT]
+                  [--menuColor MENUCOLOR]
+                  [name]
+
+Create a new Jac project
+
+Examples:
+  jac create
+      Initialize a cli project in the current directory (name from cwd)
+  jac create myapp --use acme/starter
+      Create a project from a published template
+  jac create myapp
+      Create new myapp/ directory (cli kind)
+  jac create myapp --kind service
+      Scaffold a headless API service
+  jac create myapp --kind native-binary
+      Scaffold a natively-compiled binary
+  jac create myapp --kind web-app
+      Scaffold a full-stack web app
+  jac create --app mobile --kind mobile
+      Add a mobile app to the current project as [apps.mobile]
+  jac create mysite --awesome
+      Dump the entire jaclang.org site as your project
+  jac create mysocial --awetiny
+      Create the Tiny JacYac social app workspace
+  jac create --force
+      Reinitialize existing project
+  jac create --use ./my-template
+      Create from a local template directory
+  jac create --use ./starter.jab
+      Create from a template package file
+  jac create --list
+      List available project kinds and named variants
+
+positional arguments:
+  name                  Project name (omit to initialize the current
+                        directory)
+
+options:
+  -h, --help            show this help message and exit
+  -f, --force, --no-force
+                        Overwrite existing jac.toml
+  -k, --kind KIND       Project or app kind to scaffold (cli, cli-native,
+                        service, web-app, ...)
+  --app APP             Scaffold an app of --kind inside the current project
+                        and register [apps.<app>] in its jac.toml
+  --path PATH           With --app: directory for the app, relative to the
+                        project root (default: the app name)
+  -u, --use USE         Template: a published template (org/name or
+                        org/name@range), a template directory or .jab, or a
+                        variant name
+  -a, --awesome, --no-awesome
+                        Scaffold the full jaclang.org site (landing, docs,
+                        leaderboard, socialize, wasm game) as your project
+  --awetiny, --no-awetiny
+                        Scaffold Tiny JacYac (web, mobile, desktop, CLI, feed
+                        and scoring services) as your project
+  -l, --list, --no-list
+                        List available project kinds and named variants
+  -s, --skip, --no-skip
+                        Skip dependency installation (Python + npm); run 'jac
+                        install' later
+  --style STYLE         shadcn style preset
+                        (nova|vega|maia|lyra|mira|luma|rhea|sera)
+  --baseColor BASECOLOR
+                        shadcn base palette (neutral|stone|zinc|gray)
+  --theme THEME         shadcn accent theme (e.g. rose, emerald)
+  --font FONT           shadcn font family (e.g. inter, outfit)
+  --radius RADIUS       shadcn border radius (none|small|medium|large)
+  --menuAccent MENUACCENT
+                        shadcn menu accent (subtle|bold)
+  --menuColor MENUCOLOR
+                        shadcn menu color scheme
