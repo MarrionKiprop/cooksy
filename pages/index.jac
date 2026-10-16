@@ -101,7 +101,7 @@ def:pub Home() -> JsxPage {
                                 Tell us what’s on hand. Photo suggestions will always be yours to confirm.
                             </p>
                             <span className="small-tag">
-                                Pantry intake · coming soon
+                                Pantry intake · ready to try
                             </span>
                         </article>
                         <article className="journey-card">

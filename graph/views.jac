@@ -20,6 +20,8 @@ obj RequirementView {
         essential: bool,
         preparation: str,
         substitution_notes: str;
+
+    has substitutes: list[str] = [];
 }
 
 obj StepView {
@@ -53,5 +55,5 @@ obj DiscoveryResult {
         events: list[TraversalEvent];
 
     has mode: str = "demo_graph",
-        disclosure: str = "Developer demo fixtures. No AI inference or pantry matching. Recipes are illustrative adaptations, not verified cooking guidance.";
+        disclosure: str = "Developer demo fixtures. No AI inference. Pantry matching compares names, not quantities. Recipes are illustrative adaptations, not verified cooking guidance.";
 }

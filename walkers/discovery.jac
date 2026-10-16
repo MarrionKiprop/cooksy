@@ -1,4 +1,5 @@
 """Graph-first discovery; no LLM, pantry ranking, or persistence in this fixture."""
+import from graph.projections { recipe_view }
 import from graph.models {
     CulinaryCatalogue,
     Region,
@@ -71,47 +72,7 @@ walker DiscoveryWalker {
     }
 
     can recipe with Recipe entry {
-        tradition = [here->:BELONGS_TO:->][0];
-        region = [tradition->:PART_OF:->][0];
-        requirements: list[RequirementView] = [];
-        for ingredient in [here->:REQUIRES:->] {
-            for relation in [edge here->:REQUIRES:->ingredient] {
-                requirements.append(
-                    RequirementView(
-                        name=ingredient.name,
-                        quantity=relation.quantity,
-                        unit=relation.unit,
-                        essential=relation.essential,
-                        preparation=relation.preparation,
-                        substitution_notes=relation.substitution_notes
-                    )
-                );
-            }
-        }
-        steps: list[StepView] = [];
-        for step in [here->:HAS_STEP:sequence:->] {
-            for relation in [edge here->:HAS_STEP:->step] {
-                steps.append(
-                    StepView(sequence=relation.sequence, instruction=step.instruction)
-                );
-            }
-        }
-        steps.sort(key=lambda (step: StepView) { step.sequence; });
-        self.recipes.append(
-            RecipeView(
-                key=here.key,
-                name=here.name,
-                description=here.description,
-                minutes=here.minutes,
-                servings=here.servings,
-                region=region.name,
-                tradition=tradition.name,
-                provenance=here.provenance,
-                verification=here.verification,
-                requirements=requirements,
-                steps=steps
-            )
-        );
+        self.recipes.append(recipe_view(here));
         self.events.append(TraversalEvent(kind="recipe", label=here.name));
         visit [here->:REQUIRES:->];
         visit [here->:HAS_STEP:sequence:->];

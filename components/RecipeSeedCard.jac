@@ -40,7 +40,7 @@ def:pub RecipeSeedCard(recipe: RecipeView) -> JsxElement {
                     ]}
                 </ol>
                 <p className="fixture-note">
-                    Source: {recipe.provenance}. Pantry matching and guided cooking are coming later.
+                    Source: {recipe.provenance}. Use My pantry for ingredient matching. Guided cooking is coming later.
                 </p>
             </details>
         </article>;

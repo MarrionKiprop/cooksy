@@ -15,7 +15,7 @@ page.on('response', response => {
 try {
   await page.goto(`${baseURL}/explore`);
   await expect(page.locator('.seed-card')).toHaveCount(8);
-  await expect(page.locator('.demo-disclosure')).toContainText('No AI inference or pantry matching');
+  await expect(page.locator('.demo-disclosure')).toContainText('No AI inference');
   expect(responses).toContain(200);
   await page.getByRole('button', { name: /East Asia/ }).click();
   await expect(page.locator('.seed-card')).toHaveCount(2);

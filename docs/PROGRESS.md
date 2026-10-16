@@ -1,6 +1,6 @@
 # Cooksy progress
 
-Date: 2026-10-16 (Africa/Nairobi). Current milestone: M2 complete; next: M3.
+Date: 2026-10-16 (Africa/Nairobi). Current milestone: M3 complete; next: M4.
 M0 foundation: `34e76eddfcbac857e8c3386b2a0db05790d9fc33`. M1 adds the runnable shell.
 
 | Milestone | Status | Scope / acceptance | Commit | Risks / next action |
@@ -8,7 +8,7 @@ M0 foundation: `34e76eddfcbac857e8c3386b2a0db05790d9fc33`. M1 adds the runnable 
 | M0 | Complete | Inspect environment; recovery files and guide evidence; validate and commit | 34e76ed | No app yet; begin M1 next session |
 | M1 | Complete | Verified web-app scaffold, warm responsive shell, navigation, visible demo status; startup/check/browser evidence | 0be1768 | Culinary graph begins in M2 |
 | M2 | Complete | Real culinary nodes/edges; two regions and multiple traditions; DiscoveryWalker and traversal test through ingredients/steps | e8f2773 | Demo graph only; pantry/matching begins in M3 |
-| M3 | Not started | Pantry intake and deterministic matching; normalisation/dedupe/essential/optional/ranking tests | — | Respect confirmation boundary |
+| M3 | Complete | Pantry intake and deterministic matching; normalisation/dedupe/essential/optional/ranking tests | Recorded after milestone commit | Names only; tab-scoped pantry, no account sync |
 | M4 | Not started | Recipe detail and cooking session; advance/reverse/recover progress | — | Verify persistence before implementation |
 | M5 | Not started | Structured by-llm enrichment and grounded help; reuse, provenance, malformed/duplicate/unavailable mocks | — | Provider/model not configured |
 | M6 | Not started | MobileNet adapter, upload/review/confirmation graph; validation and contract tests | — | Weights and dependencies unverified |
@@ -177,3 +177,54 @@ Next: M3, confirmed pantry intake and deterministic recipe matching.
 
 M2 milestone commit: `e8f277376759d153ffa5d7f21aff6169c02aa3d6`. The follow-up documentation commit records this hash;
 all graph, type, build and browser checks passed before the checkpoint.
+
+## M3 — Pantry intake and deterministic matching — 2026-10-16
+
+Implemented Pantry/IntakeItem nodes, typed PENDING_ITEM and HAS_INGREDIENT edges,
+IntakeWalker and MatchingWalker, explicit aliases and strict names-only validation,
+server-pinned matching endpoint and typed contracts. Extracted the existing recipe
+projection for shared relationship-backed reads. Added explicit edge substitution
+options to two demo requirements. No LLM or arithmetic delegation.
+
+Pantry UI supports manual comma/newline entry, normalisation/deduplication, removal,
+clear, browser-tab recovery, region filtering, ranked recipe explanations, direct
+available/missing-essential/missing-optional categories, possible swaps, validation,
+loading/retry and blocked-storage fallback. Quantities and account persistence are
+explicitly unimplemented. Updated Home/Explore preview copy, docs and screenshot evidence.
+
+Checks and outcomes:
+
+- Relevant installed guide queries: PASS; evidence under docs/evidence/m3-guides.
+- Initial extraction script: FAIL to match formatted source; projection written
+  explicitly. Initial format/type gates rejected reserved entry/match names and
+  misplaced module docstring; fixed with draft/candidate and module-first docstring.
+- `jac test tests/pantry_tests.jac`: PASS, 7 tests; repeat run PASS recorded below.
+- `jac test tests/discovery_tests.jac`: PASS, all 4 existing graph tests.
+- `jac fmt . --check`: initial FAIL for graph/models layout; formatted it and
+  final gate PASS, 25 Jac source files.
+- `jac check .`: PASS, 25 source files; existing compiler warnings remain.
+- `jac build --as client`: PASS, production browser bundle.
+- `COOKSY_SCREENSHOTS=1 node tests/pantry-smoke.mjs`: PASS, real RPC, aliases,
+  duplicate handling, coverage/optional/substitution boundaries, removal/filtering,
+  invalid entries, tab recovery/isolation, offline retry with draft retention,
+  clear, blocked-storage fallback and mobile layout.
+- `node tests/discovery-smoke.mjs`: PASS, graph discovery/filter/trace/retry regression.
+- `node tests/shell-smoke.mjs`: PASS, navigation/keyboard/deep-link/404 and
+  390px/320px responsive regression.
+- `git diff --check`, original-brief byte integrity, recovery links and secret/data
+  ignore checks: PASS before commit.
+
+Manual review: desktop/mobile Pantry screenshots show ingredient chips, explicit
+storage scope, ranked recipe cards, transparent coverage, missing ingredients and
+suggested swaps without counting them as available. Browser screenshots/logs saved
+under docs/screenshots and docs/evidence. No live model/provider claimed.
+
+Known limits: ingredient presence only, no quantity sufficiency or dietary/allergy
+validation; eight unverified demo recipes. SessionStorage is per tab/origin and may
+be restored by the browser. No persisted server-side pantry graph/account sync. Runtime report logs may include supplied names. Retry
+refreshes committed pantry; failed entry draft remains to submit explicitly.
+Cook-along is M4, AI discovery is M5, photo classification is M6.
+
+Next milestone: M4 recipe selection/details and recoverable cook-along sessions.
+
+Final repeat: pantry suite passed again (7 tests in 9.98s).

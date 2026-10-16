@@ -55,14 +55,16 @@ def require(
     unit: str,
     essential: bool = True,
     preparation: str = "",
-    substitution: str = ""
+    substitution: str = "",
+    substitutes: list[str] = []
 ) {
     recipe +>:REQUIRES(
         quantity=quantity,
         unit=unit,
         essential=essential,
         preparation=preparation,
-        substitution_notes=substitution
+        substitution_notes=substitution,
+        substitutes=substitutes
     ):+> ingredient;
 }
 
@@ -139,7 +141,14 @@ def build_demo_graph() -> CulinaryCatalogue {
         "A simple kale-and-tomato demo adaptation.",
         20
     );
-    require(sukuma, kale, 300.0, "g", preparation="sliced");
+    require(
+        sukuma,
+        kale,
+        300.0,
+        "g",
+        preparation="sliced",
+        substitutes=["spinach", "collard greens"]
+    );
     require(sukuma, onion, 100.0, "g", preparation="chopped");
     require(sukuma, tomato, 150.0, "g", preparation="chopped");
     require(sukuma, oil, 15.0, "ml");
@@ -163,7 +172,8 @@ def build_demo_graph() -> CulinaryCatalogue {
         300.0,
         "g",
         preparation="washed",
-        substitution="Other tender leafy greens may work; cooking times vary."
+        substitution="Other tender leafy greens may work; cooking times vary.",
+        substitutes=["kale"]
     );
     require(mchicha, coconut, 200.0, "ml");
     require(mchicha, onion, 100.0, "g");

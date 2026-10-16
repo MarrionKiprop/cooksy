@@ -1,5 +1,5 @@
-import from ..components.EmptyKitchen { EmptyKitchen }
+import from ..pantry.PantryWorkspace { PantryWorkspace }
 
 def:pub PantryPage() -> JsxPage {
-    return <EmptyKitchen kind="pantry"/>;
+    return <PantryWorkspace/>;
 }

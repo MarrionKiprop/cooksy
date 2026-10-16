@@ -189,3 +189,36 @@ the reverse-linked sources through real topology rather than duplicate JSON or g
 arrays. Two subsequent suite runs passed. First client build attempted to lower the
 walker into JavaScript; explicitly pin endpoints.discover to server, following the
 installed codespace guide and M1's verified status-RPC boundary.
+
+## D013 — M3 pantry identity and deterministic matching
+
+User authorized M3 and routine module decisions/continuing pushes. Verified installed
+jac-sv-auth, node/edge, walker, types/core, client organisation/interop and testing
+guides before implementation. Anonymous public roots are shared: do not store a
+private pantry there. Decision: browser sessionStorage holds confirmed ingredient
+names for this tab; matching sends the names and builds a transient Pantry graph
+per request, with no root attachment or cross-request user-state globals. No login
+or account persistence is implied. Storage failures leave usable in-memory UI and
+an explicit disclosure. Existing transient demo catalogue remains the recipe source.
+
+IntakeWalker traverses pending IntakeItem nodes, normalises whitespace/case and a
+small explicit alias map, deduplicates, and updates HAS_INGREDIENT relationships.
+Vision-source inputs require confirmed=True; manual UI uses typed input only. No
+implicit oil/salt/staples. Names only: quantities are unknown on pantry edges.
+MatchingWalker traverses pantry ingredients and culinary topology; availability is
+computed from REQUIRES-backed views. Score = floor(100 * directly available essential
+types / essential types). Optional ingredients do not reduce score. Rank by missing
+essential count, descending score, minutes, stable recipe key. Explicit edge-listed
+substitutes are suggestions, remain missing until the user confirms/adds the actual
+required ingredient, and never inflate score. No LLM or arithmetic delegation.
+
+M3 implementation notes: extracted the M2-tested recipe projection into
+graph/projections.jac so discovery and matching read the same REQUIRES/HAS_STEP
+data. Explicit substitutes are added to REQUIRES and projected without automatic
+replacement. No recipe seed is persisted. The first projection extraction script
+did not match formatted source; wrote the helper explicitly and reran graph tests.
+Initial check rejected reserved names match/entry and an import before a module
+docstring; renamed locals to candidate/draft and kept module docstrings first.
+Seven pantry tests and four discovery regression tests subsequently passed.
+Browser storage uses a delimited list of validated names (no JSON casts); browser
+APIs remain inside Jac client code, with a working in-memory fallback if blocked.

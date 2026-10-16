@@ -59,7 +59,7 @@ def:pub Explore() -> JsxPage {
                 </p>
             </div>
             <p className="demo-disclosure">
-                Demo collection · Eight illustrative adaptations across four regions. No AI inference or pantry matching yet. This is a small sample, not the full world of Cooksy.
+                Demo collection · Eight illustrative adaptations across four regions. No AI inference. Match these demos from My pantry. This is a small sample, not the full world of Cooksy.
             </p>
             <div className="explore-toolbar">
                 <span>Pick your inspiration</span>
@@ -94,7 +94,7 @@ def:pub Explore() -> JsxPage {
                     <span className="eyebrow">YOUR NEXT ADVENTURE</span>
                     <h2 id="selection-title">{selection_name}</h2>
                     <p>
-                        Recipes below come from the demo culinary graph. Ingredient availability will be added with pantry matching.
+                        Recipes below come from the demo culinary graph. Compare these demo recipes with your ingredients in My pantry.
                     </p>
                 </div>
                 <Link to="/pantry" className="button primary">

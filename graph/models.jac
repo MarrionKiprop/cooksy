@@ -46,9 +46,27 @@ edge REQUIRES: Recipe --> Ingredient {
 
     has essential: bool = True,
         preparation: str = "",
-        substitution_notes: str = "";
+        substitution_notes: str = "",
+        substitutes: list[str] = [];
 }
 
 edge HAS_STEP: Recipe --> RecipeStep {
     has sequence: int;
+}
+
+node Pantry {
+    has scope: str = "browser-tab request";
+}
+
+node IntakeItem {
+    has name: str;
+    has source: str = "manual",
+        confirmed: bool = True;
+}
+
+edge PENDING_ITEM: Pantry --> IntakeItem {}
+edge HAS_INGREDIENT: Pantry --> Ingredient {
+    has quantity: float | None = None,
+        unit: str = "",
+        notes: str = "Quantity not supplied";
 }
