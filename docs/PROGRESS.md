@@ -1,11 +1,11 @@
 # Cooksy progress
 
 Date: 2026-10-16 (Africa/Nairobi). Current milestone: M0 complete, foundation commit
-pending below; next: M1. This repository contains documentation only.
+`34e76eddfcbac857e8c3386b2a0db05790d9fc33`; next: M1. This repository contains documentation only.
 
 | Milestone | Status | Scope / acceptance | Commit | Risks / next action |
 | --- | --- | --- | --- | --- |
-| M0 | Complete | Inspect environment; recovery files and guide evidence; validate and commit | Recorded after foundation commit | No app yet; begin M1 next session |
+| M0 | Complete | Inspect environment; recovery files and guide evidence; validate and commit | 34e76ed | No app yet; begin M1 next session |
 | M1 | Not started | Verified web-app scaffold, warm responsive shell, navigation, visible demo status; startup/check/browser evidence | — | Install dependencies; preserve recovery files |
 | M2 | Not started | Real culinary nodes/edges; two regions and multiple traditions; DiscoveryWalker and traversal test through ingredients/steps | — | Seed is demo/test data only |
 | M3 | Not started | Pantry intake and deterministic matching; normalisation/dedupe/essential/optional/ranking tests | — | Respect confirmation boundary |
@@ -39,7 +39,11 @@ Commands and observed results:
 - `git init -b main /home/langstkip/workspace/jac-code/cooksy`: PASS.
 - Python documentation validation (required nonempty files, byte-identical briefs,
   guide exit records, local Markdown links, no application files): PASS.
-- `git diff --cached --check`: PASS before foundation commit.
+- Initial `git diff --cached --check`: FAIL due to CRLF in verbatim source briefs
+  and a blank final line in captured CLI output. Preserved those original bytes.
+- `git diff --check 34e76ed -- .` and
+  `git diff-tree --check --root 34e76ed -- . ":(exclude)docs/briefs/**" ":(exclude)docs/evidence/**"`:
+  PASS for authored documentation (immutable source/evidence excluded).
 - `git check-ignore .env .env.local githubfile models/test.pt`: PASS.
 - `git status --porcelain` after final documentation commit: required empty.
 

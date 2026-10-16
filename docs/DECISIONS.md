@@ -67,3 +67,12 @@ is resolved. Record the M0 foundation hash in a follow-up documentation commit.
 Alternative: guess a GitHub owner/visibility or attempt to embed a commit's own hash.
 Consequence: local history is recoverable; the ledger commit is discoverable with
 `git log` and cannot recursively contain its own hash.
+
+## D007 — Preserve original document bytes
+
+Context: whitespace checking flags CRLF in the supplied briefs and a final blank
+line in captured CLI output. Decision: preserve source/evidence bytes and apply
+whitespace checks to authored documentation separately; record the initial failed
+check explicitly. Alternative: normalise originals and lose byte identity.
+Consequence: source verification remains exact, and original whitespace is not
+misreported as a passing check.
