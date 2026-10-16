@@ -6,8 +6,8 @@ Read both preserved briefs in docs/briefs when resolving product requirements.
 
 ## Scope and milestone discipline
 
-Complete one milestone at a time, in M0–M8 order. The initial M0-only session is complete; the user authorized M1 with “okay next.”
-M1 is the current milestone; do not skip ahead into M2 in the same milestone. Follow the acceptance criteria in the implementation brief.
+Complete one milestone at a time, in M0–M8 order. M0 and M1 are complete; the user authorized M2 with “so m2 then.”
+Complete M2 before moving to M3, preserving the milestone boundary. Follow the acceptance criteria in the implementation brief.
 Before every milestone commit update progress, decisions, and restart instructions;
 run applicable checks, record exact outcomes and limitations, and commit only
 scoped files. Record the resulting milestone hash in a subsequent documentation
@@ -24,7 +24,12 @@ its feature; record command, pattern, alternatives and consequence in DECISIONS.
 Guide evidence is under docs/evidence; M1 queries are in m1-guides. Read relevant
 guides before new features. The web-app scaffold is already complete: NEVER scaffold
 over this repository again. main.jac renders file-based route children; pages use
-JsxPage, layout uses JsxLayout/Outlet, and endpoints.shell_status is pinned server.
+JsxPage, layout uses JsxLayout/Outlet, and endpoints.shell_status / endpoints.discover are pinned server.
+M2 graph is transient demo data: never attach fixtures to user roots. Catalogue
+ownership edges retain reverse-linked recipe/tradition sources. Requirements live
+on REQUIRES edges; sort step views explicitly by HAS_STEP sequence.
+Run `jac test tests/discovery_tests.jac` twice for graph isolation and
+`node tests/discovery-smoke.mjs` for graph-backed UI/RPC in addition to shell smoke.
 Commands: `jac install`, `jac fmt . --check`, `jac check .`, `jac build --as client`,
 `jac run --show`, `jac run --dev`. Stop the server before fmt/check/build/install to
 avoid generated-module/HMR races; restart before browser verification. Browser smoke:

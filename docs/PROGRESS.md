@@ -1,13 +1,13 @@
 # Cooksy progress
 
-Date: 2026-10-16 (Africa/Nairobi). Current milestone: M1 complete; next: M2.
+Date: 2026-10-16 (Africa/Nairobi). Current milestone: M2 complete; next: M3.
 M0 foundation: `34e76eddfcbac857e8c3386b2a0db05790d9fc33`. M1 adds the runnable shell.
 
 | Milestone | Status | Scope / acceptance | Commit | Risks / next action |
 | --- | --- | --- | --- | --- |
 | M0 | Complete | Inspect environment; recovery files and guide evidence; validate and commit | 34e76ed | No app yet; begin M1 next session |
 | M1 | Complete | Verified web-app scaffold, warm responsive shell, navigation, visible demo status; startup/check/browser evidence | 0be1768 | Culinary graph begins in M2 |
-| M2 | Not started | Real culinary nodes/edges; two regions and multiple traditions; DiscoveryWalker and traversal test through ingredients/steps | — | Seed is demo/test data only |
+| M2 | Complete | Real culinary nodes/edges; two regions and multiple traditions; DiscoveryWalker and traversal test through ingredients/steps | Recorded after milestone commit | Demo graph only; pantry/matching begins in M3 |
 | M3 | Not started | Pantry intake and deterministic matching; normalisation/dedupe/essential/optional/ranking tests | — | Respect confirmation boundary |
 | M4 | Not started | Recipe detail and cooking session; advance/reverse/recover progress | — | Verify persistence before implementation |
 | M5 | Not started | Structured by-llm enrichment and grounded help; reuse, provenance, malformed/duplicate/unavailable mocks | — | Provider/model not configured |
@@ -130,3 +130,47 @@ into docs/screenshots. Confirmed .env/key/model/runtime exclusions remain active
 
 M1 milestone commit: `0be176888fb5d3e39fc30453f06168fa4212d8ba`. All checks and screenshots were recorded before this
 checkpoint. The following documentation commit records this immutable hash.
+
+## M2 — Object-spatial culinary graph seed — 2026-10-16
+
+Completed graph/models.jac (real nodes and typed edges), graph/seed.jac (isolated
+demo graph), graph/views.jac (typed projections), walkers/discovery.jac (real
+visit/entry/exit traversal and actual encounter events), and discovery endpoint.
+Explore loads regions from the graph, filters regions/traditions server-side, shows
+eight clearly labelled demo recipe cards with edge-backed quantities, optional
+flags, preparation/substitution notes and ordered sample steps. Added loading,
+error/retry and no-match states plus optional walker trace. No M3/M4/M5 features
+were claimed or implemented. Updated shell disclosure and recovery files.
+
+Commands and outcomes:
+
+- Relevant `jac guide` queries: PASS; M2 outputs under docs/evidence/m2-guides.
+- Initial formatter/check: FAIL on in-body docstring, corrected to comment.
+- Initial graph tests: FAIL on transient edge-order behavior; explicit projected
+  step sorting fixed it. A repeat run then failed on reverse-linked source lifetime;
+  catalogue ownership edges fixed reachability without deleting persisted state.
+- `jac test tests/discovery_tests.jac`: PASS, 4 tests; immediate repeat: PASS, 4 tests.
+- `jac fmt . --check`: PASS, 17 Jac files formatted.
+- `jac check .`: PASS, 17 files; existing JSX/runtime warnings retained/disclosed.
+- Initial `jac build --as client`: FAIL, walker pulled client; explicit discover
+  server pin fixed the crossing. Subsequent production build: PASS.
+- `jac run --dev`: PASS, UI localhost:8000, API localhost:8001.
+- `COOKSY_SCREENSHOTS=1 node tests/discovery-smoke.mjs`: PASS; actual HTTP discovery,
+  8→2→1 filtering, optional quantities, ordered steps, real trace, region-reset,
+  unknown-filter empty response, mobile layout, 503/retry and no browser errors.
+- `node tests/shell-smoke.mjs`: PASS, navigation, keyboard, deep links/404,
+  connectivity/retry, 390px/320px layouts and no browser runtime errors.
+- `git diff --check`, link/recovery integrity and credential/runtime ignore checks:
+  PASS before commit. Screenshots/logs saved under docs/evidence and docs/screenshots.
+
+Manual review: desktop and mobile Explore screenshots show region cards, the demo
+disclosure, tradition selector, recipe cards and optional trace. All food examples
+are developer fixtures; sample steps are not full verified recipes.
+
+Known limits: request-local demo topology is rebuilt for each query, not durable
+culinary memory. Four regions are illustrative coverage; live enrichment is M5.
+Pantry matching is M3; recipe/cooking state is M4. No model provider, inference,
+nutrition data or generated serving image integration exercised. WSL access note
+added after user confirmed browser access via the WSL address.
+
+Next: M3, confirmed pantry intake and deterministic recipe matching.

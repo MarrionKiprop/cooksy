@@ -153,3 +153,39 @@ Further M1 diagnosis: Jac's watcher also reacted to PNG writes under docs/screen
 not just source edits. The screenshot test was triggering its own HMR. Capture to
 /tmp/cooksy-m1-screenshots outside the app; copy into docs only after stopping the
 server. This is the concrete fix for repeatable screenshot acceptance.
+
+## D012 — M2 graph model, fixture lifecycle and traversal
+
+User authorized M2. Queried installed jac-node-edge-patterns, jac-walker-patterns,
+jac-has-fields, jac-sv-persistence, jac-testing, core/types and fullstack/endpoint
+and component guides before implementing their features. Typed endpoints on edges,
++>:TYPE(fields):+> construction, reverse typed queries, edge-object references,
+ordered edge queries and can/visit/exit reporting are verified by these guides.
+Decision: Catalogue → Region ownership edge; Tradition → Region PART_OF;
+Recipe → Tradition BELONGS_TO; Recipe → Ingredient REQUIRES with quantities,
+essentiality, preparation and substitution notes; Recipe → Step HAS_STEP with
+sequence. Discovery walks backwards from regions into traditions/recipes, then
+forwards into ingredients/steps. Typed view objects are assembled from graph edges,
+not a duplicate JSON catalogue. Traces come from actual encounter abilities.
+
+M2 uses a fresh transient demo graph per request, never attached to root. This is
+supported by the node/edge guide and isolates fixtures without touching saved user
+state. Four regions/eight traditions/eight recipes are a small demonstration, not
+a global recipe database or verified culinary advice. Persistence/migrations remain
+a future feature; graph-first enrichment is M5 and intake/ranking is M3. Alternative:
+a shared persisted public seed now; deferred to avoid silently mixing fixtures with
+user data and introducing ownership/concurrent-seeding contracts before needed.
+
+M2 validation correction: transient edge ordering did not reorder the seed's reverse-
+inserted steps in the first runtime test. Sort the projected StepView list explicitly
+by the sequence read from HAS_STEP edges. Keep the deliberately reversed fixture to
+exercise this behavior. Initial endpoint docstring was placed inside its body and
+rejected; changed to a comment following the core guide's declaration-docstring rule.
+
+M2 repeat-run test exposed a transient lifetime issue: reverse-linked tradition and
+recipe sources could be collected after the builder returned. Added typed
+CATALOGUE_TRADITION and CATALOGUE_RECIPE ownership edges from the catalogue, retaining
+the reverse-linked sources through real topology rather than duplicate JSON or global
+arrays. Two subsequent suite runs passed. First client build attempted to lower the
+walker into JavaScript; explicitly pin endpoints.discover to server, following the
+installed codespace guide and M1's verified status-RPC boundary.

@@ -3,10 +3,11 @@
 Your Ingredients. The World's Kitchens.
 
 Cooksy is a Jac-native culinary discovery and cook-along application in development.
-**M1 provides a runnable responsive shell:** Home, an interactive regional preview,
-Pantry and Cook Along empty states, a not-found page, and real Jac server connectivity
-with retry. Discovery, pantry storage, recipes, cooking sessions and model inference
-are not yet implemented. Every screen discloses its preview status.
+**M2 provides graph-backed demo discovery:** Home, four regions, eight traditions,
+eight illustrative recipe adaptations, ingredient quantities and optional flags,
+ordered sample steps, actual walker encounter traces, and server retry states.
+Pantry matching, full selected-recipe preparation, cooking sessions and model
+inference are not yet implemented. All demo recipes are explicitly unverified.
 
 ## Run locally
 
@@ -21,6 +22,9 @@ jac run --dev
 ```
 
 Open http://localhost:8000. Development UI uses port 8000; the API uses port 8001.
+On WSL, if Windows localhost forwarding fails, run `hostname -I` in WSL and open
+`http://<first-WSL-IP>:8000/` from Windows. The user verified this route works.
+Keep the server terminal running; use the actual app port printed by Jac if occupied.
 No provider keys or environment file are needed for the shell. Installation needs
 package-registry access. The first server start provisions Jac's local runtime/data.
 This is a local development preview; production deployment is a later milestone.
@@ -38,8 +42,8 @@ jac check .
 jac build --as client
 ```
 
-Type checks pass with installed-compiler warnings about JSX/runtime typing and
-unused generated state aliases; these are documented in docs/evidence/m1-verification.md.
+Type checks have installed-compiler warnings about JSX/runtime typing and
+unused generated state aliases; see docs/evidence/m1-verification.md and the M2 log.
 M1 behavior is checked in a real browser rather than a trivial status-string unit test.
 Install the browser once, then start `jac run --dev` in a separate terminal:
 
@@ -54,7 +58,18 @@ To regenerate screenshots, use `COOKSY_SCREENSHOTS=1 node tests/shell-smoke.mjs`
 Captures go to /tmp/cooksy-m1-screenshots to avoid Jac watcher reloads. Stop the
 server before copying them into docs/screenshots.
 Browser binaries and Node are developer tooling, not application implementation.
-`jac test` will cover graph/domain tests from M2 onward.
+Run the isolated graph suite twice (neither run attaches fixtures to root):
+
+```bash
+jac test tests/discovery_tests.jac
+jac test tests/discovery_tests.jac
+```
+
+With the dev server running, also run `node tests/discovery-smoke.mjs` for actual
+HTTP discovery, 8→2→1 filtering, graph-backed quantities and steps, trace events,
+region-reset behavior, mobile layout, empty responses and retry. Use
+`COOKSY_SCREENSHOTS=1 node tests/discovery-smoke.mjs` for captures under
+/tmp/cooksy-m2-screenshots; copy into docs only after stopping the server.
 
 ## Architecture
 
@@ -62,13 +77,21 @@ Browser binaries and Node are developer tooling, not application implementation.
 - `pages/layout.jac` supplies navigation, the development disclosure and footer.
 - `pages/` contains Home, Explore, Pantry, Cook Along and catch-all routes.
 - `components/` contains typed Jac UI components and reactive connectivity state.
-- `endpoints.jac` exposes a read-only status function, explicitly pinned server-side.
+- `endpoints.jac` exposes server-pinned connectivity and discovery functions.
+- `graph/models.jac` declares culinary nodes and typed relationship/ownership edges.
+- `graph/seed.jac` constructs one isolated transient demo graph per request.
+- `graph/views.jac` defines typed wire projections from those relationships.
+- `walkers/discovery.jac` traverses catalogue → region → tradition → recipe →
+  ingredient/step, reads relationship fields, and records actual encounter events.
 - `styles/global.css` defines responsive typography, colors, layouts and a decorative
   serving illustration. The illustration is CSS artwork, not a model-generated meal.
 
-Later milestones add actual culinary nodes, typed edges and traversing walkers.
-Graph memory is consulted before structured LLM enrichment; Jac performs deterministic
-matching and nutrition calculations. Candidate discovery proposes approximately five
+M2 already uses real nodes/edges/walkers. It intentionally rebuilds a small demo graph
+per request without persisting or modifying user state. Shared ingredients are reused
+within each graph; step order comes from HAS_STEP sequence. The catalogue includes
+ownership edges to keep reverse-linked traditions/recipes reachable in transient memory.
+Later milestones add durable graph memory, deterministic pantry matching, structured
+LLM enrichment and reference-based nutrition calculations. Candidate discovery proposes approximately five
 meals; full recipe generation follows selection. The M2 seed is test/demo data,
 not a manually maintained production catalogue. Python stays limited to specialised
 MobileNet and SDXL inference adapters.
@@ -88,7 +111,8 @@ has been exercised in M1.
 The original [implementation guidance](docs/briefs/implementation-guidance.md) and
 [architecture](docs/briefs/technical-architecture.md) are preserved verbatim.
 Resume using [NEXT_SESSION.md](NEXT_SESSION.md); see [progress](docs/PROGRESS.md),
-[decisions](docs/DECISIONS.md), and [M1 verification](docs/evidence/m1-verification.md).
+[decisions](docs/DECISIONS.md), and [M1 verification](docs/evidence/m1-verification.md), and
+[M2 verification](docs/evidence/m2-verification.md).
 
 Remote: [MarrionKiprop/cooksy](https://github.com/MarrionKiprop/cooksy), branch main.
 SSH uses the existing ~/.ssh/id_ed25519 key through repository-local Git configuration.

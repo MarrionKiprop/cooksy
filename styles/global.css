@@ -1192,3 +1192,47 @@ h3 {
 @media (max-width: 700px) {
   .region-copy h2 { font-size: clamp(16px, 4.6vw, 21px); overflow-wrap: anywhere; }
 }
+/* Graph-backed discovery preview. */
+.demo-disclosure { margin-top: 24px; padding: 15px 18px; background: #eeefe5; border-left: 3px solid #a0ad86; font-size: 12px; }
+.discovery-section { margin-bottom: 28px; }
+.discovery-heading { display: flex; justify-content: space-between; align-items: end; gap: 24px; margin-bottom: 25px; }
+.discovery-heading h2 { margin-top: 8px; font-size: 32px; }
+.tradition-filter { display: grid; gap: 8px; min-width: 180px; }
+.tradition-filter label { font-size: 11px; color: var(--muted); }
+.tradition-filter select { font: inherit; font-size: 13px; color: var(--ink); background: #fcfbf6; border: 1px solid #bac5ac; border-radius: 7px; padding: 12px; }
+select:focus-visible, summary:focus-visible { outline: 3px solid #b6602d; outline-offset: 4px; }
+.region-card:disabled, .filter-button:disabled { opacity: .65; cursor: wait; transform: none; }
+.recipe-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+.seed-card { border: 1px solid var(--line); background: #fcfbf6; border-radius: 12px; padding: 26px; min-width: 0; }
+.seed-meta { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; margin-bottom: 19px; font-size: 10px; color: var(--muted); }
+.seed-card h3 { font-size: 29px; margin: 9px 0; }
+.seed-card > p { font-size: 13px; }
+.seed-card details { border-top: 1px solid var(--line); margin-top: 21px; padding-top: 15px; }
+.seed-card summary { font-size: 12px; cursor: pointer; font-weight: 600; padding: 6px 0; }
+.seed-card h4 { font-size: 13px; margin: 23px 0 12px; }
+.seed-card ol { padding-left: 22px; font-size: 12px; line-height: 1.8; color: var(--muted); }
+.seed-card li { padding-block: 5px; }
+.requirement-list { padding: 0; margin: 0; list-style: none; }
+.requirement-list li { border-bottom: 1px solid #e7e8de; padding-block: 10px; }
+.requirement-list li > div { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 7px; font-size: 12px; }
+.requirement-list strong { font-weight: 600; }
+.requirement-list span { color: var(--muted); font-size: 11px; }
+.requirement-list p { font-size: 11px; }
+.fixture-note { margin-top: 14px; font-size: 11px; }
+.discovery-status { padding: 25px; border: 1px dashed #b9c4aa; border-radius: 9px; font-size: 13px; }
+.discovery-status .button { margin-top: 14px; }
+.result-count { font-size: 11px; margin-top: 17px; }
+.graph-trace { margin-bottom: 50px; border-top: 1px solid var(--line); padding-top: 20px; }
+.graph-trace summary { font-size: 12px; color: var(--muted); cursor: pointer; }
+.graph-trace p, .graph-trace li { font-size: 11px; }
+.graph-trace p { margin-top: 15px; }
+.graph-trace ol { max-height: 280px; overflow: auto; padding-left: 24px; }
+.graph-trace li { padding: 5px; line-height: 1.6; }
+.graph-trace li span { color: #5a7049; font-weight: 650; }
+@media (max-width: 700px) {
+  .discovery-heading { flex-direction: column; align-items: stretch; gap: 20px; }
+  .discovery-heading h2 { font-size: 28px; }
+  .recipe-grid { grid-template-columns: minmax(0, 1fr); gap: 15px; }
+  .seed-card { padding: 22px 19px; }
+  .demo-disclosure { font-size: 11px; }
+}

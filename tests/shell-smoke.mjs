@@ -26,7 +26,7 @@ try {
   await page.goto(baseURL);
   await expect(page.getByRole('heading', { level: 1 })).toContainText('Good food starts');
   await expect(page).toHaveTitle('Cooksy — Your ingredients. The world’s kitchens.');
-  await expect(page.getByRole('status')).toHaveText('Connected to the Jac kitchen');
+  await expect(page.locator('.connection [role="status"]')).toHaveText('Connected to the Jac kitchen');
   expect(statusRequests).toContain(200); // Proves an RPC, not a client-only constant.
   await noOverflow();
   if (process.env.COOKSY_SCREENSHOTS) await page.screenshot({ path: `${screenshotDir}/m1-home-desktop.png`, fullPage: true, animations: 'disabled' });
@@ -68,7 +68,7 @@ try {
       await page.goto(baseURL + route);
       await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
       await noOverflow();
-      await expect(page.getByRole('status')).toHaveText('Connected to the Jac kitchen');
+      await expect(page.locator('.connection [role="status"]')).toHaveText('Connected to the Jac kitchen');
       console.log(`Verified ${width}px ${route}`);
       if (process.env.COOKSY_SCREENSHOTS && width === 390 && (route === '/' || route === '/explore')) {
         await page.screenshot({ path: `${screenshotDir}/m1-${route === '/' ? 'home' : 'explore'}-mobile.png`, fullPage: true });
@@ -81,10 +81,10 @@ try {
   const offlinePage = await offlineContext.newPage();
   await offlinePage.route('**/function/shell_status', route => route.abort('failed'));
   await offlinePage.goto(baseURL);
-  await expect(offlinePage.getByRole('status')).toHaveText('The kitchen is offline. Try connecting again.');
+  await expect(offlinePage.locator('.connection [role="status"]')).toHaveText('The kitchen is offline. Try connecting again.');
   await offlinePage.unroute('**/function/shell_status');
   await offlinePage.getByRole('button', { name: 'Reconnect' }).click();
-  await expect(offlinePage.getByRole('status')).toHaveText('Connected to the Jac kitchen');
+  await expect(offlinePage.locator('.connection [role="status"]')).toHaveText('Connected to the Jac kitchen');
   await offlineContext.close();
   expect(errors).toEqual([]);
   console.log('PASS: navigation, keyboard selection/skip link, deep links, 404, actual RPC, offline retry, no runtime errors, responsive 390/320px layouts.');

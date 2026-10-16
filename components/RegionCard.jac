@@ -4,13 +4,15 @@ def:pub RegionCard(
     motif: str,
     tone: str,
     selected: bool,
-    onSelect: Callable[[MouseEvent], None]
+    onSelect: Callable[[MouseEvent], None],
+    disabled: bool = False
 ) -> JsxElement {
     return
         <button
             type="button"
             className={"region-card " + tone + (" selected" if selected else "")}
             aria-pressed={selected}
+            disabled={disabled}
             onClick={onSelect}
         >
             <div className="region-art" aria-hidden="true">
