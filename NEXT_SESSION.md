@@ -22,3 +22,5 @@ Never expose .env/keys; previous three-call live authorization is exhausted.
 Jac: /home/langstkip/workspace/jac/bin/jac. Stop preview before watched edits,
 format/check/build or evidence copies. Start with jac run --dev; UI8000/API8001.
 Compiler cache and local browser execution need elevated sandbox access.
+
+Product-copy implementation checkpoint: `913509a6e21db81f3650c217c6b16c9b137d8f33`; pushed to origin/main.

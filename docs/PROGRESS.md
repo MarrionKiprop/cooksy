@@ -532,3 +532,5 @@ suites PASS, including product-copy and accessibility. Desktop/mobile screenshot
 reviewed;320/390px overflow checks pass. No paid inference. An initial shell run
 used an obsolete text assertion (fixed); another started before server readiness
 (connection refused), then passed after readiness. Evidence includes details.
+
+Product-copy implementation checkpoint: `913509a6e21db81f3650c217c6b16c9b137d8f33`; pushed to origin/main.
