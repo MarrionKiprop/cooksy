@@ -420,3 +420,6 @@ guide evidence and validation notes recorded. M7/SDXL and M8/nutrition not start
 M6 classifier covers only a subset of ingredients; no full inventory, quantities,
 allergy safety or durable photo history claims. Browser camera selection depends
 on device/browser; WSL desktop file selection is verified.
+
+M6 implementation checkpoint: `23c1388806953db54c68d406e3adf1d46c3edf59`; pushed and remote main verified.
+Final formatting, whitespace and credential/weight exclusion checks passed.

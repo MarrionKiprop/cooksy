@@ -32,3 +32,6 @@ remain disclosed. User authorizes normal checked commits/pushes to origin/main;
 never force push, verify remote hash. See progress for implementation checkpoint.
 Leave preview running after final checks. WSL browser http://172.26.123.103:8000
 (IP can change). Never print/commit .env, keys, photos or model weights.
+
+M6 implementation checkpoint: `23c1388806953db54c68d406e3adf1d46c3edf59`; pushed and remote main verified.
+Final formatting, whitespace and credential/weight exclusion checks passed.
