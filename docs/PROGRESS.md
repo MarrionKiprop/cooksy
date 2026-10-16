@@ -71,3 +71,12 @@ Next action: follow NEXT_SESSION.md to implement only M1 after this checkpoint.
 
 Next Git action: create empty remote, push main with upstream, compare remote hash
 to local HEAD. M1 remains the next application milestone.
+
+## GitHub initial push completed — 2026-10-16
+
+User created the repository. `git ls-remote origin` succeeded with empty output
+(empty repository); `git push -u origin main` succeeded, publishing the foundation
+and Git configuration commits through 2a7972a. Main now tracks origin/main.
+Updated recovery documents to remove the creation blocker. `git diff --check`
+passed before committing this handoff. Push this documentation commit and verify
+remote main equals local HEAD. Next application milestone remains M1.

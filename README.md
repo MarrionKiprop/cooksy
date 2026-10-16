@@ -64,8 +64,7 @@ will use referenced measurements or clearly identified demo estimates.
 
 GitHub SSH authentication is verified as MarrionKiprop using the existing
 `~/.ssh/id_ed25519` key, selected through repository-local Git configuration.
-`origin` targets `git@github.com:MarrionKiprop/cooksy.git`; remote creation is
-pending because GitHub returned “Repository not found.” No commits have been
-pushed yet. Once the empty repository exists, run `git push -u origin main`.
+`origin` targets `git@github.com:MarrionKiprop/cooksy.git`. The repository exists
+and the initial `git push -u origin main` succeeded; main tracks origin/main.
 Future checked milestone commits must be pushed and verified against origin/main.
 SSH keys remain outside the project and are not included in any commit.

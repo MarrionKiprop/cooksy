@@ -33,9 +33,8 @@ criteria in docs/briefs/implementation-guidance.md. Stop at the milestone bounda
 
 Blockers/configuration: none for M0; M1 dependency installation may need network
 permission. No provider needed for shell. GitHub SSH authentication works as MarrionKiprop; origin is configured for
-MarrionKiprop/cooksy. Create the empty GitHub repository or connect the GitHub
-plugin to create it, then `git push -u origin main` and verify with
-`git ls-remote origin refs/heads/main`. Ongoing pushes are authorized. Repository
-visibility is not selected yet; local Git works. Provider/weights/GPU setup belongs
+MarrionKiprop/cooksy. Initial push succeeded and main tracks origin/main.
+After each checked commit, run `git push` and compare `git rev-parse HEAD` with
+`git ls-remote origin refs/heads/main`. Ongoing pushes are authorized. Provider/weights/GPU setup belongs
 to later milestones. No uncommitted files are expected after final ledger commit;
 verify git status before starting.

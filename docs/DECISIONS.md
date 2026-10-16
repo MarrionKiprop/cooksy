@@ -88,3 +88,11 @@ Repository not found; repository creation and initial push remain pending. No gh
 CLI or token environment variable is available. Offered GitHub plugin connection
 for repository creation. Future checked commits should be pushed without asking
 again; verify remote branch hash, never force push or overwrite remote history.
+
+## D009 — GitHub repository established
+
+User confirmed creation of MarrionKiprop/cooksy. Verified the remote was empty
+with `git ls-remote origin`, then successfully ran `git push -u origin main`.
+Use the existing SSH remote and tracked main branch for future authorized pushes;
+verify remote main matches local HEAD after pushing. No plugin connection or new
+credentials were needed. Repository visibility was not inspected or changed.

@@ -56,7 +56,7 @@ Never print or commit private keys, .env, uploads or model weights. The SSH key 
 are outside this repository; do not copy them here. Global Git identity is configured.
 GitHub SSH authentication is verified as MarrionKiprop using ~/.ssh/id_ed25519.
 The repository-local core.sshCommand selects that key; origin targets
-git@github.com:MarrionKiprop/cooksy.git. Remote creation is still pending.
+git@github.com:MarrionKiprop/cooksy.git. Remote exists; main tracks origin/main and the initial push succeeded.
 The user explicitly authorized ongoing pushes: after each checked milestone and
 recovery-document commit, push to origin/main and verify remote HEAD equals local
 HEAD. First push: `git push -u origin main`; later pushes: `git push`. Never force
