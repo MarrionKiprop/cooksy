@@ -1,0 +1,4 @@
+# Separate optional CPU vision environment; the Jac app invokes its Python worker.
+Pillow==12.1.1
+torch==2.13.0
+torchvision==0.28.0

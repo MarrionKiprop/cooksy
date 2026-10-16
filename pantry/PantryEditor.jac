@@ -1,5 +1,6 @@
 import from endpoints { review_ingredients, confirm_ingredients }
 import from .client_state { write_pantry }
+import from vision.PhotoIntake { PhotoIntake }
 
 def:pub PantryEditor(
     names: list[str], disabled: bool, onConfirmed: Callable[[list[str]], None]
@@ -15,6 +16,17 @@ def:pub PantryEditor(
     def notify(updated: list[str]) {
         callback = onConfirmed as any;
         callback.call(None, updated);
+    }
+
+    def photo_busy(value: bool) {
+        busy = value;
+    }
+
+    def photo_confirmed(updated: list[str]) {
+        if not write_pantry(updated) {
+            storage_note = "Storage unavailable; shared pantry survives navigation, not refresh.";
+        }
+        notify(updated);
     }
 
     async def review(e: FormEvent) {
@@ -137,6 +149,12 @@ def:pub PantryEditor(
             </div>
                 if reviewing
                 else None}
+            <PhotoIntake
+                names={names}
+                disabled={busy or disabled}
+                onConfirmed={photo_confirmed}
+                onBusy={photo_busy}
+            />
             <p className="pantry-notice" role="status">{message}</p>
             <div className="pantry-chip-heading">
                 <h3>Confirmed ingredients <span>{len(names)}</span></h3>

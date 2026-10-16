@@ -1,29 +1,34 @@
-# M5 workflow additions complete; M6 not started
+# M6 photo intake complete; M7 not started
 
-Read AGENTS.md, docs/PROGRESS.md, docs/DECISIONS.md and git status/log first.
-Natural-language review → editable explicit confirmation → one shared pantry →
-Explore 15 regions/traditions or worldwide Discover → five valid choices → selected
-recipe → cook-along. Discover serves Surprise Me. Normal graph/LLM discovery does
-not use a static seed database; /demo and explicit labelled fallback retain fixtures.
-The supplied workflow PNG is preserved. M6/M7/M8 remain unimplemented.
+User said “lets go” to M6, explicitly deferred durable memory. Base main 10d8c45.
+Read AGENTS, docs/PROGRESS and docs/DECISIONS D018. M6 implementation is recorded in progress.
+Adapter Python in adapters/vision_adapter.py; typed views/models/service/PhotoIntake
+under vision/. PantryEditor embeds photo review; endpoints and placement pins added.
+Local-only inference: configured ignored .env points COOKSY_VISION_PYTHON to
+/home/langstkip/workspace/langstEnv/bin/python, mode local, official baseline weights
+models/mobilenet_v3_small-047dcff4.pth (ignored, SHA256 documented). No secrets printed.
+CPU torch2.13.0+cpu/torchvision0.28.0+cpu/Pillow12.1.1 installed there. Optional requirements
+under adapters/. Python validates image, uses official transforms/eval/inference_mode;
+checksum enforced. No inference-time download, no cloud photo or paid API calls.
 
-36 Jac tests, 54-file check, client build and all seven browser suites passed.
-All inference mocked; no extra paid requests. Prior three-request authorization
-is exhausted. Never print .env/keys. GPT-4.1 mini remains server-only.
-Screenshots under docs/screenshots/m5-alignment show labelled browser fixtures.
-Graph cache expires on server restart. Names only; no quantity/allergy verification.
-Shared pantry has tab storage and navigation-memory fallback, no durable account data.
-Initial load and restoration never infer; discovery has initial + one repair maximum.
+User photo→explicit review→all suggestions initially blank/unaccepted→accept/edit or
+reject→explicit confirm→same shared pantry→existing discovery. Signed15min receipt
+contains metadata only; invalid/expired/serverrestart reviews fail, no image storage.
+Actual request-local image/detection/confirmed ingredient graph walker with stable
+position association; no shared-root writes or durable photo history. MobileNet is
+prominent-object classification, supported subset only; demo is explicit labelled
+fixed potato/tomato guesses, never implicit fallback. Failures preserve typed pantry.
 
-Jac: /home/langstkip/workspace/jac/bin/jac 0.37.25. Stop preview before edits,
-checks/build or copying captures; restart before browser tests. Compiler cache needs
-elevated execution. Gates: jac fmt . --check; jac test -d tests; jac check .;
-jac build --as client. Browser suites: tests/{shell,discovery,cooking,pantry,
-pantry-discovery,global-discovery,enrichment}-smoke.mjs, each run with node.
-Do not run enrichment-live without renewed paid-call authorization.
+Verification complete: six adapter tests, 40 Jac tests, 59-file full check and
+client build passed. All eight browser suites passed including vision-smoke (actual
+local photo inference/confirmation, culinary LLM mocked). Prior three paid-call
+approval is exhausted; do not run enrichment-live. Synthetic-image inference proves
+execution/contract, not real-food accuracy. Screenshots show labelled demo fixtures.
+No account durability, SDXL or nutrition implemented. M7 is next only on user request.
 
-User authorizes normal checked commits/pushes to main; verify remote hash, never
-force push. See progress for implementation checkpoint hash. Next: user direction
-before M6. WSL preview previously works at http://172.26.123.103:8000; IP may change.
-
-Implementation checkpoint: `cb08338432954475790210917b503d8a70188053` (pushed).
+Stop preview before edits/checks/build; restart before browser tests. Jac executable
+/home/langstkip/workspace/jac/bin/jac needs elevated cache writes. Compiler warnings
+remain disclosed. User authorizes normal checked commits/pushes to origin/main;
+never force push, verify remote hash. See progress for implementation checkpoint.
+Leave preview running after final checks. WSL browser http://172.26.123.103:8000
+(IP can change). Never print/commit .env, keys, photos or model weights.

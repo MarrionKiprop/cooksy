@@ -399,3 +399,49 @@ A localized `as any` Callable.call bridge handles the installed JS typing bounda
 MockLLM.seen counts inference; wrapping by-llm functions breaks metadata reflection.
 No generated/framework files were edited. The latest Cooksy direction supersedes
 old names/static-food-database proposals in supplied reference documents.
+
+## D018 — M6 local photo review and private confirmation topology
+
+User authorized M6 with “lets go” after explicitly deferring durable memory. The
+preserved briefs require a MobileNet-family adapter, image validation, review,
+confirmation and graph links, with an honest explicit demo fallback. Consulted
+installed jac-sv-endpoints, jac-cl-js-interop, jac-python-interop, jac-testing;
+command output retained under docs/evidence/m6-guides. Reused existing component,
+node-edge and walker patterns. Official Torchvision documentation confirms this
+ImageNet model is whole-image classification, not multi-object ingredient detection:
+https://docs.pytorch.org/vision/main/models/generated/torchvision.models.mobilenet_v3_small.html
+
+Use MobileNetV3 Small IMAGENET1K_V1 CPU weights with documented checksum, matched
+preprocessing and a conservative raw ingredient label map. No dishes or animals
+mapped to raw pantry ingredients. Only supported labels among top five with >=0.05
+model probability are proposed, clearly alternatives not multiple detected objects.
+Weights/runtime already downloadable/available locally, no paid cloud photo API.
+Verify the official checksum at inference so arbitrary files cannot claim baseline
+provenance. Missing/wrong weights, no supported label or dependency failure are
+honest states; normal inference never silently returns demo ingredients.
+
+The specialist Python adapter validates JPEG/PNG actual bytes, matching MIME,
+5 MiB/16 MP bounds, single-frame decoding, EXIF orientation; inference uses the
+weight transform and eval/inference_mode on CPU. Invoke optional vision Python in
+a bounded 25-second subprocess, no shell, no image paths/URLs from client, no runtime
+download. This keeps large ML dependencies out of the Jac runtime and limits hung
+inference. Python remains limited to specialized decoding/inference, while Jac
+owns contracts, orchestration, confirmation, graph relationships and pantry updates.
+
+Choose typed JSON RPC data URLs instead of custom multipart/browser transport.
+This fits existing generated RPC and provides a small bounded photo payload; base64
+has overhead, documented as a local development tradeoff. No photo writes, shared
+root attachment, or photo transmission to the culinary LLM. Receipts signed by an
+ephemeral process key contain digest, dimensions/model and prediction metadata,
+expire in 15 minutes or restart. They permit stateless request-local confirmation
+without a shared private-photo cache or trusting client-forged predictions.
+
+Photo inputs start unaccepted; blank rejects, accept copies the suggestion and edits
+replace it. Explicit confirmed=True plus valid receipt and all-valid selected names
+are required. ConfirmPhotoWalker traverses IngredientImage→DETECTS→DetectionResult,
+links accepted/edited names with CONFIRMED_AS and Pantry→HAS_INGREDIENT, preserving
+original label and position independent of traversal order. PANTRY_IMAGE retains
+ownership. Graphs stay request-local; no durable history is claimed. Confirmation
+merges/deduplicates into the existing client pantry and invalidates old choices.
+Parent busy propagation prevents concurrent typed/photo mutations. Failed confirmation
+retains review edits/pantry; explicit demo fixture provenance remains visible.

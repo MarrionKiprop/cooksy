@@ -110,8 +110,8 @@ durable pantry persistence are not implemented.
 
 A small explicit alias map normalizes names, case and whitespace. It does not infer
 quantities or silently add staples; invalid entries are shown for correction.
-Raw chickpeas are not treated as already-cooked chickpeas. Photo input is not yet
-available, but the walker rejects unconfirmed vision-source suggestions in tests.
+Raw chickpeas are not treated as already-cooked chickpeas. Photo intake requires
+explicit review and confirmation; unconfirmed suggestions never enter the pantry.
 
 Score is floor(100 × directly available essential ingredient types / essential
 types). Optional items do not reduce it. Optional-only recipes receive 100; recipes
@@ -159,6 +159,58 @@ installed HTTP binder. Incomplete requests are tested as validation failures.
 `COOKSY_SCREENSHOTS=1 node tests/cooking-smoke.mjs` writes reviewed captures under
 /tmp/cooksy-m4-screenshots; stop the server before copying them into docs.
 
+## Photo intake (M6)
+
+Take/upload a JPEG or PNG (5 MiB, 16 megapixels maximum) in the shared pantry editor.
+“Review photo” runs a local CPU MobileNetV3 Small classifier. Suggestions start
+unaccepted: accept a name, edit it, or leave blank to reject; then explicitly choose
+“Confirm photo ingredients”. Only confirmed names enter the same shared pantry and
+trigger the existing meal flow. Photo failures preserve typed entry and saved names.
+
+This ImageNet baseline recognizes only some ingredient categories (for example
+banana, orange, broccoli, cabbage). It classifies a prominent object; alternative
+predictions are not distinct detected objects. It is not a complete kitchen inventory
+or a food-specific trained model. Scores do not establish correctness. Explicit
+“Try demo suggestions” returns fixed, labelled potato/tomato fixtures regardless of
+the photo, never an automatic fallback. No photo is sent to the culinary LLM.
+
+The thin Python adapter runs in a bounded subprocess (25 seconds). Configure:
+
+```dotenv
+COOKSY_VISION_MODE=local
+COOKSY_VISION_PYTHON=/absolute/path/to/vision-env/bin/python
+COOKSY_VISION_MODEL_PATH=/absolute/path/to/mobilenet_v3_small-047dcff4.pth
+```
+
+Create a separate Python environment and install `adapters/requirements-vision.txt`.
+For CPU-only wheels use the official PyTorch CPU index for torch/torchvision.
+Download weights explicitly; inference never downloads them:
+
+```bash
+mkdir -p models
+curl --fail --location https://download.pytorch.org/models/mobilenet_v3_small-047dcff4.pth -o models/mobilenet_v3_small-047dcff4.pth
+sha256sum models/mobilenet_v3_small-047dcff4.pth
+```
+
+Expected SHA256: `047dcff4addef86ea5bc2eff13c9614dc11f47ab1160d0a71a25e7db994f4e1f`.
+Weights and `.env` remain ignored. Missing decoder/runtime/weights gives an honest
+unavailable state. A blank Python path uses the server Python. Restart after config
+changes. Set mode `off` to disable normal inference; demo remains explicit.
+
+Photos travel as bounded data URLs through typed RPC and are decoded/validated in
+memory; application code saves no uploaded images or raw bytes to graph/storage.
+Signed review receipts expire after 15 minutes/server restart and carry only digest,
+dimensions, model and predictions. Confirmation reconstructs request-local
+IngredientImage → DETECTS → DetectionResult → CONFIRMED_AS → Ingredient topology,
+linked to Pantry; private graphs are not attached to shared roots. Graph provenance
+is transient, not durable photo history. Mobile capture availability depends on
+browser/device; file selection works in WSL desktop browsers.
+
+Tests: configured vision Python runs `tests/vision_adapter_tests.py`; Jac vision
+tests are included in `jac test -d tests`; browser regression is
+`node tests/vision-smoke.mjs`. Browser photo RPC/inference and demo confirmation are
+real; culinary LLM calls are intercepted. No paid API checks are required.
+
 ## Providers and limitations
 
 M5 uses server-only `OPENAI_API_KEY` from ignored `.env`, loaded by Jac’s server:
@@ -186,12 +238,12 @@ Help accepts only exact quotations from the current instruction, and states when
 that instruction lacks an answer. It does not provide an open-ended cooking chat.
 
 Run `jac test -d tests` for deterministic MockLLM tests (no paid calls), and
-all seven browser suites: shell, discovery, cooking, pantry, pantry-discovery,
-global-discovery and enrichment (each `node tests/<name>-smoke.mjs`). Browser
+all eight browser suites: shell, discovery, cooking, pantry, pantry-discovery,
+global-discovery, enrichment and vision (each `node tests/<name>-smoke.mjs`). Browser
 help success is mocked; the graph-first RPC/navigation are real. Provider errors
 leave existing graph content and progress available. This is local development;
 public deployment needs authentication, spending limits and durable cache design.
-Vision (M6), SDXL previews (M7) and nutrition (M8) are not implemented yet.
+M6 local photo intake is implemented; SDXL previews (M7) and nutrition (M8) remain future work.
 
 ## Project memory and GitHub
 

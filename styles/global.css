@@ -1361,3 +1361,11 @@ select:focus-visible, summary:focus-visible { outline: 3px solid #b6602d; outlin
 .result-count { white-space: nowrap; color: #536549; }
 @media (max-width: 800px) { .discovery-setup { grid-template-columns: minmax(0, 1fr); } }
 @media (max-width: 380px) { .region-choice-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .main-nav { gap: .8rem; } }
+
+.photo-intake { border-top: 1px solid var(--line, #deded0); margin-top: 1.25rem; padding-top: 1.25rem; }
+.photo-intake input { width: 100%; max-width: 100%; padding: .6rem; border: 1px solid #d7d9c9; border-radius: .45rem; background: #fff; }
+.ingredient-photo { display: block; width: 100%; max-height: 220px; object-fit: contain; margin: 1rem 0; border-radius: .6rem; }
+.photo-actions { display: flex; flex-wrap: wrap; gap: .6rem; margin: .8rem 0; }
+.photo-prediction { margin: .8rem 0; }
+.photo-prediction label { display: block; }
+.photo-intake [role="status"] { font-size: .85rem; }

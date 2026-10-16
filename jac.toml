@@ -55,5 +55,8 @@ theme_color = "#f8f6ef"
 "endpoints.recommend_meals" = "server"
 "endpoints.restore_meals" = "server"
 
+"endpoints.review_photo_ingredients" = "server"
+"endpoints.confirm_photo_ingredients" = "server"
+
 [byllm.model]
 default_model = "gpt-4.1-mini"

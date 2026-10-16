@@ -186,3 +186,16 @@ def:pub restore_meals(
 ) -> MealPlan {
     return restore(ingredients, keys, mode, region_key, tradition_key, demo);
 }
+
+import from vision.views { PhotoReview, PhotoCommit }
+import from vision.service { review as review_photo, confirm as commit_photo }
+
+def:pub review_photo_ingredients(data: str, demo: bool) -> PhotoReview {
+    return review_photo(data, demo);
+}
+
+def:pub confirm_photo_ingredients(
+    receipt: str, selections: list[str], existing: list[str], confirmed: bool
+) -> PhotoCommit {
+    return commit_photo(receipt, selections, existing, confirmed);
+}

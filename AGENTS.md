@@ -6,7 +6,7 @@ Read both preserved briefs in docs/briefs when resolving product requirements.
 
 ## Scope and milestone discipline
 
-Complete one milestone at a time, in M0–M8 order. M0–M4 are complete. M5 is reopened by the user to complete natural-language intake, shared pantry, 15 regions/traditions, worldwide Discover and one five-choice result flow. Finish these additions before M6.
+Complete one milestone at a time, in M0–M8 order. M0–M5 and their shared workflow additions are complete. M6 photo intake is authorized and implemented; verify and record it before starting M7.
 Preserve milestone boundaries and follow the acceptance criteria in the implementation brief.
 Before every milestone commit update progress, decisions, and restart instructions;
 run applicable checks, record exact outcomes and limitations, and commit only
@@ -106,7 +106,7 @@ RESOLVES_TO. No claim that schema checks establish general culinary correctness.
 StepHelp only accepts exact quotations from the current graph instruction; it cannot
 invent missing information or advance progress. Run the five browser suites including
 enrichment-smoke; enrichment-live is opt-in and paid. Stop all old preview sessions
-before starting a new server to prevent port conflicts. M6 vision remains unimplemented.
+before starting a new server to prevent port conflicts. M6 photo intake is described below.
 
 ## M5 unified workflow supersedes earlier pantry integration
 
@@ -123,4 +123,24 @@ CandidateCard/DiscoveryWorkbench were replaced by MealCard/DiscoveryWorkspace.
 Run all seven browser suites: shell, discovery, cooking, pantry, pantry-discovery,
 global-discovery, enrichment (tests/<name>-smoke.mjs). Inference must be mocked;
 enrichment-live remains paid and opt-in. Cache durability remains unimplemented.
-M6 is not started; wait for the user's next module request.
+M6 was authorized with “lets go”; photo intake is the current milestone.
+
+## M6 photo intake boundaries
+
+PhotoIntake is embedded in the same PantryEditor. Accept JPEG/PNG only, 5 MiB and
+16 megapixels; adapter verifies actual decoding/MIME, no animation, EXIF orientation.
+No image bytes saved to graph/disk or sent to OpenAI. MobileNetV3 Small ImageNet V1
+is prominent-object classification, not multi-object detection. Conservative label
+mapping; no unsupported ingredient invention. All suggestions start unaccepted;
+explicit editable confirmation is mandatory. Demo fixed predictions are explicit
+and labelled, never implicit fallback. Failure preserves existing pantry/typed entry.
+Use configured COOKSY_VISION_PYTHON for the optional adapter environment; do not add
+large torch packages to the Jac runtime. Weights ignored, official checksum recorded.
+Adapter subprocess has 25-second timeout, no shell and no inference-time download.
+Signed 15-minute process-key receipts hold metadata/predictions only; reject tampering
+and expiry. ConfirmPhotoWalker traverses actual detections using stable positions,
+creates CONFIRMED_AS and shared ingredient references in a request-local private graph.
+No durable photo history or anonymous shared-root writes. Typed RPC data URLs avoid
+custom multipart transport; bound and validate both client/server. Parent busy state
+prevents concurrent typed/photo mutations. Tests: vision_adapter_tests.py in configured
+Python, Jac full suite, all eight browser suites including vision-smoke. No paid LLM.

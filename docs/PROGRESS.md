@@ -1,6 +1,6 @@
 # Cooksy progress
 
-Date: 2026-10-16 (Africa/Nairobi). Current milestone: M5 workflow additions complete; M6 awaiting direction.
+Date: 2026-10-16 (Africa/Nairobi). Current milestone: M6 photo intake complete; M7 not started.
 M0 foundation: `34e76eddfcbac857e8c3386b2a0db05790d9fc33`. M1 adds the runnable shell.
 
 | Milestone | Status | Scope / acceptance | Commit | Risks / next action |
@@ -11,7 +11,7 @@ M0 foundation: `34e76eddfcbac857e8c3386b2a0db05790d9fc33`. M1 adds the runnable 
 | M3 | Complete | Pantry intake and deterministic matching; normalisation/dedupe/essential/optional/ranking tests | ea65d48 | Names only; tab-scoped pantry, no account sync |
 | M4 | Complete | Recipe detail and cooking session; advance/reverse/recover progress | 337fc3a | Tab-scoped progress; no account sync or timers |
 | M5 | Complete | Graph-first structured enrichment, selected preparation, grounded help, provenance/validation and content-version recovery | 524e785 | GPT-4.1 mini verified; process cache expires on restart |
-| M6 | Not started | MobileNet adapter, upload/review/confirmation graph; validation and contract tests | — | Weights and dependencies unverified |
+| M6 | Complete | Local MobileNet adapter, upload/review/explicit confirmation and private graph links | See checkpoint below | Limited ImageNet ingredient coverage; no multi-object detection |
 | M7 | Not started | Selected-recipe SDXL preview, metadata/cache, label and error tests | — | Hosted/local inference unconfigured |
 | M8 | Not started | Nutrition references/disclosure, accessibility/responsive polish, full journey and demo handoff | — | Full runtime validation still required |
 
@@ -384,3 +384,39 @@ M8 nutrition and durable account data remain unimplemented. M6 has not started.
 
 M5 workflow implementation checkpoint: `cb08338432954475790210917b503d8a70188053`; pushed to origin/main.
 Final formatting, whitespace and staged/client-bundle credential checks passed.
+
+## M6 — Photo-to-confirmed-pantry flow — 2026-10-16
+
+Implemented bounded local Python MobileNetV3 Small CPU adapter with official weights
+and checksum enforcement; JPEG/PNG actual decoding, MIME/size/pixel/frame checks,
+EXIF orientation and 25-second process timeout. Conservative ingredient mapping
+returns alternatives for a prominent object, not a multi-object inventory. Missing
+runtime/weights/no-match/errors preserve typed intake; demo predictions are explicit
+and labelled. No paid API/cloud photo requests or inference-time downloads.
+
+Shared PantryEditor now has capture/upload preview, unaccepted suggestions, accept,
+editable names, blank rejection and explicit confirmation. Typed server RPC carries
+bounded data URLs; no image files saved by application. Signed 15-minute ephemeral
+receipts bind metadata/predictions without keeping private photo caches. Confirmation
+traverses IngredientImage→DETECTS→DetectionResult→CONFIRMED_AS→Ingredient and
+Pantry→HAS_INGREDIENT/PANTRY_IMAGE in request-local graphs, never shared roots.
+Confirmed names merge into the same Explore/Discover/recipe pantry. Failures retain
+review edits and existing pantry. Parent busy state prevents overlapping mutations.
+
+Verification: 40 Jac tests PASS (47.51s), 59-file full check PASS (133.02s; existing
+warnings retained), client build PASS. Six Python adapter tests PASS. All eight
+browser suites PASS: vision, global-discovery, pantry, pantry-discovery, enrichment,
+shell, discovery, cooking. Photo browser test exercises actual local decode, real
+CPU inference/no_match, explicit demo, edited acceptance/rejected alternatives,
+failed-confirmation preservation/retry, shared discovery, corrupt-file preservation
+and 390/320px layouts; culinary inference mocked. No extra paid model calls.
+Reviewed desktop/mobile photo-review screenshots using synthetic image and clearly
+labelled fixed demo suggestions; no real-food accuracy benchmark claimed.
+
+Local optional environment: Python3.12 with Pillow12.1.1, torch2.13.0+cpu,
+torchvision0.28.0+cpu. Downloaded official 9.8MiB weights remain ignored. .env updated
+only with local vision settings; OpenAI key never printed/committed. Setup/checksum,
+guide evidence and validation notes recorded. M7/SDXL and M8/nutrition not started.
+M6 classifier covers only a subset of ingredients; no full inventory, quantities,
+allergy safety or durable photo history claims. Browser camera selection depends
+on device/browser; WSL desktop file selection is verified.

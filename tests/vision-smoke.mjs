@@ -1,0 +1,41 @@
+import {chromium,expect} from '../.jac/client/node_modules/@playwright/test/index.mjs';
+import {installModelFixtures} from './browser-fixtures.mjs';
+const base=process.env.COOKSY_TEST_URL||'http://localhost:8000';
+const browser=await chromium.launch();const page=await browser.newPage({viewport:{width:1440,height:1000}});
+const errors=[];page.on('pageerror',e=>errors.push(e.message));
+const state=await installModelFixtures(page);
+const payload=Buffer.from('iVBORw0KGgoAAAANSUhEUgAAACAAAAAYCAIAAAAUMWhjAAAAJklEQVR4nGNMmWbEQEvARFPTRy0YtWDUglELRi0YtWDUglELqAYAifcBXGHsQmkAAAAASUVORK5CYII=','base64');
+try{
+ await page.goto(base+'/pantry');await expect(page.locator('.region-choice-grid button')).toHaveCount(15);
+ await page.getByLabel('Take or upload an ingredient photo').setInputFiles({name:'bad.svg',mimeType:'image/svg+xml',buffer:Buffer.from('<svg/>')});
+ await expect(page.getByText('Choose a JPEG or PNG image up to 5 MiB.')).toBeVisible();
+ await page.getByLabel('Take or upload an ingredient photo').setInputFiles({name:'ingredient.png',mimeType:'image/png',buffer:payload});
+ await expect(page.getByRole('button',{name:'Review photo',exact:true})).toBeEnabled();
+ await page.getByRole('button',{name:'Try demo suggestions',exact:true}).click();
+ await expect(page.getByRole('heading',{name:'Review photo suggestions'})).toBeVisible();
+ await expect(page.getByText(/DEMO: fixed potato\/tomato suggestions/)).toBeVisible();
+ await expect(page.locator('.pantry-chips li')).toHaveCount(0);expect(state.calls).toHaveLength(0);
+ await expect(page.getByRole('button',{name:'Confirm photo ingredients',exact:true})).toBeDisabled();
+ await page.getByRole('button',{name:'Accept potato',exact:true}).click();
+ await page.locator('#photo-name-0').fill('sweet potato');
+ await page.route('**/function/confirm_photo_ingredients',route=>route.fulfill({status:503,body:'offline'}));
+ await page.getByRole('button',{name:'Confirm photo ingredients',exact:true}).click();
+ await expect(page.getByText(/Could not confirm suggestions/)).toBeVisible();
+ await expect(page.locator('#photo-name-0')).toHaveValue('sweet potato');
+ await expect(page.locator('.pantry-chips li')).toHaveCount(0);
+ await page.unroute('**/function/confirm_photo_ingredients');
+ await page.getByRole('button',{name:'Confirm photo ingredients',exact:true}).click();
+ await expect(page.locator('.pantry-chips li')).toHaveCount(1);await expect(page.locator('.pantry-chips')).toContainText('sweet potato');
+ await expect(page.locator('.meal-card')).toHaveCount(5);expect(state.calls.at(-1).ingredients).toEqual(['sweet potato']);
+ await page.getByRole('link',{name:'Discover worldwide',exact:true}).click();await expect(page.locator('.pantry-chips')).toContainText('sweet potato');
+ await page.getByLabel('Take or upload an ingredient photo').setInputFiles({name:'corrupt.png',mimeType:'image/png',buffer:Buffer.from('not an image')});
+ await page.getByRole('button',{name:'Review photo',exact:true}).click();
+ await expect(page.getByText('Use a valid JPEG or PNG image up to 5 MiB and 16 megapixels.')).toBeVisible();
+ await expect(page.locator('.pantry-chips')).toContainText('sweet potato');
+ await page.getByLabel('Take or upload an ingredient photo').setInputFiles({name:'ingredient.png',mimeType:'image/png',buffer:payload});
+ await page.getByRole('button',{name:'Review photo',exact:true}).click();
+ await expect(page.getByText(/No supported ingredient among the top predictions/)).toBeVisible({timeout:30000});
+ await expect(page.locator('.pantry-chips li')).toHaveCount(1);
+ for(const width of [390,320]){await page.setViewportSize({width,height:844});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);}
+ expect(errors).toEqual([]);console.log('PASS: actual local photo validation/inference, explicit demo review, opt-in edited/rejected suggestions, shared pantry and discovery, no automatic mutation, invalid preservation, mobile. LLM mocked.');
+}finally{await browser.close();}
