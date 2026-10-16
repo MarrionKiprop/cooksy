@@ -43,7 +43,7 @@ def:pub RecipeDetail(recipeKey: str) -> JsxElement {
         error = "";
         try {
             state = await cook_session(
-                selected.recipe.key, 1, False, "start", "cooksy-demo-v1"
+                selected.recipe.key, 1, False, "start", selected.recipe.version
             );
             save_session(state);
             navigate("/cook-along");
@@ -58,7 +58,7 @@ def:pub RecipeDetail(recipeKey: str) -> JsxElement {
         return
             <div className="page-width recipe-detail">
                 <h1>Finding your recipe…</h1>
-                <p role="status">Opening the demo kitchen.</p>
+                <p role="status">Opening your recipe.</p>
             </div>;
     }
     if error {
@@ -76,7 +76,9 @@ def:pub RecipeDetail(recipeKey: str) -> JsxElement {
         return
             <div className="page-width recipe-detail">
                 <h1>Recipe not found.</h1>
-                <p>That recipe isn’t in this demo collection.</p>
+                <p>
+                    That recipe is unavailable or its server cache expired. Search again in Explore.
+                </p>
                 <Link to="/explore" className="button primary">
                     Explore the kitchens
                 </Link>
@@ -99,7 +101,8 @@ def:pub RecipeDetail(recipeKey: str) -> JsxElement {
                 <span>{selected.score}% essential coverage</span>
             </div>
             <p className="demo-disclosure">
-                Illustrative, unverified demo recipe with abbreviated sample steps. This is not a complete cooking guide.
+                {selected.recipe.verification
+                    + ". Demo recipes have abbreviated steps; AI recipes need independent verification."}
             </p>
             <div className="recipe-detail-grid">
                 <section
@@ -143,7 +146,7 @@ def:pub RecipeDetail(recipeKey: str) -> JsxElement {
                     <Link to="/pantry" className="inline-link">Update my pantry →</Link>
                 </section>
                 <section className="recipe-method" aria-labelledby="method-title">
-                    <span className="eyebrow">A SMALL DEMO, ONE STEP AT A TIME</span>
+                    <span className="eyebrow">YOUR RECIPE, ONE STEP AT A TIME</span>
                     <h2 id="method-title">How it comes together.</h2>
                     <ol className="method-list">
                         {[
@@ -170,14 +173,14 @@ def:pub RecipeDetail(recipeKey: str) -> JsxElement {
             <section className="recipe-context">
                 <h2>A little context.</h2>
                 <p>
-                    This demo is associated with the {selected.recipe.tradition} kitchen in {selected.recipe.region}. The preparation is an illustrative adaptation; cultural authenticity and quantities have not been independently verified.
+                    This recipe is associated with the {selected.recipe.tradition} kitchen in {selected.recipe.region}. The preparation is an illustrative adaptation; cultural authenticity and quantities have not been independently verified.
                 </p>
                 <p className="fixture-note">Source: {selected.recipe.provenance}.</p>
             </section>
             <div className="recipe-unavailable">
                 <p>Nutrition estimates and serving previews are not available yet.</p>
                 <p>
-                    Contextual AI cooking help and timers are not part of this demo session.
+                    AI can quote relevant wording from the active cook-along step. Timers are not available.
                 </p>
             </div>
         </div>;

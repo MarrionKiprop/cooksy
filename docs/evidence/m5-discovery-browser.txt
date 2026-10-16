@@ -1,0 +1,1 @@
+PASS: actual discovery RPC, 8→2→1 filtering, edge quantities/optional flags, ordered steps, actual trace, region-reset, empty HTTP result, mobile layout, failure/retry and no browser runtime errors.

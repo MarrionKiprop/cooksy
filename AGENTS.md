@@ -6,8 +6,8 @@ Read both preserved briefs in docs/briefs when resolving product requirements.
 
 ## Scope and milestone discipline
 
-Complete one milestone at a time, in M0–M8 order. M0–M3 are complete; the user authorized M4 with “yes.”
-Complete M4 before moving to M5, preserving the milestone boundary. Follow the acceptance criteria in the implementation brief.
+Complete one milestone at a time, in M0–M8 order. M0–M5 are complete. Await the user’s next milestone instruction before M6.
+Preserve milestone boundaries and follow the acceptance criteria in the implementation brief.
 Before every milestone commit update progress, decisions, and restart instructions;
 run applicable checks, record exact outcomes and limitations, and commit only
 scoped files. Record the resulting milestone hash in a subsequent documentation
@@ -89,3 +89,21 @@ HEAD. First push: `git push -u origin main`; later pushes: `git push`. Never for
 push. If the remote has unexpected history, inspect and preserve it before merging.
 Report push failures accurately; a local commit is not evidence of remote backup.
 Use conventional milestone-scoped commit subjects. Do not create unrelated changes.
+
+## M5 verified boundaries
+
+OpenAI GPT-4.1 mini is configured server-side; .env is ignored. The user approved
+three fixed-payload paid checks, all completed; do not silently repeat that paid smoke.
+Use MockLLM for regressions. EnrichmentWalker checks graph coverage before inference;
+Jac validates/deduplicates and scores/ranks, the model returns summaries only. Full
+recipes are generated only on selection. AI output is always unverified. ai/memory
+holds a bounded public culinary process cache, not durable account data; never add
+private pantry/questions to it or promote fixtures to shared roots. Restart expires it.
+Generated Recipe.version fingerprints quantities/servings/steps. Project it through
+RecipeView and CookingView, and send the actual version for start/resume/help.
+Fixtures retain cooksy-demo-v1. Reject undeclared measured cooking water before
+RESOLVES_TO. No claim that schema checks establish general culinary correctness.
+StepHelp only accepts exact quotations from the current graph instruction; it cannot
+invent missing information or advance progress. Run the five browser suites including
+enrichment-smoke; enrichment-live is opt-in and paid. Stop all old preview sessions
+before starting a new server to prevent port conflicts. M6 vision remains unimplemented.

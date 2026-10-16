@@ -1313,3 +1313,19 @@ select:focus-visible, summary:focus-visible { outline: 3px solid #b6602d; outlin
 .cook-session-bottom { display: flex; flex-wrap: wrap; align-items: center; gap: 15px; border-top: 1px solid var(--line); margin-top: 28px; padding-top: 16px; }
 .cook-session-bottom .storage-note { flex-basis: 100%; margin-top: 0; }
 @media (max-width: 700px) { .recipe-detail-grid { grid-template-columns: minmax(0,1fr); gap: 30px; margin-top: 28px; } .cook-session { padding: 22px 18px; } .cook-session-heading { flex-direction: column; align-items: start; gap: 12px; } .active-step { padding: 25px 19px; } .active-step h3 { font-size: 26px; } .cook-controls { flex-direction: column; } .recipe-detail, .cooking-workspace { padding-bottom: 40px; } }
+
+/* M5 culinary discovery and extractive step help. */
+.ai-workbench, .step-help { padding: clamp(1.2rem, 3vw, 2rem); border: 1px solid var(--line, #dcdccf); border-radius: 20px; margin: 1.5rem 0 2.5rem; background: #f0f1e6; }
+.ai-workbench h2 { font-family: Georgia, serif; font-size: clamp(1.5rem, 3vw, 2.3rem); }
+.ai-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0; }
+.ai-workbench label, .step-help label { display: grid; gap: .5rem; font-weight: 600; }
+.ai-workbench input, .ai-workbench textarea, .step-help input { width: 100%; box-sizing: border-box; padding: .85rem; border: 1px solid #858b70; border-radius: 10px; background: #fffef9; color: #2a3426; font: inherit; }
+.ai-workbench textarea { min-height: 5.5rem; resize: vertical; }
+.ai-message { min-height: 1.5em; }
+.ai-candidates { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 1rem; }
+.ai-candidate { border-radius: 15px; padding: 1.3rem; background: #fffef9; border: 1px solid #d8dbcb; overflow-wrap: anywhere; }
+.ai-candidate h3 { font: 1.6rem Georgia, serif; }
+.ai-workbench .fixture-note, .step-help .fixture-note { font-size: .85rem; }
+.step-help blockquote { margin: 1rem 0; padding-left: 1rem; border-left: 3px solid #5d6944; }
+.step-help button { margin-top: .6rem; }
+@media (max-width: 640px) { .ai-fields { grid-template-columns: 1fr; } }

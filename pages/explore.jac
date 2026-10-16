@@ -1,3 +1,4 @@
+import from ..ai.DiscoveryWorkbench { DiscoveryWorkbench }
 import from "@jac/runtime" { Link }
 import from ..components.RegionCard { RegionCard }
 import from ..components.RecipeSeedCard { RecipeSeedCard }
@@ -58,6 +59,7 @@ def:pub Explore() -> JsxPage {
                     Choose a region, meet its kitchens, and browse a small collection of demo recipes.
                 </p>
             </div>
+            <DiscoveryWorkbench/>
             <p className="demo-disclosure">
                 Demo collection · Eight illustrative adaptations across four regions. No AI inference. Match these demos from My pantry. This is a small sample, not the full world of Cooksy.
             </p>

@@ -41,6 +41,8 @@ obj RecipeView {
         verification: str,
         requirements: list[RequirementView],
         steps: list[StepView];
+
+    has version: str = "cooksy-demo-v1";
 }
 
 obj TraversalEvent {

@@ -15,6 +15,7 @@ walker CookingWalker {
         steps: list[RecipeStep] = [],
         sequences: dict[str, int] = {},
         recipe_name: str = "",
+        recipe_version: str = "cooksy-demo-v1",
         result: CookingView | None = None,
         reports: list[CookingView] = [];
 
@@ -27,6 +28,7 @@ walker CookingWalker {
 
     can recipe with Recipe entry {
         self.recipe_name = here.name;
+        self.recipe_version = here.version;
         for step in [here->:HAS_STEP:->] {
             for relation in [edge here->:HAS_STEP:->step] {
                 self.sequences[jid(step)] = relation.sequence;
@@ -82,7 +84,8 @@ walker CookingWalker {
             total_steps=len(self.steps),
             completed=completed,
             finished=here.finished,
-            instruction=self.steps[current - 1].instruction
+            instruction=self.steps[current - 1].instruction,
+            version=self.recipe_version
         );
         report self.result as CookingView;
     }

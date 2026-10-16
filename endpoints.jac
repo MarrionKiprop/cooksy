@@ -4,6 +4,7 @@ def:pub shell_status() -> str {
     return "Connected to the Jac kitchen";
 }
 
+import from ai.memory { request_catalogue }
 import from graph.seed { build_demo_graph }
 import from graph.views { DiscoveryResult }
 import from walkers.discovery { DiscoveryWalker }
@@ -29,7 +30,7 @@ def:pub match_pantry(
     if len(ingredients) > 100 or sum([len(name) for name in ingredients]) > 8000 {
         raise ValueError("Use at most 100 ingredient entries and 8000 characters.");
     }
-    catalogue = build_demo_graph();
+    catalogue = request_catalogue();
     pantry = Pantry();
     count: int = 0;
     for raw in ingredients {
@@ -59,7 +60,7 @@ import from cooking.views { CookingView }
 import from pantry.views { MatchView }
 
 def:pub get_recipe(recipe_key: str, ingredients: list[str]) -> MatchView | None {
-    catalogue = build_demo_graph();
+    catalogue = request_catalogue();
     selection = catalogue spawn RecipeWalker(recipe_key=recipe_key);
     if selection.details is None {
         return None;
@@ -76,16 +77,63 @@ def:pub get_recipe(recipe_key: str, ingredients: list[str]) -> MatchView | None 
 def:pub cook_session(
     recipe_key: str, current_sequence: int, finished: bool, action: str, version: str
 ) -> CookingView {
-    catalogue = build_demo_graph();
-    if version != catalogue.version {
-        raise ValueError("Recipe fixture changed; start a new session.");
-    }
+    catalogue = request_catalogue();
     selection = catalogue spawn RecipeWalker(recipe_key=recipe_key);
     recipe = selection.selected_node;
     if recipe is None {
         raise ValueError("Recipe not found.");
     }
+    if version != recipe.version {
+        raise ValueError("Recipe changed; start a new session.");
+    }
     session = restore_session(recipe, current_sequence, finished);
     cooking = session spawn CookingWalker(action=action);
     return cooking.result as CookingView;
+}
+
+import from ai.memory { memory, cache_lock }
+import from ai.views { EnrichmentResult, PreparationResult, AssistanceResult }
+import from ai.service { prepare_selected, assist }
+import from walkers.enrichment { EnrichmentWalker }
+import from pantry.normalisation { normalise_name }
+
+def:pub enrich(ingredients: list[str], cuisine: str) -> EnrichmentResult {
+    if len(ingredients) > 100
+        or sum([len(raw) for raw in ingredients]) > 8000
+        or len(cuisine) > 80 {
+        raise ValueError("Request too large");
+    }
+    names: set[str] = set();
+    for raw in ingredients {
+        for token in split_names(raw) {
+            name = normalise_name(token);
+            if name {
+                names.add(name);
+            }
+            if len(names) > 100 {
+                raise ValueError("Too many ingredients");
+            }
+        }
+    }
+    with cache_lock {
+        discovery = request_catalogue() spawn EnrichmentWalker(
+            cache=memory, pantry=sorted(names), cuisine=cuisine.strip()
+        );
+        return discovery.reports[0];
+    }
+}
+
+
+def:pub prepare_candidate(recipe_key: str) -> PreparationResult {
+    with cache_lock {
+        return prepare_selected(memory, recipe_key);
+    }
+}
+
+def:pub cooking_help(
+    recipe_key: str, current_sequence: int, finished: bool, version: str, question: str
+) -> AssistanceResult {
+    return assist(
+        request_catalogue(), recipe_key, current_sequence, finished, version, question
+    );
 }

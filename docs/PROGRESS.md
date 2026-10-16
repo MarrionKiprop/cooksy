@@ -1,6 +1,6 @@
 # Cooksy progress
 
-Date: 2026-10-16 (Africa/Nairobi). Current milestone: M4 complete; next: M5.
+Date: 2026-10-16 (Africa/Nairobi). Current milestone: M5 complete; next: M6.
 M0 foundation: `34e76eddfcbac857e8c3386b2a0db05790d9fc33`. M1 adds the runnable shell.
 
 | Milestone | Status | Scope / acceptance | Commit | Risks / next action |
@@ -10,7 +10,7 @@ M0 foundation: `34e76eddfcbac857e8c3386b2a0db05790d9fc33`. M1 adds the runnable 
 | M2 | Complete | Real culinary nodes/edges; two regions and multiple traditions; DiscoveryWalker and traversal test through ingredients/steps | e8f2773 | Demo graph only; pantry/matching begins in M3 |
 | M3 | Complete | Pantry intake and deterministic matching; normalisation/dedupe/essential/optional/ranking tests | ea65d48 | Names only; tab-scoped pantry, no account sync |
 | M4 | Complete | Recipe detail and cooking session; advance/reverse/recover progress | 337fc3a | Tab-scoped progress; no account sync or timers |
-| M5 | Not started | Structured by-llm enrichment and grounded help; reuse, provenance, malformed/duplicate/unavailable mocks | — | Provider/model not configured |
+| M5 | Complete | Graph-first structured enrichment, selected preparation, grounded help, provenance/validation and content-version recovery | Ledger below | GPT-4.1 mini verified; process cache expires on restart |
 | M6 | Not started | MobileNet adapter, upload/review/confirmation graph; validation and contract tests | — | Weights and dependencies unverified |
 | M7 | Not started | Selected-recipe SDXL preview, metadata/cache, label and error tests | — | Hosted/local inference unconfigured |
 | M8 | Not started | Nutrition references/disclosure, accessibility/responsive polish, full journey and demo handoff | — | Full runtime validation still required |
@@ -280,3 +280,54 @@ Next milestone: M5 structured enrichment and grounded assistance (mock/provider 
 
 M4 milestone commit: `337fc3a3aa99a13d9ae73dffd506107d0d4b9af7`; pushed successfully. This follow-up documentation
 commit records the checkpoint. Verification evidence was recorded before committing.
+
+
+## M5 — Structured culinary enrichment and grounded help — 2026-10-16
+
+Added typed AI schemas/sem annotations, verified Jac by-llm provider configuration,
+EnrichmentWalker, candidate/ingredient/RESOLVES_TO topology, bounded process culinary
+memory, selected full-recipe generation, deterministic validation/deduplication/ranking,
+provenance and unverified labels. Explore offers pantry/cuisine discovery beyond the
+fixture regions. Existing graph coverage skips inference. Full recipes are prepared
+only after selection and reused from graph memory. Cookbook help selects checked
+verbatim wording from the current graph step and declines insufficient context.
+
+Generated recipes use content-versioned snapshots through graph projections, detail,
+cook-along and help; stale progress is rejected after recipe content changes. Added
+finite quantities, exact quantity-name membership, bounds and measured-water checks.
+No private pantry, questions or sessions enter the public process cache. Provider
+failures preserve existing graph/UI content and do not advance progress.
+
+Final verification:
+
+- Installed Jac guides captured under docs/evidence/m5-guides; by-llm/config/node-edge/
+  testing/client/auth/types patterns verified. `jac install` PASS, optional LLM closure.
+- `jac test -d tests`: PASS, **25 tests in 47.30s** (10 M5 + 15 regressions).
+- `jac check .`: PASS, **43 files in 66.65s**, existing warnings disclosed.
+- `jac fmt . --check`: PASS, **43/43**. Production client build: PASS (3.4s).
+- All five final browser suites: PASS; real graph/navigation/cooking RPC, 320px
+  layout, failure preservation, storage recovery and step-answer reset. Browser
+  help-success fixture is mocked; no paid calls run in these suites.
+- Exactly three user-approved live GPT-4.1 mini requests: grounded help (one quote),
+  structured discovery (three accepted candidates), selected ten-step preparation.
+  Real cross-request graph/browser cooking/reload then passed without additional
+  inference. Subsequent visual review caught undeclared measured water; tightened
+  validation and added a passing regression. Content-version checks were added and
+  verified with mocks/backend tests. No paid retest after those final changes.
+- Saved key absent from production bundles; .env ignored/untracked. No key printed.
+- Desktop discovery/mobile help captures reviewed; final captures in docs/screenshots.
+
+Initial failures and fixes are recorded in m5-verification.md: reserved test variable,
+missing optional litellm, browser storage typing, overlapping old preview processes,
+and actual RPC envelope shape. Automatic review initially rejected live testing;
+explicit payload/destination/spending approval then allowed exactly three requests.
+No rejection was bypassed. Live cache was cleared during the final controlled restart.
+
+Limits: generated culinary graph is process-lifetime (100 candidates), not durable
+storage; restart expires generated recipes. Output remains unverified. Schema and
+the measured-water rule cannot prove all natural-language ingredient correctness,
+authenticity, allergy suitability or nutrition. Help quotes only the current step.
+No M6 photo, M7 image generation or M8 nutrition integration was added.
+
+M5 implementation commit is recorded in the following ledger commit.
+Next: M6 photo suggestions with explicit review/confirmation before pantry mutation.

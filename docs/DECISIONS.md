@@ -259,3 +259,79 @@ fields so incomplete external requests fail validation rather than relying on th
 installed binder’s defaults. get_recipe likewise requires its ingredient list.
 Unit helpers supply defaults only for in-process test convenience; no framework
 or generated runtime files were modified. Added this failure to the verification log.
+
+## D015 — M5 model boundary, public culinary cache, and grounded help
+
+User authorized M5 with “next,” saved an OpenAI key in ignored `.env`, and selected
+“the lower ones like 4.” Selected gpt-4.1-mini after checking its official model page
+(https://developers.openai.com/api/docs/models/gpt-4.1-mini). The credential skill's
+reuse decision is resolved by the user saving the existing key; no key was printed,
+copied into source, or committed. Jac's server loads project `.env`; installed
+scale/config/project_env.jac confirms this. Default live mode invokes the provider
+only on explicit discovery, selection or help actions; COOKSY_LLM_MODE=demo disables
+calls. Model timeout is 35 seconds, provider retries zero, malformed-output retries
+zero. No tools or shared conversations are supplied to the model.
+
+Verified `jac guide jac-by-llm`, jac-node-edge-patterns, jac-testing, jac-config,
+jac-sv-auth, jac-types and jac-cl-components; evidence under m5-guides. Use typed obj
+returns with per-field/function/argument sem annotations, declaration-only by llm(),
+and MockLLM to exercise request construction and parsing. The first mock run exposed
+missing optional litellm: [byllm.model] declares the capability, and jac install must
+sync its third-party dependencies before even mocked calls work. A test initially
+used reserved `graph` as a variable; renamed to catalogue following the core guide.
+
+EnrichmentWalker traverses existing complete recipes and candidate memory before
+checking coverage. At least five in-scope candidates skip inference; insufficient
+coverage asks for at most five summaries. Jac validates lengths, positive bounded
+time, required/unique normalized ingredients, cuisine scope and canonical dish +
+tradition identity. Rejected/duplicate proposals do not become graph nodes. Jac
+computes essential-name coverage and sorts by missing essentials, descending score,
+time and stable key. No quantity sufficiency, nutrition or dietary claims are made.
+
+Generated culinary memory is a bounded, process-lifetime graph (100 candidates),
+not durable account storage. It holds only culinary proposals/requirements/prepared
+recipes; private pantry, questions and cooking state are not attached. A lock
+serializes discovery and preparation to avoid duplicate concurrent writes. Candidate
+nodes connect to Ingredients via CANDIDATE_REQUIRES and to a selected complete Recipe
+via RESOLVES_TO. Recipe quantities/steps use existing REQUIRES/HAS_STEP edges.
+Prepared graph content is copied into request-local catalogues; fixtures are never
+promoted into persistent/shared roots. Alternative: persist public culinary memory
+now; deferred until ownership, retention and account boundaries are deliberate.
+The UI discloses restart expiry; server restart deliberately clears generated dishes.
+
+Selection generates only one full recipe; quantities must have exactly the candidate
+ingredient names, positive finite bounded values, and bounded servings/steps. Schema
+validation cannot establish culinary correctness or detect every ingredient mentioned
+in natural-language directions. Every AI result therefore remains explicitly
+unverified, with model provenance and timestamp. A successful selected recipe is
+reused without another model call. Failed preparation leaves the candidate unchanged.
+
+Cooking help is deliberately extractive: the model selects quotations from the
+current graph instruction; Jac requires every quotation to be an exact substring.
+Unknown keys, versions and out-of-range steps are rejected. No invented timings,
+temperatures or substitutions are accepted. Empty answers disclose insufficient
+context. No help call advances the session. Help components remount when the active
+step/finished state changes so old answers cannot appear under a different step.
+
+M5 live review follow-up: automatic approval review initially rejected the paid test
+because its exact payload/destination lacked explicit approval. No workaround or
+request was sent. User then explicitly approved the fixed ingredients, recipe step
+and question for up to three paid GPT-4.1 mini calls. Those three calls returned
+one grounded quotation, three validated proposals and a ten-step selected recipe.
+Subsequent local requests/browser navigation proved graph reuse, cooking transitions
+and reload recovery without extra inference. Visual review then found measured
+cooking water present only in prose. Added a deterministic measured-water consistency
+check and regression: undeclared measured cooking water now rejects preparation
+before RESOLVES_TO is created. No further paid calls were made. The transient live
+cache was cleared by the deliberate final server restart. The screenshot of that
+rejected-in-review recipe is not shipped as an accepted recipe example. Broader
+natural-language ingredient correctness still requires independent verification.
+
+Generated recipe recovery uses a content fingerprint in Recipe.version (quantities,
+servings and instructions), projected through RecipeView and CookingView. Clients
+send that version explicitly for start/resume/help; fixtures retain cooksy-demo-v1.
+Recreating a dish with different instructions therefore rejects stale progress,
+rather than treating the stable dish identity as an instruction version. A regression
+covers projection, generated cooking, stale fixture-version rejection and changed
+instructions. This extends M4's version checks to generated content without changing
+its explicit-argument RPC contract or private tab storage boundaries.

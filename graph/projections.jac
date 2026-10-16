@@ -41,6 +41,7 @@ def recipe_view(recipe: Recipe) -> RecipeView {
         provenance=recipe.provenance,
         verification=recipe.verification,
         requirements=requirements,
-        steps=steps
+        steps=steps,
+        version=recipe.version
     );
 }

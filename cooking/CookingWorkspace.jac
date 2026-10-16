@@ -1,3 +1,4 @@
+import from ..ai.StepHelp { StepHelp }
 import from "@jac/runtime" { Link }
 import from endpoints { cook_session }
 import type from .views { CookingView }
@@ -88,7 +89,7 @@ def:pub CookingWorkspace() -> JsxElement {
                     <br/>
                     <em>at a time.</em>
                 </h1>
-                <p>Follow a selected demo recipe, with progress you can return to.</p>
+                <p>Follow your selected recipe, with progress you can return to.</p>
             </div>
             {<p role="status" className="discovery-status">
                 Opening your cooking session…
@@ -119,7 +120,7 @@ def:pub CookingWorkspace() -> JsxElement {
             {<section className="cook-session" aria-labelledby="active-recipe">
                 <div className="cook-session-heading">
                     <div>
-                        <span className="small-tag">DEMO ADAPTATION · UNVERIFIED</span>
+                        <span className="small-tag">RECIPE · UNVERIFIED</span>
                         <h2 id="active-recipe">{active.recipe_name}</h2>
                     </div>
                     <Link to={"/recipes/" + active.recipe_key} className="inline-link">
@@ -127,7 +128,7 @@ def:pub CookingWorkspace() -> JsxElement {
                     </Link>
                 </div>
                 <p className="fixture-note">
-                    Abbreviated sample instructions, not a complete cooking guide.
+                    Recipe instructions are unverified; demo recipes use abbreviated sample steps.
                 </p>
                 <div className="cook-progress">
                     <span aria-live="polite">
@@ -152,7 +153,7 @@ def:pub CookingWorkspace() -> JsxElement {
                                 + str(active.total_steps)}
                     </span>
                     <h3>
-                        {"You’ve reached the end of this demo."
+                        {"You’ve reached the end of this recipe."
                             if active.finished
                             else active.instruction}
                     </h3>
@@ -178,11 +179,20 @@ def:pub CookingWorkspace() -> JsxElement {
                         onClick={nextStep}
                         disabled={busy or active.finished}
                     >
-                        {"Finish demo session"
+                        {"Finish session"
                             if active.current_sequence == active.total_steps
                             else "Mark done & continue →"}
                     </button>
                 </div>
+                <StepHelp
+                    key={active.recipe_key
+                        + str(active.current_sequence)
+                        + str(active.finished)}
+                    recipe_key={active.recipe_key}
+                    sequence={active.current_sequence}
+                    finished={active.finished}
+                    version={active.version}
+                />
                 <div className="cook-session-bottom">
                     <p className="storage-note">{storage_note}</p>
                     <button

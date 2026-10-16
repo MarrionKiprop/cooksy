@@ -43,3 +43,10 @@ theme_color = "#f8f6ef"
 "endpoints.match_pantry" = "server"
 "endpoints.get_recipe" = "server"
 "endpoints.cook_session" = "server"
+
+"endpoints.enrich" = "server"
+"endpoints.prepare_candidate" = "server"
+"endpoints.cooking_help" = "server"
+
+[byllm.model]
+default_model = "gpt-4.1-mini"

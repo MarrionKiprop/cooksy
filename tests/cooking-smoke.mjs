@@ -39,7 +39,7 @@ try {
   await page.getByRole('button', { name: 'Back a step' }).click();
   await expect(page.locator('.active-step')).toContainText('STEP 1 OF 2');
   await page.getByRole('button', { name: 'Mark done & continue' }).click();
-  await page.getByRole('button', { name: 'Finish demo session' }).click();
+  await page.getByRole('button', { name: 'Finish session' }).click();
   await expect(page.locator('.active-step')).toContainText('SESSION COMPLETE');
   await expect(page.getByLabel('Cooking progress')).toHaveAttribute('value', '2');
   await page.reload();

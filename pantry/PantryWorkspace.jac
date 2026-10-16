@@ -234,7 +234,7 @@ def:pub PantryWorkspace() -> JsxElement {
                         </div>
                     </div>
                     <p className="match-disclosure">
-                        Demo recipes · ranked by fewer missing essentials, then coverage and cooking time. Name coverage only; quantities are not checked. Substitutions never silently count as available.
+                        Graph recipes · ranked by fewer missing essentials, then coverage and cooking time. Name coverage only; quantities are not checked. Substitutions never silently count as available.
                     </p>
                     {<div role="alert" className="discovery-status">
                         <p>{error}</p>
@@ -268,7 +268,7 @@ def:pub PantryWorkspace() -> JsxElement {
                         <span aria-hidden="true">❋</span>
                         <h3>A little pantry. A lot of possibility.</h3>
                         <p>
-                            Add some ingredients to see demo recipes ranked by what you have.
+                            Add some ingredients to see graph recipes ranked by what you have.
                         </p>
                         <Link to="/explore" className="inline-link">
                             Explore the kitchens{" "}
@@ -278,7 +278,7 @@ def:pub PantryWorkspace() -> JsxElement {
                         if not names and not busy and not error
                         else None}
                     {<p className="discovery-status">
-                        No demo recipes in this region yet. Try all regions.
+                        No prepared recipes in this region yet. Try all regions.
                     </p>
                         if names and not matches and not busy and not error
                         else None}

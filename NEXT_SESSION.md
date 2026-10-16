@@ -1,67 +1,48 @@
-# Resume at: M5
+# Resume at: M6
 
-M4 is complete: /recipes/:key shows graph-backed details and pantry availability;
-Explore and pantry cards link to it. CookingWalker maintains real current/completed
-step relationships, with tab-scoped snapshot recovery and a route-memory fallback.
-Next/back/finish/restart/end, bounds, version checks, failed actions, isolation and
-blocked storage were tested. No timers, model inference, nutrition or images yet.
-M4 milestone commit: `337fc3a3aa99a13d9ae73dffd506107d0d4b9af7`; pushed. See PROGRESS.md for evidence.
+M5 is complete: graph-first structured candidates, selected recipe preparation and
+extractive active-step help use Jac by llm() with GPT-4.1 mini. The saved server-only
+key is in ignored .env; never display it. Exactly three fixed-payload paid checks
+were explicitly approved and completed. Do not silently repeat that paid smoke.
+Implementation hash is recorded in the following ledger commit.
 
-Read first:
+Read AGENTS.md, docs/PROGRESS.md, docs/DECISIONS.md, both briefs as needed, status/log
+and relevant installed guides before edits. The Jac environment is
+/home/langstkip/workspace/jac/bin/jac (0.37.25); app is this directory.
 
-```bash
-cd /home/langstkip/workspace/jac-code/cooksy
-export PATH="/home/langstkip/workspace/jac/bin:$PATH"
-cat AGENTS.md docs/PROGRESS.md docs/DECISIONS.md NEXT_SESSION.md
-git status --short
-git log -5 --oneline
-jac guide jac-by-llm
-jac guide jac-types
-jac guide jac-sv-persistence
-jac guide jac-testing
-```
+Exact next milestone: M6 MobileNet photo-to-confirmed-pantry flow. Verify installed
+Jac endpoints/upload, Python interoperability, graph/walker/client and testing guides
+before selecting patterns. Python is limited to specialized inference adapters.
+Inspect actual model/dependency availability; never claim real classification from
+mock output. Validate uploads, file size/content and prediction contract. Show
+suggestions for explicit user review; only confirmed detections may enter pantry
+HAS_INGREDIENT edges via IntakeWalker. Add graph relationships for image/detection/
+confirmation per the architecture and meaningful mocked/adapter contract tests.
+Keep missing weights/unconfigured mode honest. Do not implement M7 SDXL in M6.
 
-Exact next task: M5 structured culinary enrichment and grounded active-recipe/step
-assistance through verified Jac by-llm patterns. Consult existing graph candidates
-first, validate/deduplicate structured proposals, preserve provenance and explicit
-unverified status. Keep all ranking/filtering/arithmetic in Jac. Separate candidate
-discovery from selected full-recipe preparation; never present fixture text as
-model output. Start with installed MockLLM examples and malformed/unavailable tests.
+Current completed checks: 25 Jac tests, full 43-file check, formatter 43/43, production
+client build and all five browser suites pass. M5 evidence/screenshots are recorded.
+Existing warnings remain. Use MockLLM for normal tests, not live paid calls.
 
-Before any real provider/API setup, read the applicable credential/provider skill;
-for OpenAI or an unspecified provider, use the installed openai-platform-api-key
-credential gate. Do not print keys or silently pick a paid model. No provider has
-been configured in M0–M4, and no live integration should be claimed before testing.
+Important contracts:
+- All five cook_session arguments are explicit; get_recipe requires ingredient list.
+- Generated Recipe.version fingerprints content; pass projected version for start,
+  snapshot recovery and help. Fixtures still use cooksy-demo-v1.
+- Generated culinary graph cache is bounded process memory (100 candidates), not
+  durable. Restart clears generated dishes; private pantries/questions are not stored.
+- Candidate summaries precede full selected preparation. Jac scores and ranks.
+- Measured cooking water must be declared; output still needs independent verification.
+- Step help only accepts exact quotations from the current graph instruction.
+- Browser pantries/progress are tab/origin scoped, with documented storage fallback.
+- Client view annotations may need import type to avoid duplicate generated codecs.
 
-Definition of done: existing graph consulted first, validated schema-constrained
-proposals with provenance/duplicate handling, grounded help limited to selected
-recipe/step, unavailable-provider UI and deterministic mocks, tests for valid,
-malformed/duplicate/unavailable results, applicable full checks, updated recovery
-files, focused commit pushed and remote hash verified. Keep M6 photo inference out.
+Stop every old dev preview before edits/check/build/install/docs writes; overlapping
+servers caused one port conflict. Run jac fmt . --check, jac check ., jac test -d tests,
+jac build --as client, then jac run --dev and node tests/{shell,discovery,pantry,cooking,
+enrichment}-smoke.mjs individually. Capture outside app and copy with server stopped.
+The optional enrichment-live.mjs makes paid calls and requires explicit opt-in.
 
-Existing checks (stop server before edits/check/build/install):
-
-```bash
-jac fmt . --check
-jac check .
-jac test -d tests
-jac build --as client
-jac run --dev
-# Separate terminal after startup:
-node tests/shell-smoke.mjs
-node tests/discovery-smoke.mjs
-node tests/pantry-smoke.mjs
-node tests/cooking-smoke.mjs
-```
-
-Important contracts: cook_session requires all five arguments, get_recipe requires
-its ingredient list; omitted intermediate HTTP defaults were broken in this Jac
-installation. CookingView client annotations use import type to prevent duplicate
-wire-codec declarations. Graphs remain request-local; browser snapshots are not
-account authentication. Stable recipe keys + version restore state; never jids.
-SessionStorage may survive browser restoration. No shared anonymous private graph.
-
-Preview localhost:8000; Windows/WSL access through http://172.26.123.103:8000 worked
-in this session (check hostname -I if it changes). Keep the server terminal open.
-Capture screenshots to /tmp before copying into docs with server stopped. Leave a
-running preview at handoff. Ongoing pushes are authorized; verify a clean tree.
+WSL browser previously works at http://172.26.123.103:8000 (hostname -I if changed).
+Leave one running preview at handoff. GitHub origin/main pushes are already authorized;
+commit scoped milestones/recovery docs, push, record milestone hash in a second
+ledger commit, push and verify remote HEAD equals local HEAD. Never force push.

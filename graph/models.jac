@@ -29,6 +29,8 @@ node Recipe {
 
     has provenance: str = "Cooksy developer demo fixture",
         verification: str = "Illustrative adaptation; not a verified recipe";
+
+    has version: str = "cooksy-demo-v1";
 }
 
 node RecipeStep {

@@ -3,11 +3,11 @@
 Your Ingredients. The World's Kitchens.
 
 Cooksy is a Jac-native culinary discovery and cook-along application in development.
-**M4 adds selected recipe details and recoverable cook-along sessions.** Open View
-recipe from Explore or a pantry match to see quantities, pantry status, preparation,
-substitutions, ordered sample steps and provenance. Start cook-along, mark steps done,
-go back, finish, restart or end a session. Progress recovers within the browser tab.
-Recipes remain abbreviated, unverified demos; model inference is a later milestone.
+**M5 adds graph-first AI discovery, selected-recipe preparation and grounded step help.**
+Explore checks existing dishes before asking GPT-4.1 mini for approximately five
+unverified candidates. Select one to prepare its full recipe, then start cook-along.
+Pantry matching and coverage/ranking remain deterministic Jac code. Demo fixtures
+remain available without a provider. Every generated dish needs verification.
 
 ## Run locally
 
@@ -117,7 +117,7 @@ types). Optional items do not reduce it. Optional-only recipes receive 100; reci
 with no requirements are omitted. Ranking uses fewer missing essentials, higher
 coverage, shorter time, then stable recipe key. Edge-listed substitutes are suggestions,
 never automatic availability. Amounts, dietary/allergy suitability and full recipe
-verification are not checked. Results come from eight explicit demo adaptations.
+verification are not checked. Results include eight demo adaptations and any prepared AI recipes cached by this server.
 
 A failed submission retains the draft and previous pantry. Retry matching refreshes
 the committed pantry; submit the retained draft with Add & find meals when ready.
@@ -129,7 +129,7 @@ traverses the culinary graph, and the detail view combines its shared projection
 with M3 availability. No nutrition or generated serving image is fabricated.
 
 Cook-along has one active session per tab/origin. Starting a new recipe replaces it.
-Snapshots contain the stable recipe key, fixture version, current sequence and
+Snapshots contain the stable recipe key, recipe content version, current sequence and
 finished flag. Jac validates those fields, reconstructs real CookingSession,
 CURRENT_STEP and COMPLETED_STEP relationships, traverses steps and applies the action.
 Back rewinds the completed prefix; finishing completes the last step; restart clears
@@ -139,8 +139,8 @@ Snapshots record user progress, not independently verified cooking completion.
 Progress is saved to sessionStorage; a client module memory fallback survives route
 navigation when storage is blocked, with a visible warning that refresh recovery
 will be lost. There is no server-owned durable session or cross-device account sync.
-Runtime report logs may include recipe/progress data. Timers and contextual AI help
-are deferred. Sample steps are not a complete cooking guide.
+Runtime report logs may include recipe/progress data. Timers are deferred.
+The help panel selects checked quotations from the current graph instruction. Sample steps are not a complete cooking guide.
 
 `get_recipe` requires recipe_key and ingredients. `cook_session` requires all five
 fields: recipe_key, current_sequence, finished, action and version. Clients send
@@ -152,13 +152,35 @@ installed HTTP binder. Incomplete requests are tested as validation failures.
 
 ## Providers and limitations
 
-No provider is configured. `.env.example` lists proposed settings, explicitly not
-runtime functionality. M5 will verify the installed by-llm guide, select/test a model
-provider and document server-side credentials and activation. M6 will document vision
-weights/preprocessing and require confirmation before pantry mutation. M7 will document
-SDXL local/hosted contracts, caching and the required illustrative AI label. Nutrition
-will use referenced measurements or disclosed demo estimates. None of those integrations
-has been exercised in M1.
+M5 uses server-only `OPENAI_API_KEY` from ignored `.env`, loaded by Jac’s server:
+
+```dotenv
+OPENAI_API_KEY=your-local-key
+COOKSY_LLM_MODE=live
+```
+
+Never put a real key in `.env.example` or client code. Restart Jac after editing
+`.env`. Set `COOKSY_LLM_MODE=demo` to disable provider calls. Model identity is
+`gpt-4.1-mini` in ai/provider.jac and jac.toml; `jac install` installs its optional
+LLM capability. Requests use a 35-second provider timeout and no output retries.
+No provider call runs on page load: discovery, preparation and help are explicit
+user actions. Ingredient names/cuisine or question/current step go to OpenAI.
+
+Generated culinary content is cached in a bounded process-lifetime graph, with
+provenance and unverified labels. **Server restart expires generated candidates and
+recipes**; generated instructions also carry a content version to reject stale progress. Refresh/navigation in the same server process can reuse them. No private
+pantry, question history or cooking sessions are stored in that cache. Prepared
+recipes must preserve the candidate’s ingredient names. Schema and coherence
+checks are not independent culinary, nutrition, allergy or authenticity verification.
+Help accepts only exact quotations from the current instruction, and states when
+that instruction lacks an answer. It does not provide an open-ended cooking chat.
+
+Run `jac test -d tests` for deterministic MockLLM tests (no paid calls), and
+`node tests/enrichment-smoke.mjs` alongside the four existing browser suites. Browser
+help success is mocked; the graph-first RPC/navigation are real. Provider errors
+leave existing graph content and progress available. This is local development;
+public deployment needs authentication, spending limits and durable cache design.
+Vision (M6), SDXL previews (M7) and nutrition (M8) are not implemented yet.
 
 ## Project memory and GitHub
 
@@ -168,7 +190,8 @@ Resume using [NEXT_SESSION.md](NEXT_SESSION.md); see [progress](docs/PROGRESS.md
 [decisions](docs/DECISIONS.md), and [M1 verification](docs/evidence/m1-verification.md), and
 [M2 verification](docs/evidence/m2-verification.md), and
 [M3 verification](docs/evidence/m3-verification.md), and
-[M4 verification](docs/evidence/m4-verification.md).
+[M4 verification](docs/evidence/m4-verification.md), and
+[M5 verification](docs/evidence/m5-verification.md).
 
 Remote: [MarrionKiprop/cooksy](https://github.com/MarrionKiprop/cooksy), branch main.
 SSH uses the existing ~/.ssh/id_ed25519 key through repository-local Git configuration.
