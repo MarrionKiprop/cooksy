@@ -57,3 +57,6 @@ CandidateCard is shared; do not duplicate candidate rendering in the two screens
 Run tests/pantry-discovery-smoke.mjs in addition to the five baseline browser suites.
 Pantry smoke intercepts discover_pantry to avoid accidental paid model requests.
 Empty client lists require explicit length checks in conditionals/JSX.
+
+Pantry follow-up checkpoint: `1ba4d99a5abae6b1e17889eb1768a7936c6fa194`; pushed and remote verified.
+M6 remains the next milestone.

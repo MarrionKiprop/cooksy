@@ -351,3 +351,6 @@ AI failure recovery, selection/navigation, empty/rejected input and 320px layout
 All inference in the new browser flow is mocked; no additional paid API calls.
 Initial new browser test failed on the stale empty discovery panel; explicit length
 guards fixed it. Existing compiler warnings remain. This is an M5 repair, not M6.
+
+Pantry follow-up commit: `1ba4d99a5abae6b1e17889eb1768a7936c6fa194`; pushed and remote HEAD matched.
+Formatter checked all 44 sources; staged whitespace and key-exclusion checks passed.
