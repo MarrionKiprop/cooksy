@@ -492,3 +492,46 @@ interference. Stop the accidental child without clearing data; select explicit
 worker Python or shutil.which("python3"), never packaged sys.executable. Apply the
 same fallback correction to vision (its configured path was already working). Add
 an actual demo subprocess regression, beyond mocked subprocess contract tests.
+
+## D020 — M8 sourced nutrition, missing-data semantics and final demo quality
+
+User authorized finishing M8 before returning to SDXL and other deferred work.
+Queried installed node/edge, walker, component, testing, endpoint and npm guides;
+evidence in m8-guides. USDA primary source archive was downloaded for extraction,
+not a runtime API. ExactfoodIDs, six nutrientIDs/units and archiveSHA256 are retained
+in a small JSON subset. This complies with the architecture's explicit distinction
+between food-composition references and an unwanted static global recipe database.
+No provider keys or paid inference needed for nutrition. Initial mistyped download
+URL returned404; corrected using the actual link on USDA's download page.
+
+NutritionWalker traverses REQUIRES, creates HAS_NUTRITION and item/reference/source
+links in request-local graphs, computes edible-mass per100g sums and divides actual
+servings before rounding. No assumptions for volume/count units or generic oil.
+Optional ingredients are counted as listed. Exact source assumptions are visible.
+Missingnutrients remain None; unsupportedfood/units produce explicit exclusionrows.
+Show supported-ingredient subtotals with a strong incomplete-meal label; unknowns
+are not zeros, and nutrition references do not validate AI/demo recipe quantities.
+Alternative: invent broad food mappings or ask an LLM for macros; rejected because
+it creates unjustified certainty. Broader coverage remains explicit follow-up work.
+
+Nutrition RPC is server-pinned with recipe-key/version checks; independent component
+keeps failures out of cooking. WCAG audit uses pinned axe-core4.14.0 devdependency;
+fixed actual lowcontrast Home stepnumbers/tags/footer and named preview landmark.
+Discovery modes now use a proper nav landmark rather than naming a generic div.
+Added focus-visible/reduced-motion styles, tablecaption/scopedheaders, partial-data
+and source disclosures, source/retry/mobile checks. Automated violations/incomplete
+findings are preserved, never called full human accessibility certification.
+
+Clean install used an isolated source copy, no .env/runtime/models/userphotos;
+`jac install --frozen`, all53Jac tests and productionbuild passed. No-key startup
+with explicit provider disable completed the actual full demo journey without model
+response mocks. Original project also passed mocked paid-provider regressions.
+An install command initially targeted the original cwd and was interrupted; clean
+verification was rerun in the correct isolated directory. No source/data reset.
+A11y test needed to await cooking navigation before next route; preview test was
+corrected to accept a previously cached demo on load while asserting no inference,
+so suite order does not incorrectly assume an empty public process cache.
+
+Handoff docs include demo, architecture and nutrition methodology. LiveSDXL, better
+food/multi-object vision, durability, richer references and production readiness
+are explicitly deferred in FOLLOW_UPS. M8 does not claim these are complete.

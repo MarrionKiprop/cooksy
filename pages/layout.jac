@@ -68,7 +68,7 @@ def:pub Shell() -> JsxLayout {
                     My pantry
                 </Link>
             </header>
-            <div className="demo-banner">
+            <div className="demo-banner" role="region" aria-label="Development preview">
                 <span className="demo-badge">DEVELOPMENT PREVIEW</span>
                 <span>
                     Your shared pantry → Explore or Discover → five choices → cook along. AI suggestions need verification.

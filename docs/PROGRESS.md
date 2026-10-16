@@ -1,6 +1,6 @@
 # Cooksy progress
 
-Date: 2026-10-16 (Africa/Nairobi). Current milestone: M7 preview flow complete in demo mode; M8 not started.
+Date: 2026-10-16 (Africa/Nairobi). Current milestone: M8 complete; M0–M8 local-demo scope finished.
 M0 foundation: `34e76eddfcbac857e8c3386b2a0db05790d9fc33`. M1 adds the runnable shell.
 
 | Milestone | Status | Scope / acceptance | Commit | Risks / next action |
@@ -13,7 +13,7 @@ M0 foundation: `34e76eddfcbac857e8c3386b2a0db05790d9fc33`. M1 adds the runnable 
 | M5 | Complete | Graph-first structured enrichment, selected preparation, grounded help, provenance/validation and content-version recovery | 524e785 | GPT-4.1 mini verified; process cache expires on restart |
 | M6 | Complete | Local MobileNet adapter, upload/review/explicit confirmation and private graph links | See checkpoint below | Limited ImageNet ingredient coverage; no multi-object detection |
 | M7 | Complete (demo flow) | Selected-recipe preview, SDXL adapters, graph cache/metadata, labels and error tests | See checkpoint below | Real SDXL unavailable; user has no local/hosted setup |
-| M8 | Not started | Nutrition references/disclosure, accessibility/responsive polish, full journey and demo handoff | — | Full runtime validation still required |
+| M8 | Complete (local demo) | Sourced nutrition/gaps, accessibility/mobile corrections, clean setup/full journey, demo/architecture/follow-up handoff | See checkpoint below | Broader nutrition, human accessibility/device testing and deferred provider/storage work remain |
 
 ## M0 evidence and checks
 
@@ -460,3 +460,53 @@ Zone.Identifier remain untouched and untracked, outside this milestone commit.
 
 M7 implementation checkpoint: `290d49ebd37638dec07528d25139d9d0c6ae9087`; pushed and remote main verified.
 Final formatter/whitespace/credential exclusion checks and final copy build passed.
+
+## M8 — Nutrition, quality pass and demo readiness — 2026-10-16
+
+Completed NutritionWalker and actual Recipe→HAS_NUTRITION→NutritionProfile/item/source
+relationships; exact ten-food USDA SR Legacy subset, primary-source FDC IDs/links,
+archiveSHA256 and nutrient field evidence. Jac calculates mass-scaled recipe values
+and equal-serving estimates. Unknown foods/units/missing values are not zeros; partial
+results are labelled known-ingredient subtotals, with exclusions and assumptions.
+No volume/count guesses, generic-oil substitutions, cooking-loss/yield or allergy
+verification claims. Nutrition panel failures preserve recipe/cook-along.
+
+Completed focus/reduced-motion styling, nutrition tablecaption/headers/mobile layout,
+actual contrast fixes and named preview/navigation landmarks. Added pinned dev-only
+axe-core4.14.0, full-journey and accessibility suites. Demo walkthrough, architecture,
+nutrition methodology and explicit follow-up list added; no SDXL activation, new
+vision training, durability or production deployment attempted.
+
+Verification outcomes:
+- `jac test -d tests`: PASS,53tests in62.10s; new nutrition suite6tests PASS.
+- `jac check .`: PASS,69files in141.29s; existing compiler warnings retained.
+- Post-audit layout and discovery-nav checks: PASS,1file each (2.29s/4.25s).
+- Client production builds: PASS; final navigation build2.5s, assetclient.rV3O5nHb.js.
+- Both Python adapter suites: PASS,6vision+6SDXL tests, no paid inference.
+- All11browser suites PASS: shell,discovery,cooking,pantry,pantry-discovery,
+  global-discovery,enrichment,vision,preview,final-journey,accessibility.
+- Axe: zero reported violations across7routes including editable ingredient review,
+  expanded nutrition references, preview demo and active cooking. Remaining incomplete
+  color checks concern logos/non-text decoration and pseudo-element backgrounds;
+  exact findings retained. This is not full screen-reader/accessibility certification.
+- Desktop/mobile nutrition panels visually reviewed,390/320px overflow checks pass.
+- Clean isolated source copy: no.env/modelweights/userphotos; `jac install --frozen`
+  PASS, all53tests PASS(73.07s), productionbuild PASS. Final clean/source bundles
+  match assetname; optional vision/provider setup remains separate.
+- Actual clean/no-key startup with providers disabled completed the full pantry→
+  worldwide discovery→five explicit demo choices→recipe→nutrition→preview demo→
+  cooking/reload/finish journey without model-response mocks. Nutrition503 injection
+  only tests fault recovery. No paid OpenAI/SDXL requests in M8.
+
+Recorded corrections: first archive URL typo404, fixed from official link. Initial
+install command used original cwd, interrupted then rerun in correct isolated copy.
+Axe found actual lowcontrast text and missing landmark, fixed without rule suppression.
+A11y test now awaits cooking navigation; preview smoke accepts pre-existing cached
+public demo state and still asserts no generation on load. No application data reset.
+
+Known limits: ten reference foods and mass units only; historical raw-reference
+assumptions, unsupported quantities and incomplete meal totals are explicit. AI/demo
+recipes remain unverified. LiveSDXL, improved food/multi-object vision, durable graph
+memory/account sync, richer references and production readiness are deferred in
+FOLLOW_UPS.md. User JPG/Zone.Identifier remain untouched/untracked. No next milestone
+started; M0–M8 local-demo checkpoint is complete pending immutable commit ledger.

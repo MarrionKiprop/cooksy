@@ -211,7 +211,7 @@ def:pub DiscoveryWorkspace(initial_mode: str) -> JsxElement {
                     One shared pantry. Five meal choices. A full recipe only after you choose.
                 </p>
             </div>
-            <div className="discovery-mode-nav" aria-label="Discovery modes">
+            <nav className="discovery-mode-nav" aria-label="Discovery modes">
                 <Link
                     to="/explore"
                     className={"button primary"
@@ -230,7 +230,7 @@ def:pub DiscoveryWorkspace(initial_mode: str) -> JsxElement {
                 >
                     Discover worldwide
                 </Link>
-            </div>
+            </nav>
             <div className="discovery-setup">
                 <PantryEditor
                     names={names}
@@ -417,7 +417,7 @@ def:pub DiscoveryWorkspace(initial_mode: str) -> JsxElement {
                 if not busy and (error or (active is not None and not active.ready))
                 else None}
             <p className="storage-note">
-                Your confirmed pantry is private to this browser tab. Generated culinary memory currently lasts for this server process; restarting may expire saved choices. Photo suggestions need your confirmation. Optional serving previews are on your selected recipe page; live SDXL needs setup. Nutrition is a later module.
+                Your confirmed pantry is private to this browser tab. Generated culinary memory currently lasts for this server process; restarting may expire saved choices. Photo suggestions need your confirmation. Optional serving previews are on your selected recipe page; live SDXL needs setup. Reference-based nutrition, where supported, is on the recipe page.
             </p>
         </div>;
 }

@@ -6,7 +6,7 @@ Read both preserved briefs in docs/briefs when resolving product requirements.
 
 ## Scope and milestone discipline
 
-Complete one milestone at a time, in M0–M8 order. M0–M5 and their shared workflow additions are complete. M6 photo intake is complete; M7 selected-recipe preview flow is complete in explicit demo mode. M8 waits for user direction.
+Complete one milestone at a time, in M0–M8 order. M0–M5 and their shared workflow additions are complete. M6 photo intake is complete; M7 selected-recipe preview flow is complete in explicit demo mode. M8 nutrition and demo-readiness work is complete; M0–M8 local-demo scope is finished.
 Preserve milestone boundaries and follow the acceptance criteria in the implementation brief.
 Before every milestone commit update progress, decisions, and restart instructions;
 run applicable checks, record exact outcomes and limitations, and commit only
@@ -162,9 +162,40 @@ neither provider nor GPU/weights. No model downloads, paid calls or OpenAI fallb
 Use adapters/sdxl_adapter.py, hosted contract in README, no client URLs/API keys.
 Tests: six SDXL adapter tests in optional vision Python; all Jac tests; nine browser
 suites including preview-smoke. Preserve untracked user JPG/Zone.Identifier; don't
-commit private test photos. M8 waits for the next user request.
+commit private test photos. M8 is authorized; its boundaries follow below.
 
 Packaged runtime correction: never use sys.executable as a Python worker fallback;
 it resolves to the Jac launcher here. Explicit COOKSY_{VISION,SDXL}_PYTHON wins;
 otherwise use shutil.which("python3") and return unavailable if missing. Actual
 subprocess demo regression protects against relaunching the app. No data reset.
+
+## M8 nutrition and final handoff
+
+NutritionPanel is isolated on selected RecipeDetail; failure never blocks cooking.
+NutritionWalker reads REQUIRES masses and creates real NutritionProfile/item/reference
+relationships. Ten exact USDA SR Legacy records with FDCIDs/URLs/archive hash are in
+nutrition/references.json, methodology docs/NUTRITION.md. This is a legitimate small
+food-composition reference, not a static recipe database. Never use LLM nutrient
+values, zero-fill unknowns, map generic oil to olive oil, or assume count/volume masses.
+Use grams/kg/mg; sum unrounded per100g values, divide servings before displayrounding.
+All listed optional ingredients count. Partial values must say known-ingredient
+subtotal; no supported records means unavailable, not a zero-calorie meal. No claims
+of cooking-loss, yield, absorption, allergy or culinary verification.
+
+Run all Jac tests and both adapter Python suites, plus11browser suites including
+final-journey and accessibility. Axe4.14.0 is dev-only; keep findings/incomplete checks
+and manual limitations honest. Existing paid-call approval is exhausted. Clean setup
+verification excludes .env, optional models and private user photos. Offline journey
+variant requires disabled providers; don't make accidental paid calls. Stop previews
+before watched source/docs writes, checks or build. Preserve user JPG/Zone.Identifier.
+
+M0–M8 local-demo scope is complete only when final gates/checkpoint are recorded.
+Deferred items are in docs/FOLLOW_UPS.md: liveSDXL setup, food-specific vision,
+durable graph/account storage, broader nutrient references and production hardening.
+Do not silently begin those projects; user explicitly deferred them.
+
+M8 final gates:53Jac tests,69-file fullcheck plus targeted semantic fixes,12adapter
+tests and11browser suites pass. Clean install/test/build and no-key fulljourney pass.
+Axe7routes:zero reported violations; exact incomplete decorative/pseudo-background
+color checks retained in evidence. No claim of full accessibility certification.
+M0–M8 complete as local demo. Consult FOLLOW_UPS.md and user direction for new work.

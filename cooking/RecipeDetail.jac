@@ -4,6 +4,7 @@ import from endpoints { get_recipe, cook_session }
 import from pantry.views { MatchView }
 import from .client_state { save_session }
 import from previews.ServingPreview { ServingPreview }
+import from nutrition.NutritionPanel { NutritionPanel }
 
 def:pub RecipeDetail(recipeKey: str) -> JsxElement {
     has detail: MatchView | None = None,
@@ -171,6 +172,11 @@ def:pub RecipeDetail(recipeKey: str) -> JsxElement {
                 </p>
                 <p className="fixture-note">Source: {selected.recipe.provenance}.</p>
             </section>
+            <NutritionPanel
+                key={selected.recipe.key + selected.recipe.version}
+                recipeKey={selected.recipe.key}
+                version={selected.recipe.version}
+            />
             <ServingPreview
                 key={selected.recipe.key + selected.recipe.version}
                 recipeKey={selected.recipe.key}
@@ -178,7 +184,6 @@ def:pub RecipeDetail(recipeKey: str) -> JsxElement {
                 name={selected.recipe.name}
             />
             <div className="recipe-unavailable">
-                <p>Nutrition estimates are not available yet.</p>
                 <p>
                     AI can quote relevant wording from the active cook-along step. Timers are not available.
                 </p>

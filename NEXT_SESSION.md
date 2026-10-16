@@ -1,37 +1,41 @@
-# M7 serving-preview flow complete (demo); M8 not started
+# M0–M8 local demo complete — follow-ups only on user direction
 
-User authorized M7 and confirmed no hosted/local SDXL setup. Read AGENTS, progress,
-D019 and git status/log first. Preserve pre-existing user green-bananas...jpg and
-Zone.Identifier untracked; never include private test photos in commits.
+Read AGENTS.md, PROGRESS.md, DECISIONS.md and git status/log first. Latest user asked
+to finish M8 while keeping liveSDXL for later. M8 implements sourced nutrition,
+quality checks and demo handoff. See docs/{DEMO,ARCHITECTURE,NUTRITION,FOLLOW_UPS}.md.
 
-RecipeDetail includes ServingPreview: cache-only load/reload, explicit generate or
-labelled demo. Jac builds canonical prompt from selected full graph recipe/version,
-VisualisationWalker visits cached GeneratedImage nodes, bounded16-image process cache
-stores model/provider/prompt/key/seed/timestamp and actual recipe links. Failed preview
-preserves recipe/cooking and prior visible result. Demo is a CSS plate, no generated
-food photograph. Required illustrative label is always present on image/demo views.
+Nutrition:10exact USDA SR Legacy records in nutrition/references.json, FDC IDs,
+links/archiveSHA256 and original nutrient-field evidence. Deterministic Jac walker
+uses declared edible mass(g/kg/mg), all listed optional ingredients, per100g sums,
+equalservings and displayrounding. Unknownfoods/units/values never becomezero.
+Partial results must say known-ingredient subtotal; no complete-meal claims. No
+LLM nutrients or generic-oil/count/volume guesses. Request-local profile/reference
+links, isolated panel/retry; no private pantry shared-root writes.
 
-Optional Python SDXL adapter supports offline CUDA/Diffusers model directory or
-HTTPS JSON bridge (README contract), no redirects/remote image URLs. Neither real
-provider path has live verification. User has neither; normal generation honestly
-unavailable, explicit demo works. No weights installed, no paid calls. .env unchanged.
-Prior paid3-call approval exhausted; never run live provider/image tests silently.
+Gates:53Jac tests,69-file fullcheck plus post-audit layout/nav checks,productionbuild,
+6vision+6SDXL adaptertests and all11browser suites passed. Axe7routes/expandedstates
+zero reported violations, incomplete decorative/pseudo-background color checks
+recorded; not full accessibility certification. Desktop/mobile screenshots reviewed.
+Clean no.env/no-model source copy in /tmp/cooksy-m8-clean:install--frozen,53tests,
+build and actual no-key/provider-disabled fulljourney passed. Final build asset
+matches original. No model-response mocks for that offline journey; no paidcalls.
 
-Verified: final47Jac tests, full64-file check plus post-fix3-file check, client build,
-6PythonSDXL adapter tests and all9browser suites passed. Browser caught sys.executable
-resolving to packaged Jac launcher; fixed both worker helpers to explicit config or
-shutil.which("python3"). Actual demo subprocess regression added; no data cleared.
-Screenshots/evidence in docs/screenshots/m7 and docs/evidence/m7-verification.md.
-Existing compiler warnings remain. LiveSDXL unverified; mocks never claimed live.
+Regression suites:node tests/{shell,discovery,cooking,pantry,pantry-discovery,
+global-discovery,enrichment,vision,preview,final-journey,accessibility}-smoke.mjs,
+individually. Offline finaljourney variant requires providersdisabled, then set
+COOKSY_OFFLINE_JOURNEY=1. Standard browser tests mock paid provider outputs. Never
+run enrichment-live/paid image checks without renewed explicit authorization.
+Previous3paid-call approval exhausted. .env/key/modelweights never printed/committed.
 
-Stop dev preview before edits/checks/build/copying images (HMR reacts to writes).
-Jac /home/langstkip/workspace/jac/bin/jac requires elevated cache access. Optional
-vision Python /home/langstkip/workspace/langstEnv/bin/python; vision weights stay
-ignored. Configured vision works; baseline limited-food/multiple-object accuracy
-is known and deliberately deferred. Cache durability also deliberately deferred.
-M8 nutrition/final polish is next only on user's request. Normal checked pushes
-authorized to origin/main; verify remote hash, no forcepush. See progress for hash.
-Leave preview running at http://172.26.123.103:8000 (WSL IP may change).
+Deferred:liveSDXL(no provider/GPU/weights), food-specific/multi-object vision and
+confidence improvements, durable graph/account memory, broader nutrition references,
+production/auth/ops and human accessibility/device testing. Do not silently start.
+Preserve user green-bananas...jpg and Zone.Identifier untracked; no privatephoto push.
 
-M7 implementation checkpoint: `290d49ebd37638dec07528d25139d9d0c6ae9087`; pushed and remote main verified.
-Final formatter/whitespace/credential exclusion checks and final copy build passed.
+Jac /home/langstkip/workspace/jac/bin/jac0.37.25. Stop preview before source/docs,
+fmt/check/build/install or screenshotcopy (HMR); elevated compilercache access.
+Actual workerPython must be explicitconfig or python3 fromPATH, never packaged
+sys.executable(Jac launcher). Existing visionenvironment is langstEnv/bin/python;
+weights remain ignored. Source provider settings preserved. Leave preview running
+at http://172.26.123.103:8000 (WSL IP maychange). Main pushes authorized; verifyremote
+hash, noforcepush. Implementationcheckpoint recorded in progress after commit.

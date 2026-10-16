@@ -3,11 +3,15 @@
 Your Ingredients. The World's Kitchens.
 
 Cooksy is a Jac-native culinary discovery and cook-along application in development.
-**M5 completes the shared typed-ingredient discovery workflow.** Review and edit
-natural-language ingredient suggestions, explicitly confirm one pantry, then Explore
-15 culinary regions/traditions or Discover varied meals worldwide (Surprise Me).
-Five distinct validated choices unlock selection; only the chosen dish gets a full
-recipe. Jac computes matching/ranking. AI content remains unverified.
+**M0–M8 are implemented as a local development demo.** Review and confirm one
+shared ingredient pantry, Explore15regions or Discover varied meals worldwide,
+choose from five validated dishes, then open the selected recipe and cook along.
+Recipe pages include sourced nutrition estimates/subtotals and an optional preview
+panel. Live SDXL is deferred; its demo never pretends to be a generated food image.
+AI culinary output and recipe quantities remain unverified.
+
+Start with the [demo walkthrough](docs/DEMO.md), [architecture](docs/ARCHITECTURE.md),
+[nutrition methodology](docs/NUTRITION.md) and [recorded follow-ups](docs/FOLLOW_UPS.md).
 
 ## Run locally
 
@@ -92,7 +96,7 @@ within each graph; step order comes from HAS_STEP sequence. The catalogue includ
 ownership edges to keep reverse-linked traditions/recipes reachable in transient memory.
 M3 adds Pantry/IntakeItem nodes, HAS_INGREDIENT edges, IntakeWalker and
 MatchingWalker. M4 adds recoverable cooking sessions; M5 implements structured enrichment. Durable account-owned
-graph memory and reference-based nutrition remain future work. Candidate discovery proposes approximately five
+graph memory remains future work. M8 adds a small sourced nutrition reference subset. Candidate discovery proposes approximately five
 meals; full recipe generation follows selection. The M2 seed is test/demo data,
 not a manually maintained production catalogue. Python stays limited to specialised
 MobileNet and SDXL inference adapters.
@@ -238,13 +242,39 @@ Help accepts only exact quotations from the current instruction, and states when
 that instruction lacks an answer. It does not provide an open-ended cooking chat.
 
 Run `jac test -d tests` for deterministic MockLLM tests (no paid calls), and
-all nine browser suites: shell, discovery, cooking, pantry, pantry-discovery,
-global-discovery, enrichment, vision and preview (each `node tests/<name>-smoke.mjs`). Browser
+all eleven browser suites: shell, discovery, cooking, pantry, pantry-discovery,
+global-discovery, enrichment, vision, preview, final-journey and accessibility (each `node tests/<name>-smoke.mjs`). Browser
 help success is mocked; the graph-first RPC/navigation are real. Provider errors
 leave existing graph content and progress available. This is local development;
 public deployment needs authentication, spending limits and durable cache design.
 M6 photo intake and M7 preview flow are implemented. Live SDXL needs provider setup;
-nutrition (M8) remains future work.
+M8 reference-based nutrition and local demo quality checks are implemented.
+
+## Nutrition and quality (M8)
+
+Selected recipe pages calculate reference-based estimates from declared edible masses.
+The ten-food USDA SR Legacy subset includes energy, protein, carbohydrate, fat, fibre
+and sodium. Jac performs all arithmetic; no nutrient numbers come from an LLM.
+Unknown foods/units and missing nutrient values stay explicit gaps. Partial results
+are labelled **known-ingredient subtotal**, never complete meal nutrition. Mass units
+are g/gram/grams, kg and mg; no guessed counts, cup weights or liquid densities.
+All listed ingredients, including optional ones, are included when supported.
+
+Every supported ingredient links to its exact source. See [methodology](docs/NUTRITION.md)
+for records, archive provenance, assumptions and limits. Cooking losses, yield,
+actual oil absorption and equal portions are not verified. Ingredient references
+do not establish recipe safety, quantities, allergy suitability or authenticity.
+Nutrition failures leave recipe/cooking usable.
+
+The quality pass adds visible keyboard focus, reduced-motion support, contrast and
+landmark corrections, mobile tables, full-journey checks and axe-core developer audits.
+Automated checks and screenshots do not constitute full accessibility certification;
+manual screen-reader/device testing remains follow-up work. The local demo was also
+installed/tested/built in an isolated copy without .env or model weights. Optional
+ML/provider setup is separate. Use `jac install --frozen` to verify declared locks.
+For a no-model-mock final journey, run the app with culinary providers disabled and
+`COOKSY_OFFLINE_JOURNEY=1 node tests/final-journey-smoke.mjs`. Never use that variant
+against a live paid provider configuration.
 
 ## Serving previews (M7)
 

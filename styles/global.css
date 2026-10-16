@@ -1378,3 +1378,22 @@ select:focus-visible, summary:focus-visible { outline: 3px solid #b6602d; outlin
 .preview-demo { text-align: center; padding: 1.5rem; border-radius: 1rem; background: #ebeddf; }
 .preview-plate { width: 140px; height: 140px; border-radius: 50%; margin: 0 auto 1rem; border: 16px solid #fffdf5; box-shadow: 0 4px 15px #35503922; display: grid; place-items: center; color: #6d8155; font-size: 4rem; background: #f7f3e7; }
 .preview-prompt { overflow-wrap: anywhere; font-size: .85rem; }
+
+/* M8: reference nutrition, keyboard clarity and reduced-motion preference. */
+.nutrition-panel { border: 1px solid #d6dac9; border-radius: 1.2rem; padding: clamp(1rem,3vw,2rem); background: #fffef8; margin: 2rem 0; }
+.nutrition-table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-variant-numeric: tabular-nums; }
+.nutrition-table caption { text-align: left; font-weight: 600; padding-bottom: .65rem; }
+.nutrition-table th, .nutrition-table td { text-align: left; border-bottom: 1px solid #d9ddcf; padding: .65rem .4rem; }
+.nutrition-table thead { background: #edf0e3; }
+.nutrition-gap { padding: .8rem; border-left: 3px solid #95632f; background: #fbf0dd; color: #65431f; }
+.nutrition-sources ul { padding-left: 1.2rem; }
+.nutrition-sources li { margin: .7rem 0; }
+.nutrition-panel p, .nutrition-panel a { overflow-wrap: anywhere; }
+button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible, summary:focus-visible { outline: 3px solid #965827; outline-offset: 3px; }
+summary { cursor: pointer; }
+@media (max-width: 420px) { .nutrition-table { font-size: .8rem; } .nutrition-table th, .nutrition-table td { padding: .55rem .2rem; } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; } }
+
+.step-number { color: #536246; }
+.small-tag { color: #58614f; }
+.footer-note { color: #59634f; }

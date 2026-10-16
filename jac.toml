@@ -22,6 +22,7 @@ typescript = "^5.3.3"
 "@types/react" = "^19.2.0"
 "@types/react-dom" = "^19.2.0"
 "@playwright/test" = "1.64.1"
+axe-core = "4.14.0"
 
 
 
@@ -59,6 +60,8 @@ theme_color = "#f8f6ef"
 "endpoints.confirm_photo_ingredients" = "server"
 
 "endpoints.serving_preview" = "server"
+
+"endpoints.recipe_nutrition" = "server"
 
 [byllm.model]
 default_model = "gpt-4.1-mini"

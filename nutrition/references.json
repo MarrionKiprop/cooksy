@@ -1,0 +1,157 @@
+{
+  "source": "USDA FoodData Central / SR Legacy April 2018",
+  "download_url": "https://fdc.nal.usda.gov/fdc-datasets/FoodData_Central_sr_legacy_food_csv_2018-04.zip",
+  "archive_sha256": "b80817294b8850530aaedf2e515c02593b1824f763a0ff356e5c2081643e6fd0",
+  "retrieved": "2026-10-16",
+  "basis": "per 100 g edible portion; raw unless description states otherwise",
+  "nutrient_ids": [
+    "1008",
+    "1003",
+    "1005",
+    "1004",
+    "1079",
+    "1093"
+  ],
+  "foods": [
+    {
+      "name": "potato",
+      "fdc_id": "170026",
+      "description": "Potatoes, flesh and skin, raw",
+      "source_url": "https://fdc.nal.usda.gov/food-details/170026/nutrients",
+      "values": [
+        77.0,
+        2.05,
+        17.49,
+        0.09,
+        2.1,
+        6.0
+      ]
+    },
+    {
+      "name": "spinach",
+      "fdc_id": "168462",
+      "description": "Spinach, raw",
+      "source_url": "https://fdc.nal.usda.gov/food-details/168462/nutrients",
+      "values": [
+        23.0,
+        2.86,
+        3.63,
+        0.39,
+        2.2,
+        79.0
+      ]
+    },
+    {
+      "name": "cabbage",
+      "fdc_id": "169975",
+      "description": "Cabbage, raw",
+      "source_url": "https://fdc.nal.usda.gov/food-details/169975/nutrients",
+      "values": [
+        25.0,
+        1.28,
+        5.8,
+        0.1,
+        2.5,
+        18.0
+      ]
+    },
+    {
+      "name": "onion",
+      "fdc_id": "170000",
+      "description": "Onions, raw",
+      "source_url": "https://fdc.nal.usda.gov/food-details/170000/nutrients",
+      "values": [
+        40.0,
+        1.1,
+        9.34,
+        0.1,
+        1.7,
+        4.0
+      ]
+    },
+    {
+      "name": "carrot",
+      "fdc_id": "170393",
+      "description": "Carrots, raw",
+      "source_url": "https://fdc.nal.usda.gov/food-details/170393/nutrients",
+      "values": [
+        41.0,
+        0.93,
+        9.58,
+        0.24,
+        2.8,
+        69.0
+      ]
+    },
+    {
+      "name": "tomato",
+      "fdc_id": "170457",
+      "description": "Tomatoes, red, ripe, raw, year round average",
+      "source_url": "https://fdc.nal.usda.gov/food-details/170457/nutrients",
+      "values": [
+        18.0,
+        0.88,
+        3.89,
+        0.2,
+        1.2,
+        5.0
+      ]
+    },
+    {
+      "name": "egg",
+      "fdc_id": "171287",
+      "description": "Egg, whole, raw, fresh",
+      "source_url": "https://fdc.nal.usda.gov/food-details/171287/nutrients",
+      "values": [
+        143.0,
+        12.56,
+        0.72,
+        9.51,
+        0.0,
+        142.0
+      ]
+    },
+    {
+      "name": "olive oil",
+      "fdc_id": "171413",
+      "description": "Oil, olive, salad or cooking",
+      "source_url": "https://fdc.nal.usda.gov/food-details/171413/nutrients",
+      "values": [
+        884.0,
+        0.0,
+        0.0,
+        100.0,
+        0.0,
+        2.0
+      ]
+    },
+    {
+      "name": "salt",
+      "fdc_id": "173468",
+      "description": "Salt, table",
+      "source_url": "https://fdc.nal.usda.gov/food-details/173468/nutrients",
+      "values": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        38758.0
+      ]
+    },
+    {
+      "name": "banana",
+      "fdc_id": "173944",
+      "description": "Bananas, raw",
+      "source_url": "https://fdc.nal.usda.gov/food-details/173944/nutrients",
+      "values": [
+        89.0,
+        1.09,
+        22.84,
+        0.33,
+        2.6,
+        1.0
+      ]
+    }
+  ]
+}

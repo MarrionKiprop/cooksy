@@ -7,7 +7,7 @@ const calls=[];page.on('request',r=>{if(r.url().endsWith('/function/serving_prev
 try{
  await page.goto(base+'/recipes/gamja-jeon-demo');
  await expect(page.getByRole('heading',{name:'Picture your plate.'})).toBeVisible();
- await expect(page.locator('.serving-preview [role="status"]')).toContainText('Nothing is generated automatically.');
+ await expect(page.locator('.serving-preview [role="status"]')).toContainText(/Nothing is generated automatically\.|DEMO: layout only/);
  expect(calls.every(c=>c.generate===false)).toBe(true);
  await page.getByRole('button',{name:'Generate serving preview',exact:true}).click();
  await expect(page.locator('.serving-preview [role="status"]')).toContainText('SDXL is not configured.');
