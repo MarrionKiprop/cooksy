@@ -58,5 +58,7 @@ theme_color = "#f8f6ef"
 "endpoints.review_photo_ingredients" = "server"
 "endpoints.confirm_photo_ingredients" = "server"
 
+"endpoints.serving_preview" = "server"
+
 [byllm.model]
 default_model = "gpt-4.1-mini"

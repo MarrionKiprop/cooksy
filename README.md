@@ -194,7 +194,7 @@ sha256sum models/mobilenet_v3_small-047dcff4.pth
 
 Expected SHA256: `047dcff4addef86ea5bc2eff13c9614dc11f47ab1160d0a71a25e7db994f4e1f`.
 Weights and `.env` remain ignored. Missing decoder/runtime/weights gives an honest
-unavailable state. A blank Python path uses the server Python. Restart after config
+unavailable state. A blank Python path uses `python3` from PATH; packaged Jac itself is not a Python worker. Restart after config
 changes. Set mode `off` to disable normal inference; demo remains explicit.
 
 Photos travel as bounded data URLs through typed RPC and are decoded/validated in
@@ -238,12 +238,65 @@ Help accepts only exact quotations from the current instruction, and states when
 that instruction lacks an answer. It does not provide an open-ended cooking chat.
 
 Run `jac test -d tests` for deterministic MockLLM tests (no paid calls), and
-all eight browser suites: shell, discovery, cooking, pantry, pantry-discovery,
-global-discovery, enrichment and vision (each `node tests/<name>-smoke.mjs`). Browser
+all nine browser suites: shell, discovery, cooking, pantry, pantry-discovery,
+global-discovery, enrichment, vision and preview (each `node tests/<name>-smoke.mjs`). Browser
 help success is mocked; the graph-first RPC/navigation are real. Provider errors
 leave existing graph content and progress available. This is local development;
 public deployment needs authentication, spending limits and durable cache design.
-M6 local photo intake is implemented; SDXL previews (M7) and nutrition (M8) remain future work.
+M6 photo intake and M7 preview flow are implemented. Live SDXL needs provider setup;
+nutrition (M8) remains future work.
+
+## Serving previews (M7)
+
+A selected full recipe has an optional “Picture your plate” panel. Page load only
+checks the process cache. “Generate serving preview” requests generation explicitly;
+“Try demo layout” shows an abstract plate with no generated food photograph. Demo
+mode exercises the recipe-grounded prompt and graph cache, clearly labelled as no
+SDXL inference. With the current environment, real SDXL remains unconfigured.
+
+Jac constructs the prompt from actual recipe name/context, quantities/preparation
+and ordered steps. It does not ask the culinary LLM to invent a visual brief. Cache
+keys include recipe/content version, canonical prompt, model/provider settings and
+render policy. Only successful/demo states are cached (max16), with seed, timestamp,
+model/provider and recipe graph links. Restart expires preview memory. Images are
+returned as validated PNG/JPEG data URLs, not persisted files or remote image links.
+Every image is labelled “AI-generated serving preview; illustrative, not an exact
+photograph.” Appearance cannot verify amounts, cultural authenticity or ingredients.
+
+Optional server settings, kept in ignored `.env`:
+
+```dotenv
+COOKSY_SDXL_MODE=off
+COOKSY_SDXL_PYTHON=/absolute/path/to/optional-image-env/bin/python
+COOKSY_SDXL_MODEL_ID=stabilityai/stable-diffusion-xl-base-1.0
+COOKSY_SDXL_MODEL_PATH=
+COOKSY_SDXL_ENDPOINT=
+COOKSY_SDXL_API_KEY=
+```
+
+Use mode `local` only with CUDA, compatible PyTorch/Diffusers/Transformers/Accelerate
+and safetensors installed in that separate environment, and a complete pre-staged
+Diffusers SDXL model directory. Loading is offline; the app never downloads model
+weights. The [official Diffusers SDXL guide](https://huggingface.co/docs/diffusers/v0.35.0/en/using-diffusers/sdxl)
+describes the pipeline. This local provider has not been live-verified here. Update model identity/version
+when replacing model weights, so cached images are invalidated.
+
+Mode `hosted` needs Pillow in the configured worker Python and a server-configured
+HTTPS bridge, no redirects. It POSTs JSON
+`{model,prompt,negative_prompt,seed,width:768,height:768,steps:25}` with an optional
+server-only Bearer key. The bridge must return
+`{image_base64:"...",mime_type:"image/png"}` (JPEG also accepted), not an image URL.
+Vendor APIs with different contracts need a bridge/adapter; do not paste arbitrary
+provider URLs expecting this shape to work. The host receives selected recipe text
+on explicit request, never pantry photographs. No hosted provider is configured or
+live-tested. Failures leave the recipe and cooking progress usable. Network timeout
+is60seconds, process timeout100seconds; no automatic generation retries. Images are
+bounded to2MiB/1.5megapixels and validated before use. Runtime fallback demo is explicit.
+
+Verification: optional vision Python can run `tests/sdxl_adapter_tests.py` (mocked
+hosted calls, no money); graph tests are included in `jac test -d tests`;
+`node tests/preview-smoke.mjs` covers actual demo/cache RPC and mocked image success.
+Do not run paid image/provider smoke checks without explicit authorization.
 
 ## Project memory and GitHub
 

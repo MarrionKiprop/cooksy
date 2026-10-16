@@ -199,3 +199,12 @@ def:pub confirm_photo_ingredients(
 ) -> PhotoCommit {
     return commit_photo(receipt, selections, existing, confirmed);
 }
+
+import from previews.views { PreviewView }
+import from previews.service { selected_preview }
+
+def:pub serving_preview(
+    recipe_key: str, version: str, generate: bool, demo: bool
+) -> PreviewView {
+    return selected_preview(recipe_key, version, generate, demo);
+}

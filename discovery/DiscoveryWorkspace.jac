@@ -417,7 +417,7 @@ def:pub DiscoveryWorkspace(initial_mode: str) -> JsxElement {
                 if not busy and (error or (active is not None and not active.ready))
                 else None}
             <p className="storage-note">
-                Your confirmed pantry is private to this browser tab. Generated culinary memory currently lasts for this server process; restarting may expire saved choices. Photo suggestions need your confirmation. Nutrition and serving previews are later modules.
+                Your confirmed pantry is private to this browser tab. Generated culinary memory currently lasts for this server process; restarting may expire saved choices. Photo suggestions need your confirmation. Optional serving previews are on your selected recipe page; live SDXL needs setup. Nutrition is a later module.
             </p>
         </div>;
 }

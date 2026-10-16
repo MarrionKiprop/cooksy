@@ -445,3 +445,50 @@ ownership. Graphs stay request-local; no durable history is claimed. Confirmatio
 merges/deduplicates into the existing client pantry and invalidates old choices.
 Parent busy propagation prevents concurrent typed/photo mutations. Failed confirmation
 retains review edits/pantry; explicit demo fixture provenance remains visible.
+
+## D019 — M7 selected recipe preview, optional SDXL provider and explicit demo
+
+User requested the next milestone after M6 and confirmed they have neither hosted
+SDXL endpoint nor local weights/GPU. Implement the briefs' demo acceptance path
+without downloading multi-gigabyte models or silently switching image providers.
+No OpenAI image generation/key reuse and no paid requests. Optional real inference
+paths are implemented and contract-tested, not claimed live-verified.
+
+Queried installed jac-sv-endpoints, jac-walker-patterns, jac-node-edge-patterns,
+jac-python-interop, jac-cl-components and jac-testing; evidence under m7-guides.
+A typed serving_preview RPC requires an existing full graph recipe and exact current
+version. Client sends keys/actions, never image prompts/provider settings. Page
+mount and reload request cache only; explicit generation is isolated from cooking.
+
+VisualisationWalker encounters the selected Recipe, reads relationship-backed
+projection and ordered steps, canonicalizes ingredient order, visits GeneratedImage
+nodes from PreviewCache and reuses exact recipe/version/prompt/config matches.
+Only a cache miss with generate=True invokes the specialist Python adapter. Cache
+max16public culinary images, process-only; failures not cached. CACHED_IMAGE retains
+ownership; HAS_PREVIEW and GENERATED_FOR connect actual recipe and image metadata.
+Key includes prompt policy, negative prompt, mode/model identity/path/endpoint and
+fixed768px/25step settings; deterministic seed derived from digest, not a promise
+of bit-identical output across hardware/model revisions. Pantry/private photos are
+never image-generation inputs. Cache does not change deferred durable memory scope.
+
+Optional local path loads a pre-staged Diffusers SDXL directory offline with
+local_files_only=True/use_safetensors, requires CUDA and uses eval inference context.
+Hosted path uses a configured HTTPS JSON bridge, bearer key stays server-only; no
+redirects, fetched image URLs or vendor-specific polling assumed. Bound responses,
+validate actual PNG/JPEG image bytes/size/dimensions, sanitize errors. Endpoint is
+operator-configured, never client-supplied. Python process timeout100seconds, hosted
+network timeout60seconds. Neither path is exercised against a live model here.
+
+Explicit demo returns metadata/prompt with no image bytes; UI shows an abstract CSS
+plate and “DEMO layout · No SDXL image generated”. Every displayed real image carries
+“AI-generated serving preview; illustrative, not an exact photograph.” Demo also
+retains that label alongside the stronger no-generation disclosure. No fake SDXL
+photo is shipped. Provider unavailable/error leaves recipe/progress and priorpreview
+usable. Nutrition/timers remain deferred; M8 is not part of this milestone.
+
+M7 browser correction: packaged Jac reports the Jac launcher as sys.executable.
+Using that as a subprocess Python fallback relaunched the app and caused HMR/port
+interference. Stop the accidental child without clearing data; select explicit
+worker Python or shutil.which("python3"), never packaged sys.executable. Apply the
+same fallback correction to vision (its configured path was already working). Add
+an actual demo subprocess regression, beyond mocked subprocess contract tests.

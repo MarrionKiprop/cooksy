@@ -6,7 +6,7 @@ Read both preserved briefs in docs/briefs when resolving product requirements.
 
 ## Scope and milestone discipline
 
-Complete one milestone at a time, in M0–M8 order. M0–M5 and their shared workflow additions are complete. M6 photo intake is authorized and implemented; verify and record it before starting M7.
+Complete one milestone at a time, in M0–M8 order. M0–M5 and their shared workflow additions are complete. M6 photo intake is complete; M7 selected-recipe preview flow is complete in explicit demo mode. M8 waits for user direction.
 Preserve milestone boundaries and follow the acceptance criteria in the implementation brief.
 Before every milestone commit update progress, decisions, and restart instructions;
 run applicable checks, record exact outcomes and limitations, and commit only
@@ -123,7 +123,7 @@ CandidateCard/DiscoveryWorkbench were replaced by MealCard/DiscoveryWorkspace.
 Run all seven browser suites: shell, discovery, cooking, pantry, pantry-discovery,
 global-discovery, enrichment (tests/<name>-smoke.mjs). Inference must be mocked;
 enrichment-live remains paid and opt-in. Cache durability remains unimplemented.
-M6 was authorized with “lets go”; photo intake is the current milestone.
+M6 photo intake is complete; M7 preview boundaries follow below.
 
 ## M6 photo intake boundaries
 
@@ -144,3 +144,27 @@ No durable photo history or anonymous shared-root writes. Typed RPC data URLs av
 custom multipart transport; bound and validate both client/server. Parent busy state
 prevents concurrent typed/photo mutations. Tests: vision_adapter_tests.py in configured
 Python, Jac full suite, all eight browser suites including vision-smoke. No paid LLM.
+
+## M7 selected-recipe preview boundaries
+
+ServingPreview is isolated on RecipeDetail. Only explicit generation can call SDXL;
+page load/reload is cache-only, no inference. serving_preview requires selected full
+recipe key/exact version plus generate/demo booleans. Jac derives prompt from graph
+projection/ordered steps and canonical ingredient ordering. VisualisationWalker
+traverses actual Recipe and cached GeneratedImage nodes; bounded16-entry process
+cache stores image/prompt/seed/provider/model/timestamp and recipe relationships.
+No private pantry/photo inputs or durable memory added. Failures are not cached.
+Explicit demo shows CSS plate + no-generation disclosure; never fake an SDXL image.
+Every image carries the exact illustrative label. Provider failure preserves recipe,
+cooking progress and prior preview. Optional Python local offline CUDA/Diffusers
+and hosted HTTPS JSON bridge paths; neither has live SDXL verification. User has
+neither provider nor GPU/weights. No model downloads, paid calls or OpenAI fallback.
+Use adapters/sdxl_adapter.py, hosted contract in README, no client URLs/API keys.
+Tests: six SDXL adapter tests in optional vision Python; all Jac tests; nine browser
+suites including preview-smoke. Preserve untracked user JPG/Zone.Identifier; don't
+commit private test photos. M8 waits for the next user request.
+
+Packaged runtime correction: never use sys.executable as a Python worker fallback;
+it resolves to the Jac launcher here. Explicit COOKSY_{VISION,SDXL}_PYTHON wins;
+otherwise use shutil.which("python3") and return unavailable if missing. Actual
+subprocess demo regression protects against relaunching the app. No data reset.

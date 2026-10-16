@@ -1369,3 +1369,12 @@ select:focus-visible, summary:focus-visible { outline: 3px solid #b6602d; outlin
 .photo-prediction { margin: .8rem 0; }
 .photo-prediction label { display: block; }
 .photo-intake [role="status"] { font-size: .85rem; }
+
+.serving-preview { border: 1px solid #daddcc; background: #fffef8; border-radius: 1.2rem; padding: clamp(1rem, 3vw, 2rem); margin: 2rem 0; }
+.serving-preview figure { margin: 1rem 0; }
+.serving-preview img { display: block; width: 100%; max-width: 768px; border-radius: 1rem; }
+.serving-preview figcaption, .preview-demo p { font-size: .85rem; margin-top: .7rem; }
+.preview-actions { display: flex; gap: 1rem; flex-wrap: wrap; margin: 1rem 0; }
+.preview-demo { text-align: center; padding: 1.5rem; border-radius: 1rem; background: #ebeddf; }
+.preview-plate { width: 140px; height: 140px; border-radius: 50%; margin: 0 auto 1rem; border: 16px solid #fffdf5; box-shadow: 0 4px 15px #35503922; display: grid; place-items: center; color: #6d8155; font-size: 4rem; background: #f7f3e7; }
+.preview-prompt { overflow-wrap: anywhere; font-size: .85rem; }

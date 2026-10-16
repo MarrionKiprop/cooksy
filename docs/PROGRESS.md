@@ -1,6 +1,6 @@
 # Cooksy progress
 
-Date: 2026-10-16 (Africa/Nairobi). Current milestone: M6 photo intake complete; M7 not started.
+Date: 2026-10-16 (Africa/Nairobi). Current milestone: M7 preview flow complete in demo mode; M8 not started.
 M0 foundation: `34e76eddfcbac857e8c3386b2a0db05790d9fc33`. M1 adds the runnable shell.
 
 | Milestone | Status | Scope / acceptance | Commit | Risks / next action |
@@ -12,7 +12,7 @@ M0 foundation: `34e76eddfcbac857e8c3386b2a0db05790d9fc33`. M1 adds the runnable 
 | M4 | Complete | Recipe detail and cooking session; advance/reverse/recover progress | 337fc3a | Tab-scoped progress; no account sync or timers |
 | M5 | Complete | Graph-first structured enrichment, selected preparation, grounded help, provenance/validation and content-version recovery | 524e785 | GPT-4.1 mini verified; process cache expires on restart |
 | M6 | Complete | Local MobileNet adapter, upload/review/explicit confirmation and private graph links | See checkpoint below | Limited ImageNet ingredient coverage; no multi-object detection |
-| M7 | Not started | Selected-recipe SDXL preview, metadata/cache, label and error tests | — | Hosted/local inference unconfigured |
+| M7 | Complete (demo flow) | Selected-recipe preview, SDXL adapters, graph cache/metadata, labels and error tests | See checkpoint below | Real SDXL unavailable; user has no local/hosted setup |
 | M8 | Not started | Nutrition references/disclosure, accessibility/responsive polish, full journey and demo handoff | — | Full runtime validation still required |
 
 ## M0 evidence and checks
@@ -423,3 +423,37 @@ on device/browser; WSL desktop file selection is verified.
 
 M6 implementation checkpoint: `23c1388806953db54c68d406e3adf1d46c3edf59`; pushed and remote main verified.
 Final formatting, whitespace and credential/weight exclusion checks passed.
+
+## M7 — Selected-recipe serving-preview flow — 2026-10-16
+
+User authorized next module after M6 and confirmed neither hosted SDXL provider
+nor local weights/GPU is available. Implemented selected full-recipe/version RPC,
+deterministic graph-grounded prompt, canonical ingredient order, VisualisationWalker
+cache traversal, GeneratedImage metadata and ownership/recipe links, bounded16-entry
+process cache, seed/model/prompt/version keying, isolated RecipeDetail preview panel,
+explicit demo plate and required illustrative label. Initial load/reload only read
+cache. Failures preserve recipe/progress and prior preview. No M8 work added.
+
+Optional Python adapter supports offline local CUDA/Diffusers directory or a
+configured HTTPS JSON bridge with server-only auth; PNG/JPEG bytes verified and
+bounded. Neither real SDXL path is live-verified/configured. No multi-gigabyte model
+download, paid generation, OpenAI image fallback or secret changes were performed.
+Demo deliberately returns no food image; the UI says no SDXL image was generated.
+
+Verification: initial fullsuite46tests PASS(43.47s), full check64files PASS(139.29s),
+clientbuild PASS. Browser exposed packaged sys.executable resolving to Jac launcher,
+which relaunched app instead of Python. Stopped preview/accidental child without
+clearing data. Worker fallback now explicit configured Python or actual python3
+from PATH; applied same fix to vision's previously unused blank-path fallback.
+Added actual subprocess regression. Final fullsuite47tests PASS(17.85s), affected
+3-file check PASS(3.85s), finalbuild PASS(3.0s). Six SDXL Python adapter tests PASS;
+all nine browser suites PASS: preview, vision, shell, discovery, cooking, pantry,
+pantry-discovery, global-discovery and enrichment. SDXL image-success and culinary
+LLM calls mocked; actual selected demo/cache RPC and local photo inference exercised.
+Desktop/mobile preview panels reviewed, screenshots under docs/screenshots/m7.
+
+Limits: real SDXL must be configured separately. Hosted integration is a documented
+JSON bridge contract; vendor-specific APIs need an adapter/bridge. Cache/images are
+process-lifetime, not durable. Seed does not guarantee cross-platform determinism.
+Nutrition and final M8 polish remain unimplemented. User's pre-existing JPG and
+Zone.Identifier remain untouched and untracked, outside this milestone commit.

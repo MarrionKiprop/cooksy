@@ -1,6 +1,6 @@
 """Private request-local photo topology; signed review receipts contain no image bytes."""
 import os;
-import sys;
+import shutil;
 import json;
 import hmac;
 import hashlib;
@@ -25,7 +25,9 @@ def worker(data: str, mode: str) -> dict[str, any] {
     if len(data) > 7000000 {
         raise ValueError("Photo exceeds the 5 MiB limit.");
     }
-    executable = os.environ.get("COOKSY_VISION_PYTHON", "") or sys.executable;
+    executable = os.environ.get("COOKSY_VISION_PYTHON", "")
+        or shutil.which("python3")
+        or "";
     script = str(
         Path(__file__).resolve().parent.parent / "adapters" / "vision_adapter.py"
     );
