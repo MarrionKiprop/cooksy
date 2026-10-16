@@ -25,3 +25,5 @@ Do not run enrichment-live without renewed paid-call authorization.
 User authorizes normal checked commits/pushes to main; verify remote hash, never
 force push. See progress for implementation checkpoint hash. Next: user direction
 before M6. WSL preview previously works at http://172.26.123.103:8000; IP may change.
+
+Implementation checkpoint: `cb08338432954475790210917b503d8a70188053` (pushed).

@@ -381,3 +381,6 @@ Limits: ingredient names only, no quantity sufficiency/allergy/authenticity chec
 AI graph cache remains process-scoped and expires on restart. Regions/traditions
 are navigation metadata, not an exhaustive food database. M6 vision, M7 images,
 M8 nutrition and durable account data remain unimplemented. M6 has not started.
+
+M5 workflow implementation checkpoint: `cb08338432954475790210917b503d8a70188053`; pushed to origin/main.
+Final formatting, whitespace and staged/client-bundle credential checks passed.
