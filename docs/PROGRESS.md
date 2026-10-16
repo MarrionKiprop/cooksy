@@ -57,3 +57,17 @@ owner, remote visibility and SSH authentication remain unresolved. Architecture'
 hackathon deadline is source context, not a verified current schedule.
 
 Next action: follow NEXT_SESSION.md to implement only M1 after this checkpoint.
+
+## GitHub setup follow-up — 2026-10-16
+
+- Workspace githubfile authentication: FAIL (public key rejected).
+- ~/.ssh/id_ed25519 authentication: PASS, authenticated account MarrionKiprop.
+- Initial sandbox network lookup: FAIL; authorized network retry succeeded.
+- Set repository-local core.sshCommand and origin: PASS.
+- Remote lookup: FAIL, Repository not found for MarrionKiprop/cooksy.
+- GitHub plugin offered for repository creation; no gh CLI/token available.
+- Updated operating instructions for user-authorized ongoing verified pushes.
+- `git diff --check`: PASS. No push has succeeded; remote creation remains pending.
+
+Next Git action: create empty remote, push main with upstream, compare remote hash
+to local HEAD. M1 remains the next application milestone.

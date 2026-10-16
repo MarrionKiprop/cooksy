@@ -76,3 +76,15 @@ whitespace checks to authored documentation separately; record the initial faile
 check explicitly. Alternative: normalise originals and lose byte identity.
 Consequence: source verification remains exact, and original whitespace is not
 misreported as a passing check.
+
+## D008 — GitHub authentication and ongoing push authorization
+
+User requested GitHub configuration and continuing pushes. Workspace githubfile
+was rejected; ~/.ssh/id_ed25519 authenticated as MarrionKiprop (SSH exit 1 with
+GitHub's successful-authentication greeting is expected). Set repository-local
+core.sshCommand to select that key and origin to MarrionKiprop/cooksy over SSH.
+Do not change global SSH settings or copy key material. Remote ls-remote returned
+Repository not found; repository creation and initial push remain pending. No gh
+CLI or token environment variable is available. Offered GitHub plugin connection
+for repository creation. Future checked commits should be pushed without asking
+again; verify remote branch hash, never force push or overwrite remote history.
