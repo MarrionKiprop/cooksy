@@ -2,6 +2,7 @@
 import json;
 import from pathlib { Path }
 import from math { isfinite }
+import from threading { RLock }
 import from graph.models { Recipe, Ingredient, REQUIRES }
 import from .models {
     FoodReference,
@@ -12,9 +13,17 @@ import from .models {
     USES_REFERENCE,
     SOURCE_INGREDIENT
 }
-import from .views { NutritionView, NutritionItemView, NutrientValue }
+import from .views {
+    NutritionView,
+    NutritionItemView,
+    NutrientValue,
+    EstimatedFood,
+    NutritionProposal
+}
+import ai.provider as provider;
 import from ai.memory { request_catalogue }
 import from walkers.recipe { RecipeWalker }
+import from graph.projections { recipe_view }
 
 glob nutrient_names: list[str] = [
          "Energy",
@@ -26,6 +35,8 @@ glob nutrient_names: list[str] = [
      ];
 glob nutrient_units: list[str] = ["kcal", "g", "g", "g", "g", "mg"];
 glob disclosure: str = "Reference-based estimate from declared edible ingredient masses, not a measured meal. Includes every listed ingredient, including optional items. Raw USDA reference assumptions are shown below. Cooking losses, absorbed/discarded oil, moisture and yield changes are not adjusted. Equal servings are assumed. Missing foods, measures or nutrient values are omitted, never treated as zero. This does not verify dietary or allergy suitability.";
+glob ai_cache: dict[str, NutritionView] = {},
+     ai_lock = RLock();
 
 def references() -> list[FoodReference] {
     raw = json.loads((Path(__file__).parent / "references.json").read_text()) as dict[
@@ -76,6 +87,8 @@ def grams_for(quantity: float, unit: str) -> float | None {
 
 walker NutritionWalker {
     has reference: list[FoodReference];
+    has estimates: list[EstimatedFood] = [],
+        used_ai: bool = False;
     has selected: Recipe | None = None,
         profile: NutritionProfile | None = None,
         result: NutritionView | None = None;
@@ -113,11 +126,56 @@ walker NutritionWalker {
                 }
             }
             reason = "";
+            estimate: EstimatedFood | None = None;
+            for proposal in self.estimates {
+                if proposal.name == here.name {
+                    estimate = proposal;
+                    break;
+                }
+            }
+            item_ai: bool = False;
+            values: list[float | None] = found.values
+                if found is not None
+                else [None for _ in range(6)];
+            if estimate is not None {
+                if grams is None and estimate.grams is not None {
+                    grams = estimate.grams;
+                    item_ai = True;
+                    reason = "AI-estimated edible mass. ";
+                }
+                if found is None and any([v is not None for v in estimate.values]) {
+                    found = FoodReference(
+                        name=here.name,
+                        fdc_id="",
+                        description="AI food-composition estimate; not a retrieved reference",
+                        source_url="",
+                        values=estimate.values
+                    );
+                    values = estimate.values;
+                    item_ai = True;
+                    reason += "AI-estimated nutrient values. ";
+                } elif found is not None {
+                    values = [v for v in found.values];
+                    for index in range(6) {
+                        if values[index] is None
+                            and estimate.values[index] is not None {
+                            values[index] = estimate.values[index];
+                            item_ai = True;
+                        }
+                    }
+                }
+                if item_ai {
+                    reason += "AI assumptions: " + estimate.assumptions + " ";
+                }
+            }
             if found is None {
-                reason = "No exact supported food reference; excluded.";
+                reason += "No exact supported food reference; excluded.";
             }
             if grams is None {
                 reason += " No supported edible mass; counts and volumes are not guessed.";
+            }
+            if any([value is None for value in values]) {
+                reason += " Some nutrient values are unavailable.";
             }
             item = NutritionItem(name=here.name, grams=grams, reason=reason.strip());
             profile +>:NUTRITION_ITEM():+> item;
@@ -137,9 +195,10 @@ walker NutritionWalker {
             if found is None or grams is None {
                 continue;
             }
+            self.used_ai = self.used_ai or item_ai;
             self.matched += 1;
             for index in range(6) {
-                amount = found.values[index];
+                amount = values[index];
                 if amount is None {
                     self.missing[index] = True;
                 } else {
@@ -160,6 +219,9 @@ walker NutritionWalker {
         status = "estimate"
             if complete
             else ("partial" if self.matched > 0 else "unavailable");
+        if self.used_ai {
+            status = "ai_estimate" if complete else "ai_partial";
+        }
         profile.status = status;
         values: list[NutrientValue] = [];
         for index in range(6) {
@@ -186,7 +248,12 @@ walker NutritionWalker {
                 self.rows,
                 key=lambda (row: NutritionItemView) -> str { return row.name; }
             ),
-            disclosure=disclosure
+            disclosure=(
+                "Includes approximate AI food composition or portion-mass estimates, not verified USDA values or measured nutrition. Assumptions are listed per ingredient. "
+                    if self.used_ai
+                    else ""
+            )
+                + disclosure
         );
     }
 }
@@ -200,9 +267,128 @@ def nutrition_for(recipe_key: str, version: str) -> NutritionView {
     if recipe is None or recipe.version != version {
         raise ValueError("Recipe unavailable or changed. Reload the selected recipe.");
     }
+    key = recipe_key + "|" + version;
+    with ai_lock {
+        if key in ai_cache {
+            return ai_cache[key];
+        }
+    }
     calculation = recipe spawn NutritionWalker(reference=references());
     if calculation.result is None {
         raise ValueError("Nutrition calculation unavailable.");
     }
     return calculation.result;
+}
+
+def validate_estimates(
+    proposal: NutritionProposal, requested: list[str]
+) -> list[EstimatedFood] {
+    if len(proposal.items) > len(requested) {
+        raise ValueError("Too many nutrition estimates.");
+    }
+    seen: set[str] = set();
+    limits: list[float] = [1000.0, 100.0, 100.0, 100.0, 100.0, 100000.0];
+    for item in proposal.items {
+        if item.name not in requested or item.name in seen or len(item.values) != 6 {
+            raise ValueError("Invalid nutrition ingredient identity.");
+        }
+        seen.add(item.name);
+        if not item.assumptions.strip() or len(item.assumptions) > 600 {
+            raise ValueError("Nutrition assumptions required.");
+        }
+        if item.grams is not None
+            and (not isfinite(item.grams) or not 0 < item.grams <= 1000000) {
+            raise ValueError("Invalid estimated mass.");
+        }
+        for index in range(6) {
+            value = item.values[index];
+            if value is not None
+                and (not isfinite(value) or not 0 <= value <= limits[index]) {
+                raise ValueError("Invalid estimated nutrient value.");
+            }
+        }
+        macros = item.values[1:4];
+        if all([v is not None for v in macros])
+            and sum(
+                [
+                    v
+                    for v in macros
+                    if v is not None
+                ]
+            )
+                > 105 {
+            raise ValueError("Invalid estimated macronutrient mass.");
+        }
+    }
+    return proposal.items;
+}
+
+def estimate_for(recipe_key: str, version: str) -> NutritionView {
+    baseline = nutrition_for(recipe_key, version);
+    if baseline.status == "estimate" {
+        return baseline;
+    }
+    selection = request_catalogue() spawn RecipeWalker(recipe_key=recipe_key);
+    recipe = selection.selected_node;
+    if recipe is None or recipe.version != version {
+        raise ValueError("Recipe unavailable or changed.");
+    }
+    key = recipe_key + "|" + version;
+    with ai_lock {
+        if key in ai_cache {
+            return ai_cache[key];
+        }
+        if not provider.enabled() {
+            raise ValueError("Nutrition AI is unavailable.");
+        }
+        requested = [
+            row.name
+            for row in baseline.items
+            if row.reason
+        ];
+        context: list[dict[str, any]] = [];
+        for ingredient in [recipe->:REQUIRES:->] {
+            if ingredient.name not in requested {
+                continue;
+            }
+            for amount in [edge recipe->:REQUIRES:->ingredient] {
+                context.append(
+                    {
+                        "name": ingredient.name,
+                        "quantity": amount.quantity,
+                        "unit": amount.unit,
+                        "preparation": amount.preparation
+                    }
+                );
+            }
+        }
+        if len(requested) > 24 or not requested {
+            raise ValueError("Nutrition estimation is unavailable for these gaps.");
+        }
+        view = recipe_view(recipe);
+        proposal = provider.estimate_foods(
+            json.dumps(
+                {
+                    "recipe": recipe.name,
+                    "description": recipe.description,
+                    "region": view.region,
+                    "tradition": view.tradition,
+                    "ingredients": context
+                }
+            )
+        );
+        estimates = validate_estimates(proposal, requested);
+        calculation = recipe spawn NutritionWalker(
+            reference=references(), estimates=estimates
+        );
+        result = calculation.result;
+        if result is None or result.status not in ["ai_estimate", "ai_partial"] {
+            raise ValueError("No usable AI nutrition estimates.");
+        }
+        if len(ai_cache) >= 16 {
+            ai_cache.pop(list(ai_cache.keys())[0]);
+        }
+        ai_cache[key] = result;
+        return result;
+    }
 }

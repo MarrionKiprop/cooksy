@@ -218,7 +218,11 @@ def:pub serving_preview(
 }
 
 import from nutrition.views { NutritionView }
-import from nutrition.service { nutrition_for }
+import from nutrition.service { nutrition_for, estimate_for }
 def:pub recipe_nutrition(recipe_key: str, version: str) -> NutritionView {
     return nutrition_for(recipe_key, version);
+}
+
+def:pub estimate_recipe_nutrition(recipe_key: str, version: str) -> NutritionView {
+    return estimate_for(recipe_key, version);
 }

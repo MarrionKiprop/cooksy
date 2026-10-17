@@ -1,13 +1,16 @@
-import from endpoints { recipe_nutrition }
+import from endpoints { recipe_nutrition, estimate_recipe_nutrition }
 import type from .views { NutritionView }
 
 def:pub NutritionPanel(recipeKey: str, version: str) -> JsxElement {
     has state: NutritionView | None = None,
         busy: bool = True,
-        error: str = "";
+        error: str = "",
+        ai_error: str = "",
+        estimating: bool = False;
     async def load {
         busy = True;
         error = "";
+        ai_error = "";
         try {
             state = await recipe_nutrition(recipeKey, version);
         } except Exception {
@@ -18,14 +21,26 @@ def:pub NutritionPanel(recipeKey: str, version: str) -> JsxElement {
     async can with [recipeKey, version] entry {
         await load();
     }
+    async def estimate {
+        estimating = True;
+        ai_error = "";
+        try {
+            state = await estimate_recipe_nutrition(recipeKey, version);
+        } except Exception {
+            ai_error = "AI estimates are unavailable. Your reference values and recipe are unchanged.";
+        }
+        estimating = False;
+    }
     nutrition = state;
+    ai = nutrition is not None and nutrition.status in ["ai_estimate", "ai_partial"];
+    partial = nutrition is not None and nutrition.status in ["partial", "ai_partial"];
     return
         <section
             className="nutrition-panel"
             aria-labelledby="nutrition-title"
-            aria-busy={busy}
+            aria-busy={busy or estimating}
         >
-            <span className="eyebrow">FROM INGREDIENT REFERENCES</span>
+            <span className="eyebrow">NUTRITION INSIGHTS</span>
             <h2 id="nutrition-title">A little nourishment.</h2>
             {<p role="status">Calculating reference-based estimates…</p>
                 if busy
@@ -45,41 +60,54 @@ def:pub NutritionPanel(recipeKey: str, version: str) -> JsxElement {
                 else None}
             {<div>
                 <h3>
-                    {"Estimated recipe nutrition"
-                        if nutrition.status == "estimate"
+                    {"AI-assisted nutrition estimate"
+                        if ai
                         else (
-                            "Known-ingredient subtotal only"
-                                if nutrition.status == "partial"
-                                else "Not enough supported data"
+                            "Estimated recipe nutrition"
+                                if nutrition.status == "estimate"
+                                else (
+                                    "Known-ingredient subtotal only"
+                                        if partial
+                                        else "Not enough supported data"
+                                )
                         )}
                 </h3>
                 <p className="nutrition-coverage">
                     {str(nutrition.matched)
                         + " of "
                         + str(nutrition.total_items)
-                        + " ingredient amounts supported · "
+                        + (
+                            " ingredient amounts included · "
+                                if ai
+                                else " ingredient amounts supported · "
+                        )
                         + str(nutrition.servings)
                         + " equal servings"}
                 </p>
                 {<p className="nutrition-gap">
                     Incomplete: these numbers exclude unsupported ingredients and are not the nutrition of the whole meal.
                 </p>
-                    if nutrition.status == "partial"
+                    if partial
+                    else None}
+                {<p className="nutrition-gap">
+                    Includes approximate AI nutrient or portion estimates, not verified USDA values or measured meal nutrition. Review the assumptions below.
+                </p>
+                    if ai
                     else None}
                 {<table className="nutrition-table">
                     <caption>
-                        {"Estimated values"
-                            if nutrition.status == "estimate"
-                            else "Subtotal for supported ingredients; whole-meal totals unavailable"}
+                        {"AI-assisted approximate values"
+                            if nutrition.status == "ai_estimate"
+                            else (
+                                "Estimated values"
+                                    if nutrition.status == "estimate"
+                                    else "Subtotal for supported ingredients; whole-meal totals unavailable"
+                            )}
                     </caption>
                     <thead>
                         <tr>
                             <th scope="col">Nutrient</th>
-                            <th scope="col">
-                                Recipe{" subtotal"
-                                    if nutrition.status == "partial"
-                                    else ""}
-                            </th>
+                            <th scope="col">Recipe{" subtotal" if partial else ""}</th>
                             <th scope="col">Per serving</th>
                         </tr>
                     </thead>
@@ -103,6 +131,24 @@ def:pub NutritionPanel(recipeKey: str, version: str) -> JsxElement {
                 </table>
                     if nutrition.status != "unavailable"
                     else None}
+                {<div className="nutrition-ai-action">
+                    <p className="fixture-note">
+                        Ask AI to estimate missing foods or portion masses. Sends recipe ingredients to OpenAI and may use API credits.
+                    </p>
+                    <button
+                        type="button"
+                        className="button secondary"
+                        disabled={estimating}
+                        onClick={estimate}
+                    >
+                        {"Estimating…"
+                            if estimating
+                            else "Estimate missing nutrition with AI"}
+                    </button>
+                </div>
+                    if nutrition.status in ["partial", "unavailable"]
+                    else None}
+                {<p role="status">{ai_error}</p> if ai_error else None}
                 <details className="nutrition-sources">
                     <summary>References, assumptions and missing amounts</summary>
                     <p className="fixture-note">{nutrition.disclosure}</p>
@@ -129,7 +175,7 @@ def:pub NutritionPanel(recipeKey: str, version: str) -> JsxElement {
                         ]}
                     </ul>
                     <p>
-                        Small USDA SR Legacy reference subset, per 100 g edible portion; not an exhaustive food database. Generic cooking oil is not assumed to be olive oil. Counts, cups and millilitres are not converted without food-specific evidence.
+                        Reference-based values use a small USDA SR Legacy subset per 100 g edible portion. AI-assisted values or count/volume conversions use the stated assumptions and are not verified database measurements. Generic cooking oil is not silently replaced with olive oil.
                     </p>
                 </details>
             </div>

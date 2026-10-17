@@ -70,7 +70,7 @@ obj AssistanceResult {
 
 sem IngredientProposal.name = "Lowercase simple ingredient name, no quantity.";
 sem IngredientProposal.essential = "Whether required rather than optional.";
-sem CandidateProposal.name = "Short dish name.";
+sem CandidateProposal.name = "Established local dish name where appropriate; adaptations labelled explicitly.";
 sem CandidateProposal.description = "Brief description with adaptation uncertainty, no private user text.";
 sem CandidateProposal.region = "Geographical culinary region.";
 sem CandidateProposal.tradition = "Culinary tradition, not a claim of verified authenticity.";

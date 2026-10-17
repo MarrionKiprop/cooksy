@@ -41,6 +41,6 @@ provider is configured. Current vision is a limited prominent-object classifier.
 Two-stage culinary generation is preserved: candidate summaries first, one full
 recipe only on selection. A discovery action permits one initial summary request
 and one bounded repair; partial sets cannot be selected. Navigation/reload restore
-existing exact graph identities without inference. Nutrition never calls an LLM.
+existing exact graph identities without inference. Nutrition loads references without inference. An explicit AI-estimate endpoint can fill food/portion gaps with labelled assumptions; Jac keeps totals and known reference values.
 Preview generation requires an explicit selected-recipe action. Ingredient
 confirmation and provider/error disclosures remain part of the product flow.

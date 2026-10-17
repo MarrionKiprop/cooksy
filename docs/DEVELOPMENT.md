@@ -255,7 +255,9 @@ M8 reference-based nutrition and local demo quality checks are implemented.
 
 Selected recipe pages calculate reference-based estimates from declared edible masses.
 The ten-food USDA SR Legacy subset includes energy, protein, carbohydrate, fat, fibre
-and sodium. Jac performs all arithmetic; no nutrient numbers come from an LLM.
+and sodium. Jac performs all arithmetic. The reference-only path makes no LLM
+call; an explicit AI-estimate action can fill gaps with separately labelled
+composition/portion assumptions (see NUTRITION.md).
 Unknown foods/units and missing nutrient values stay explicit gaps. Partial results
 are labelled **known-ingredient subtotal**, never complete meal nutrition. Mass units
 are g/gram/grams, kg and mg; no guessed counts, cup weights or liquid densities.

@@ -63,6 +63,7 @@ theme_color = "#f8f6ef"
 "endpoints.serving_preview" = "server"
 
 "endpoints.recipe_nutrition" = "server"
+"endpoints.estimate_recipe_nutrition" = "server"
 
 [byllm.model]
 default_model = "gpt-4.1-mini"

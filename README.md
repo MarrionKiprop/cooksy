@@ -32,7 +32,8 @@ Without a provider, you can browse explicitly labelled sample recipes.
 Recipes created with AI need a review of ingredient amounts and instructions.
 Photo recognition supports a limited range of ingredients; suggestions must be
 confirmed before they enter your pantry. Nutrition uses a small sourced reference
-set and clearly identifies incomplete subtotals.
+set and clearly identifies incomplete subtotals. An optional AI action estimates
+missing food composition or portion masses, with assumptions and separate labels.
 
 Real serving-image generation requires a separately configured SDXL provider or
 local GPU setup. The sample layout does not generate a food image. Pantry and
