@@ -65,3 +65,6 @@ theme_color = "#f8f6ef"
 
 [byllm.model]
 default_model = "gpt-4.1-mini"
+
+[serve.compression]
+enabled = false
