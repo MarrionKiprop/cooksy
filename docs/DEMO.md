@@ -12,6 +12,25 @@ No OpenAI key is required for the deterministic demo. Live SDXL remains off;
 with Pillow (configured optional vision environment); manual typed intake always
 works if vision is unavailable.
 
+## JacHammer hosted demo limitations
+
+Real photo recognition and SDXL generation are excluded from the hosted demo.
+Use typed ingredients for the shared pantry, then Explore/Discover, recipe selection
+and cook-along. Live culinary suggestions require server-side OpenAI configuration.
+
+Photo recognition has a working local integration, but the hosted CPU dependency
+installation ended with exit code137; the sandbox pod then became unavailable.
+The cause was not confirmed. Hosted packages, verified MobileNet weights and worker
+configuration were not completed or tested. Do not retry installation for this demo.
+
+Real SDXL generation has not been verified locally or in JacHammer. No suitable
+hosted GPU/model runtime or external SDXL provider is configured. The explicit
+sample layout is an illustration placeholder, not an SDXL-generated image.
+Neither sample photo suggestions nor sample layouts demonstrate real inference.
+
+These are deployment/inference follow-ups, not completed hosted capabilities.
+The user has deferred both features for the JacHammer demonstration.
+
 ## Five-minute walkthrough
 
 1. Open **My pantry**. Type `potato, cooking oil, salt`. Click **Review ingredients**.

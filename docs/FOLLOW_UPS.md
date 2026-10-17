@@ -26,3 +26,22 @@ They remain visible work, not completed production capabilities.
 
 Pick up a follow-up only when the user chooses it; do not silently download model
 weights, spend provider credits, or change the application's privacy boundaries.
+
+## Hosted demonstration decision — 17 October 2026
+
+Defer real photo recognition and SDXL in JacHammer; demonstrate typed ingredient
+intake and the culinary workflow instead. No further model installations, weight
+downloads or paid inference are authorized by this decision.
+
+- **Photo recognition:** the attempted CPU PyTorch installation exited137 and the
+  sandbox pod subsequently became unavailable. OOM/eviction was not established.
+  Hosted inference setup and validation remain incomplete. Revisit with an adequate
+  prebuilt runtime, persistent/reproducible provisioning or a separately approved
+  hosted vision integration. Existing local classification accuracy limits remain.
+- **SDXL:** no confirmed CUDA runtime, model installation or hosted provider.
+  Existing adapter/UI are implemented; real generation remains unverified. Revisit
+  provider/runtime selection and an explicitly approved live check later.
+
+The reported sandbox uses emptyDir volumes: data may survive container restarts
+within the same pod, but is lost when that pod is removed. Persistent deployment
+support has not been established. Sample modes remain explicitly labelled.
