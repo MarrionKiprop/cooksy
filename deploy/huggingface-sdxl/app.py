@@ -12,10 +12,10 @@ REVISION = '462165984030d82259a11f4367a4eed129e94a7b'
 CAPTION = 'AI-generated serving preview; illustrative, not an exact photograph.'
 
 pipe = StableDiffusionXLPipeline.from_pretrained(
-    MODEL, revision=REVISION, variant='fp16', torch_dtype=torch.float16,
+    MODEL, revision=REVISION, variant='fp16', dtype=torch.float16,
     use_safetensors=True,
 ).to('cuda')
-pipe.enable_vae_slicing()
+pipe.vae.enable_slicing()
 
 
 @spaces.GPU(duration=60)

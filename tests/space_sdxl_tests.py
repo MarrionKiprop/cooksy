@@ -18,7 +18,9 @@ class SpaceTests(unittest.TestCase):
         spaces.GPU.side_effect = lambda **kwargs: lambda fn: fn
         self.torch = MagicMock()
         diffusers = MagicMock()
-        self.pipe = diffusers.StableDiffusionXLPipeline.from_pretrained.return_value.to.return_value
+        self.pipe = MagicMock(spec=['vae'])
+        self.pipe.vae = MagicMock(spec=['enable_slicing'])
+        diffusers.StableDiffusionXLPipeline.from_pretrained.return_value.to.return_value = self.pipe
         self.pipe.return_value.images = [Image.new('RGB', (768, 768), (120, 80, 40))]
         modules = {'spaces': spaces, 'gradio': gradio, 'torch': self.torch, 'diffusers': diffusers}
         with patch.dict(sys.modules, modules):
@@ -30,6 +32,7 @@ class SpaceTests(unittest.TestCase):
 
     def test_loading_does_not_generate_and_gpu_call_is_bounded(self):
         self.pipe.assert_not_called()
+        self.pipe.vae.enable_slicing.assert_called_once_with()
         self.spaces.GPU.assert_called_once_with(duration=60)
 
     def test_generated_image_and_metadata_match_adapter_policy(self):
