@@ -51,5 +51,8 @@ support has not been established. Sample modes remain explicitly labelled.
 The user created LangstKip/cooksy-sdxl to pursue a recorded SDXL demo. Upload files
 and a compatible Cooksy queued-API adapter are now prepared in
 `deploy/huggingface-sdxl/`; see DEVELOPMENT.md. This reopens SDXL integration
-preparation only. Deployment, GPU execution and quota handling remain unverified.
+preparation only. The user subsequently confirmed real image generation in the running Space.
+Its public API schema matches the adapter (prompt, negative_prompt, seed; two
+outputs). Local Cooksy is configured; end-to-end Cooksy image generation/cache
+reuse and API quota handling still need live verification.
 The photo-recognition deferral and production-hosting limitations remain.

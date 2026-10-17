@@ -342,7 +342,8 @@ The upload bundle is in `deploy/huggingface-sdxl/`. Upload its **three files**
 Do not upload the enclosing folder or the whole Cooksy application. Keep ZeroGPU
 selected. Uploading starts a build and downloads the pinned official SDXL model;
 no GPU inference occurs on page load. First build/startup can take several minutes.
-This bundle is prepared and mock-tested, not yet live GPU verified.
+The user has verified image generation in the running Space UI. Cooksy-to-Space
+end-to-end generation remains to be verified.
 
 After the Space reports Running, configure **Cooksy's server**, not the Space:
 
