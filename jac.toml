@@ -58,6 +58,7 @@ theme_color = "#f8f6ef"
 
 "endpoints.review_photo_ingredients" = "server"
 "endpoints.confirm_photo_ingredients" = "server"
+"endpoints.photo_processing_notice" = "server"
 
 "endpoints.serving_preview" = "server"
 

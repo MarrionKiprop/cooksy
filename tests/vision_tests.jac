@@ -4,6 +4,22 @@ import from vision.models { IngredientImage, DetectionResult, DETECTS, CONFIRMED
 import from vision.service { ConfirmPhotoWalker }
 import from graph.models { Pantry, Ingredient, HAS_INGREDIENT }
 
+test "photo processing notice reflects configured sharing without secrets" {
+    with patch.dict(photos.os.environ, {"COOKSY_VISION_MODE": "hosted"}) {
+        assert "Hugging Face" in photos.processing_notice();
+        with patch.object(
+            photos.subprocess, "run", side_effect=RuntimeError("private")
+        ) as worker {
+            photos.worker("image", "hosted");
+            assert worker.call_args.kwargs["timeout"] == 100;
+        }
+    }
+    with patch.dict(photos.os.environ, {"COOKSY_VISION_MODE": "local"}) {
+        assert "on this server" in photos.processing_notice();
+        assert "Hugging Face" not in photos.processing_notice();
+    }
+}
+
 def fixture() -> dict[str, any] {
     return {
         "status": "predictions_available",

@@ -5,6 +5,10 @@ import io
 from pathlib import Path
 import unittest
 import tempfile
+import os
+import sys
+from types import SimpleNamespace
+from unittest.mock import Mock
 from unittest.mock import patch
 from PIL import Image
 
@@ -19,6 +23,38 @@ def photo(fmt='PNG'):
     return f'data:image/{mime};base64,' + base64.b64encode(stream.getvalue()).decode()
 
 class VisionAdapterTests(unittest.TestCase):
+    def hosted(self, payload, data=None):
+        call=Mock(return_value=payload)
+        with patch.dict(os.environ,{'COOKSY_VISION_ENDPOINT':'https://langstkip-cooksy-sdxl.hf.space/gradio_api/call/review_photo','COOKSY_VISION_API_KEY':'test-hf-secret'}), patch.dict(sys.modules,{'sdxl_adapter':SimpleNamespace(gradio_payload=call)}):
+            result=adapter.classify(photo() if data is None else data,'hosted','')
+        return result,call
+
+    def hosted_payload(self, status='predictions_available'):
+        return dict(status=status,model='mobilenet_v3_small/IMAGENET1K_V1',
+                    requires_user_confirmation=True,width=32,height=24,
+                    predictions=[dict(label='banana',ingredient='banana',confidence=0.8)] if status=='predictions_available' else [])
+
+    def test_hosted_contract_keeps_names_unconfirmed_and_auth_private(self):
+        result,call=self.hosted(self.hosted_payload())
+        self.assertEqual(result['status'],'predictions_available')
+        self.assertTrue(result['requires_user_confirmation'])
+        self.assertEqual(call.call_args.kwargs['data'],[photo()])
+        self.assertEqual(call.call_args.kwargs['outputs'],1)
+        self.assertEqual(call.call_args.args[2]['Authorization'],'Bearer test-hf-secret')
+        self.assertNotIn('test-hf-secret',str(result))
+
+    def test_hosted_invalid_photo_does_not_leave_server(self):
+        result,call=self.hosted(self.hosted_payload(),data='corrupt')
+        self.assertEqual(result['status'],'invalid');call.assert_not_called()
+
+    def test_hosted_rejects_unsupported_or_malformed_predictions(self):
+        for field,value in [('model','other'),('requires_user_confirmation',False),('width',100),('predictions',[dict(label='pizza',ingredient='pizza',confidence=0.8)]),('predictions',[dict(label='banana',ingredient='banana',confidence=float('nan'))])]:
+            payload=self.hosted_payload();payload[field]=value
+            result,_=self.hosted(payload)
+            self.assertEqual(result['status'],'unavailable');self.assertEqual(result['predictions'],[])
+        result,_=self.hosted(self.hosted_payload('no_match'))
+        self.assertEqual(result['status'],'no_match')
+
     def test_rejects_invalid_and_mismatched_media(self):
         for value in ['', 'http://localhost/private', 'data:image/png;base64,%%%','data:image/svg+xml;base64,abc', photo().replace('image/png','image/jpeg')]:
             self.assertEqual(adapter.classify(value, 'demo', '')['status'], 'invalid')

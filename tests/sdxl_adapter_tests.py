@@ -15,6 +15,22 @@ def image_data():
     return base64.b64encode(stream.getvalue()).decode()
 
 class AdapterTests(unittest.TestCase):
+    def test_shared_queue_supports_single_photo_json_output(self):
+        class Response(io.BytesIO):
+            def __enter__(self): return self
+            def __exit__(self,*args): self.close()
+        photo=dict(status='no_match',predictions=[])
+        with patch.object(module.urllib.request,'build_opener') as opener:
+            opener.return_value.open.side_effect=[
+                Response(b'{"event_id":"photo123"}'),
+                Response(b'event: complete\ndata: '+json.dumps([photo]).encode()+b'\n\n'),
+            ]
+            result=module.gradio_payload('https://example.hf.space/gradio_api/call/review_photo',{},
+                                         {'Content-Type':'application/json'},data=['photo-data'],outputs=1,index=0)
+            request=opener.return_value.open.call_args_list[0].args[0]
+            self.assertEqual(json.loads(request.data),{'data':['photo-data']})
+        self.assertEqual(result,photo)
+
     def space_request(self, events, receipt=None):
         class Response(io.BytesIO):
             def __enter__(self): return self

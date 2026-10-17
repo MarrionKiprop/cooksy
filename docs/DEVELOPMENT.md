@@ -336,8 +336,9 @@ Historical development notes, evidence and design references are local-only.
 
 ## Hugging Face ZeroGPU SDXL demo
 
-The upload bundle is in `deploy/huggingface-sdxl/`. Upload its **three files**
-(`app.py`, `requirements.txt`, `README.md`) to the **root** of the Gradio Space
+The upload bundle is in `deploy/huggingface-sdxl/`. Run `python deploy/huggingface-sdxl/prepare_upload.py`. Upload the **four files**
+(`app.py`, `requirements.txt`, `README.md`, `vision_adapter.py`) from
+`build/huggingface-sdxl/` to the **root** of the Gradio Space
 [LangstKip/cooksy-sdxl](https://huggingface.co/spaces/LangstKip/cooksy-sdxl).
 Do not upload the enclosing folder or the whole Cooksy application. Keep ZeroGPU
 selected. Uploading starts a build and downloads the pinned official SDXL model;
@@ -394,3 +395,39 @@ The full Python3.12 stack, including Gradio6.30/Spaces0.51.3 and datasets, resol
 successfully in a pip dry run. No GPU runtime is installed or executed by that
 check; real build/startup and generation remain pending. Replace only the Space's
 requirements.txt with the corrected upload file, then let it rebuild.
+
+## Hosted MobileNet in the same Space
+
+The user has reopened photo integration for the recording. Re-upload the four-file
+bundle above to add the separate CPU `/review_photo` endpoint. Torchvision0.23.0
+matches Torch2.8.0; neither is needed in Cooksy's hosted-photo worker.
+
+After the Space is Running, set these **server-only** Cooksy values:
+
+```dotenv
+COOKSY_VISION_MODE=hosted
+COOKSY_VISION_ENDPOINT=https://langstkip-cooksy-sdxl.hf.space/gradio_api/call/review_photo
+COOKSY_VISION_PYTHON=/absolute/path/to/python-with-Pillow
+COOKSY_VISION_API_KEY=
+```
+
+Use an HF access token only if needed; never use an OpenAI key for this endpoint.
+Restart Cooksy to refresh configuration and the client processing notice. The
+visible photo notice must identify Hugging Face before review; the real-review
+button stays disabled if the processing notice cannot load. Selecting a file only
+previews it locally. Explicit sample suggestions never invoke the hosted provider.
+
+Cooksy validates JPEG/PNG bytes, size and dimensions before sending the data URL.
+The Space repeats validation and uses the exact original conservative MobileNet
+label map/checkpoint SHA. First valid review downloads a small verified checkpoint;
+failure affects photo review only, not SDXL. The JSON result is revalidated in
+Cooksy before producing the signed, expiring review receipt. All acceptance, edits,
+rejection, graph confirmation and pantry sharing stay in Jac. Photos are not saved
+by Cooksy or deliberately written to disk by the Space classifier; Hugging Face
+processes the image and may retain platform request data. Avoid private images.
+Queue/process bounds are85/100seconds for hosted vision; local remains25seconds.
+This improves hosting availability, not classifier accuracy. Prefer one prominent
+ingredient. Hosted photo inference remains unverified until the updated Space is
+uploaded and a real user review succeeds. Local inference remains available with
+mode=local; do not run real photo tests against hosted mode without intent to send
+that photo externally.

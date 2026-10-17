@@ -43,7 +43,7 @@ def worker(data: str, mode: str) -> dict[str, any] {
             ),
             capture_output=True,
             text=True,
-            timeout=25,
+            timeout=100 if mode == "hosted" else 25,
             check=True
         );
         return json.loads(result.stdout) as dict[str, any];
@@ -57,6 +57,13 @@ def worker(data: str, mode: str) -> dict[str, any] {
             "height": 0
         };
     }
+}
+
+def processing_notice() -> str {
+    if os.environ.get("COOKSY_VISION_MODE", "local") == "hosted" {
+        return "Review photo sends your image to Hugging Face for recognition. Cooksy does not save the photo or send it to OpenAI. Avoid private images.";
+    }
+    return "Photo recognition runs on this server. Cooksy does not save the photo or send it to OpenAI.";
 }
 
 def review(data: str, demo: bool) -> PhotoReview {

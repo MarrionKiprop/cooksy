@@ -1,4 +1,8 @@
-import from endpoints { review_photo_ingredients, confirm_photo_ingredients }
+import from endpoints {
+    review_photo_ingredients,
+    confirm_photo_ingredients,
+    photo_processing_notice
+}
 import type from .views { PredictionView }
 
 def:pub PhotoIntake(
@@ -13,7 +17,18 @@ def:pub PhotoIntake(
         message: str = "",
         receipt: str = "",
         predictions: list[PredictionView] = [],
-        selections: list[str] = [];
+        selections: list[str] = [],
+        privacy_notice: str = "Loading photo processing details…",
+        privacy_ready: bool = False;
+
+    async can with entry {
+        try {
+            privacy_notice = await photo_processing_notice();
+            privacy_ready = True;
+        } except Exception {
+            privacy_notice = "Photo processing details are unavailable. Use typed ingredients or reload before reviewing a photo.";
+        }
+    }
 
     def set_busy(value: bool) {
         busy = value;
@@ -55,7 +70,7 @@ def:pub PhotoIntake(
         target.value = "";
     }
     async def analyse(demo: bool) {
-        if not data {
+        if not data or (not demo and not privacy_ready) {
             return;
         }
         set_busy(True);
@@ -127,7 +142,7 @@ def:pub PhotoIntake(
                 <button
                     type="button"
                     className="button secondary"
-                    disabled={busy or disabled or not data}
+                    disabled={busy or disabled or not data or not privacy_ready}
                     onClick={lambda (e: MouseEvent) { analyse(False); }}
                 >
                     {"Reviewing photo…" if busy else "Review photo"}
@@ -141,11 +156,12 @@ def:pub PhotoIntake(
                     Try sample suggestions
                 </button>
             </div>
+            <p className="fixture-note photo-privacy">{privacy_notice}</p>
             <p role="status">{message}</p>
             <details className="photo-info">
                 <summary>About photo suggestions</summary>
                 <p>
-                    Recognition can miss or misidentify ingredients. Scores are not certainty. Your photo is processed on this server, not sent to OpenAI or saved.
+                    Recognition can miss or misidentify ingredients. Scores are not certainty. Hosted providers may temporarily retain request data under their own policies. Sample suggestions do not send your photo to the hosted provider.
                 </p>
             </details>
             {<div className="photo-review">

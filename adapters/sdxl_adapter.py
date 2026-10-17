@@ -36,13 +36,13 @@ class NoRedirect(urllib.request.HTTPRedirectHandler):
         return None
 
 
-def gradio_payload(endpoint, body, headers):
+def gradio_payload(endpoint, body, headers, *, data=None, outputs=2, index=1, timeout=85):
     """Use Gradio's queued API, never download a returned remote file URL."""
     opener = urllib.request.build_opener(NoRedirect())
-    request = urllib.request.Request(endpoint, data=json.dumps({'data': [
-        body['prompt'], body['negative_prompt'], body['seed']
-    ]}).encode(), headers=headers, method='POST')
-    deadline = time.monotonic() + 85
+    if data is None:
+        data = [body['prompt'], body['negative_prompt'], body['seed']]
+    request = urllib.request.Request(endpoint, data=json.dumps({'data': data}).encode(), headers=headers, method='POST')
+    deadline = time.monotonic() + timeout
     with opener.open(request, timeout=15) as response:
         raw = response.read(4097)
         if len(raw) > 4096:
@@ -66,10 +66,10 @@ def gradio_payload(endpoint, body, headers):
                 if event == 'error':
                     raise ValueError('Space generation failed')
                 if event == 'complete':
-                    outputs = json.loads(text[5:])
-                    if not isinstance(outputs, list) or len(outputs) != 2 or not isinstance(outputs[1], dict):
+                    values = json.loads(text[5:])
+                    if not isinstance(values, list) or len(values) != outputs or not isinstance(values[index], dict):
                         raise ValueError('Unexpected Space output')
-                    return outputs[1]
+                    return values[index]
     raise TimeoutError('Space queue timed out')
 
 

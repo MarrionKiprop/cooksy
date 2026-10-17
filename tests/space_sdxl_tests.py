@@ -4,6 +4,7 @@ import importlib.util
 import io
 from pathlib import Path
 import sys
+import tempfile
 import unittest
 from unittest.mock import MagicMock, patch
 
@@ -22,13 +23,45 @@ class SpaceTests(unittest.TestCase):
         self.pipe.vae = MagicMock(spec=['enable_slicing'])
         diffusers.StableDiffusionXLPipeline.from_pretrained.return_value.to.return_value = self.pipe
         self.pipe.return_value.images = [Image.new('RGB', (768, 768), (120, 80, 40))]
-        modules = {'spaces': spaces, 'gradio': gradio, 'torch': self.torch, 'diffusers': diffusers}
+        vision = MagicMock()
+        self.classify = vision.classify
+        modules = {'spaces': spaces, 'gradio': gradio, 'torch': self.torch, 'diffusers': diffusers,
+                   'vision_adapter': vision}
         with patch.dict(sys.modules, modules):
             path = Path(__file__).resolve().parents[1] / 'deploy/huggingface-sdxl/app.py'
             spec = importlib.util.spec_from_file_location('cooksy_sdxl_space', path)
             self.app = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(self.app)
         self.spaces = spaces
+
+    def test_photo_review_is_cpu_only_and_passes_validated_input_to_classifier(self):
+        checked = dict(status='valid', predictions=[])
+        expected = dict(status='no_match', predictions=[])
+        self.classify.side_effect = [checked, expected]
+        with patch.object(self.app, 'mobile_weights', return_value=Path('/mock/verified.pth')):
+            self.assertEqual(self.app.review_photo('data:image/png;base64,abc'), expected)
+        self.assertEqual(self.classify.call_args.args,
+                         ('data:image/png;base64,abc','local','/mock/verified.pth'))
+        self.pipe.assert_not_called()
+        self.spaces.GPU.assert_called_once()  # Only SDXL reserves GPU.
+
+    def test_invalid_photo_and_weight_failure_do_not_break_sdxl(self):
+        self.classify.return_value = dict(status='invalid', predictions=[])
+        with patch.object(self.app,'mobile_weights') as weights:
+            self.assertEqual(self.app.review_photo('bad')['status'],'invalid')
+            weights.assert_not_called()
+        self.classify.return_value = dict(status='valid', predictions=[])
+        with patch.object(self.app,'mobile_weights',side_effect=RuntimeError('private detail')):
+            result=self.app.review_photo('valid')
+        self.assertEqual(result['status'],'unavailable')
+        self.assertNotIn('private detail',str(result))
+        self.assertEqual(self.app.generate('dish','',1)[1]['seed'],1)
+
+    def test_unverified_mobile_weights_are_never_installed(self):
+        with tempfile.TemporaryDirectory() as directory:
+            with patch.object(self.app.tempfile,'gettempdir',return_value=directory), patch.object(self.app.urllib.request,'urlopen',return_value=io.BytesIO(b'wrong checkpoint')):
+                with self.assertRaises(ValueError): self.app.mobile_weights()
+            self.assertFalse(list(Path(directory).rglob('*.pth')))
 
     def test_loading_does_not_generate_and_gpu_call_is_bounded(self):
         self.pipe.assert_not_called()

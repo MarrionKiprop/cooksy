@@ -1,11 +1,16 @@
 """SDXL inference only. Cooksy's application and graph remain in Jac."""
 import base64
 import io
+import hashlib
+from pathlib import Path
+import tempfile
+import urllib.request
 
 import spaces  # Must precede torch for ZeroGPU initialization.
 import gradio as gr
 import torch
 from diffusers import StableDiffusionXLPipeline
+from vision_adapter import classify
 
 MODEL = 'stabilityai/stable-diffusion-xl-base-1.0'
 REVISION = '462165984030d82259a11f4367a4eed129e94a7b'
@@ -16,6 +21,36 @@ pipe = StableDiffusionXLPipeline.from_pretrained(
     use_safetensors=True,
 ).to('cuda')
 pipe.vae.enable_slicing()
+
+
+def mobile_weights():
+    digest = '047dcff4addef86ea5bc2eff13c9614dc11f47ab1160d0a71a25e7db994f4e1f'
+    target = Path(tempfile.gettempdir()) / 'cooksy-models' / 'mobilenet_v3_small-047dcff4.pth'
+    if target.is_file() and hashlib.sha256(target.read_bytes()).hexdigest() == digest:
+        return target
+    url = 'https://download.pytorch.org/models/mobilenet_v3_small-047dcff4.pth'
+    with urllib.request.urlopen(url, timeout=20) as response:
+        blob = response.read(11_000_001)
+    if len(blob) > 11_000_000 or hashlib.sha256(blob).hexdigest() != digest:
+        raise ValueError('MobileNet checkpoint verification failed')
+    target.parent.mkdir(parents=True, exist_ok=True)
+    temporary = target.with_suffix('.tmp')
+    temporary.write_bytes(blob)
+    temporary.replace(target)
+    return target
+
+
+def review_photo(data: str):
+    # No GPU reservation. Decode first; never download weights for invalid media.
+    checked = classify(data, 'validate', '')
+    if checked['status'] != 'valid':
+        return checked
+    try:
+        return classify(data, 'local', str(mobile_weights()))
+    except Exception:
+        checked.update(status='unavailable', predictions=[],
+                       message='Photo recognition unavailable. Use typed ingredients.')
+        return checked
 
 
 @spaces.GPU(duration=60)
@@ -55,6 +90,11 @@ with gr.Blocks() as demo:
     response = gr.JSON(visible=False)
     button.click(generate, [prompt, negative, seed], [image, response],
                  api_name='generate', concurrency_limit=1)
+    photo_data = gr.Textbox(visible=False)
+    photo_result = gr.JSON(visible=False)
+    photo_button = gr.Button(visible=False)
+    photo_button.click(review_photo, photo_data, photo_result,
+                       api_name='review_photo', concurrency_id='vision', concurrency_limit=1)
 
 if __name__ == '__main__':
     demo.queue(max_size=4, default_concurrency_limit=1).launch(show_error=False)

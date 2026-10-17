@@ -56,3 +56,12 @@ Its public API schema matches the adapter (prompt, negative_prompt, seed; two
 outputs). Local Cooksy is configured; end-to-end Cooksy image generation/cache
 reuse and API quota handling still need live verification.
 The photo-recognition deferral and production-hosting limitations remain.
+
+## Hosted photo preparation for recording
+
+The user reopened this follow-up after SDXL worked. A CPU MobileNet endpoint in
+the same ZeroGPU Space and an opt-in hosted-photo adapter are prepared. Editable
+confirmation remains mandatory; the UI discloses Hugging Face processing before
+review. Local inference is retained. Upload/runtime and real hosted photo review
+must still be verified. This does not improve food accuracy or establish durable
+production hosting. See DEVELOPMENT.md for the four-file bundle and settings.

@@ -188,7 +188,15 @@ def:pub restore_meals(
 }
 
 import from vision.views { PhotoReview, PhotoCommit }
-import from vision.service { review as review_photo, confirm as commit_photo }
+import from vision.service {
+    review as review_photo,
+    confirm as commit_photo,
+    processing_notice
+}
+
+def:pub photo_processing_notice() -> str {
+    return processing_notice();
+}
 
 def:pub review_photo_ingredients(data: str, demo: bool) -> PhotoReview {
     return review_photo(data, demo);

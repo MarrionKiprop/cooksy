@@ -1,10 +1,12 @@
-"""Bounded local MobileNet worker. No URLs, uploads on disk, or runtime downloads."""
+"""Validated MobileNet worker: offline local inference or explicit hosted review."""
 import base64
 import io
 import hashlib
 import json
 import os
+import math
 import sys
+import urllib.parse
 import warnings
 
 MAX_BYTES = 5 * 1024 * 1024
@@ -61,6 +63,45 @@ def classify(data_url: str, mode: str, weights_path: str) -> dict:
                       predictions=[dict(label="demo potato", ingredient="potato", confidence=0.87),
                                    dict(label="demo tomato", ingredient="tomato", confidence=0.64)],
                       message="DEMO: fixed potato/tomato suggestions; not recognized from your photo.")
+        return result
+    if mode == "hosted":
+        endpoint = os.environ.get('COOKSY_VISION_ENDPOINT', '')
+        parsed = urllib.parse.urlsplit(endpoint)
+        if (parsed.scheme != 'https' or not (parsed.hostname or '').endswith('.hf.space')
+                or parsed.path != '/gradio_api/call/review_photo' or parsed.username
+                or parsed.password or parsed.query or parsed.fragment):
+            result.update(status='unavailable', message='Hosted photo recognition is not configured. Use typed ingredients.')
+            return result
+        try:
+            from sdxl_adapter import gradio_payload
+            headers = {'Content-Type': 'application/json'}
+            key = os.environ.get('COOKSY_VISION_API_KEY', '')
+            if key: headers['Authorization'] = 'Bearer ' + key
+            payload = gradio_payload(endpoint, {}, headers, data=[data_url], outputs=1, index=0)
+            if (payload.get('model') != result['model']
+                    or payload.get('requires_user_confirmation') is not True
+                    or payload.get('width') != image.width or payload.get('height') != image.height):
+                raise ValueError('Invalid hosted photo contract')
+            predictions = payload.get('predictions')
+            if not isinstance(predictions, list) or len(predictions) > 5:
+                raise ValueError('Invalid predictions')
+            for item in predictions:
+                label, name, score = item['label'], item['ingredient'], item['confidence']
+                if (not isinstance(label, str) or FOOD.get(label) != name
+                        or isinstance(score, bool) or not isinstance(score, (float, int))
+                        or not math.isfinite(score) or not 0.05 <= score <= 1):
+                    raise ValueError('Unsupported prediction')
+            status = payload.get('status')
+            if status not in ['predictions_available', 'no_match', 'unavailable']:
+                raise ValueError('Invalid hosted status')
+            if (status == 'predictions_available') != bool(predictions):
+                raise ValueError('Invalid hosted result')
+            result.update(status=status, predictions=predictions,
+                          message='Review each suggestion before adding it.' if predictions else
+                          ('No supported ingredient among the top predictions. Try one prominent ingredient or type its name.'
+                           if status == 'no_match' else 'Hosted recognition is unavailable. Use typed ingredients.'))
+        except Exception:
+            result.update(status='unavailable', predictions=[], message='Hosted recognition failed or timed out. Your pantry is unchanged; use typed ingredients.')
         return result
     if mode != "local" or not weights_path or not os.path.isfile(weights_path):
         result.update(status="unavailable", message="Local vision weights are unavailable. Use typed ingredients or explicitly try demo.")
