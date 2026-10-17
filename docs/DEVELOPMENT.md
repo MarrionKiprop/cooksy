@@ -333,3 +333,55 @@ Do not run paid image/provider smoke checks without explicit authorization.
 Source: [MarrionKiprop/cooksy](https://github.com/MarrionKiprop/cooksy).
 Keep credentials, model weights, user photos and generated runtime files out of Git.
 Historical development notes, evidence and design references are local-only.
+
+## Hugging Face ZeroGPU SDXL demo
+
+The upload bundle is in `deploy/huggingface-sdxl/`. Upload its **three files**
+(`app.py`, `requirements.txt`, `README.md`) to the **root** of the Gradio Space
+[LangstKip/cooksy-sdxl](https://huggingface.co/spaces/LangstKip/cooksy-sdxl).
+Do not upload the enclosing folder or the whole Cooksy application. Keep ZeroGPU
+selected. Uploading starts a build and downloads the pinned official SDXL model;
+no GPU inference occurs on page load. First build/startup can take several minutes.
+This bundle is prepared and mock-tested, not yet live GPU verified.
+
+After the Space reports Running, configure **Cooksy's server**, not the Space:
+
+```dotenv
+COOKSY_SDXL_MODE=hosted
+COOKSY_SDXL_ENDPOINT=https://langstkip-cooksy-sdxl.hf.space/gradio_api/call/generate
+COOKSY_SDXL_MODEL_ID=stabilityai/stable-diffusion-xl-base-1.0
+COOKSY_SDXL_PYTHON=/absolute/path/to/python-with-Pillow
+COOKSY_SDXL_API_KEY=
+```
+
+Leave the API key blank for an initial public-Space test. Where Hugging Face
+requires authentication, use a least-privilege Hugging Face token with access to
+this Space in the server environment, never an OpenAI key. Never put tokens into
+Space code, client code or Git. Quota/account behavior must be verified live.
+Cooksy's hosted worker only needs Pillow; torch/Diffusers run in the Space.
+`COOKSY_SDXL_MODE=off` remains the default until deliberately configured.
+
+Restart Cooksy after changing configuration. Open a selected full recipe and click
+**Generate serving preview**. This submits one Gradio job and consumes GPU quota;
+page load does not generate. The adapter accepts only bounded inline PNG/JPEG bytes
+from the completed queue output; it never fetches a returned Gradio file URL.
+The standard HTTPS JSON bridge and local/off/sample paths are unchanged.
+
+The queue deadline is85seconds inside the existing100second subprocess limit.
+A long queue, cold start, quota error or timeout returns an honest failure without
+blocking cooking; no automatic retry is made. A remote queued job may still finish
+and consume quota after a local timeout. Warm the Space before recording and do
+not repeatedly click while awaiting a result. Public access, quotas, sleeping,
+startup time and availability make this a demo service, not permanent hosting.
+Only selected recipe text is sent; generated images may be temporarily cached by
+Gradio. SDXL can truncate long text and invent visual details. Keep the mandatory
+illustrative caption; do not represent sample layouts as generated images.
+
+Checks without model calls:
+`python tests/sdxl_adapter_tests.py` and `python tests/space_sdxl_tests.py` in a
+Pillow-equipped environment. Live success must additionally verify one real image,
+recipe/cache reuse, no generation on load and continued cooking access on failure.
+
+References: [ZeroGPU setup](https://huggingface.co/docs/hub/spaces-zerogpu),
+[Gradio queued API](https://www.gradio.app/guides/querying-gradio-apps-with-curl),
+[SDXL model and license](https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0).

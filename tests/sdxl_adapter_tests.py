@@ -1,6 +1,7 @@
 import base64
 import importlib.util
 import io
+import json
 import os
 from pathlib import Path
 import unittest
@@ -14,6 +15,60 @@ def image_data():
     return base64.b64encode(stream.getvalue()).decode()
 
 class AdapterTests(unittest.TestCase):
+    def space_request(self, events, receipt=None):
+        class Response(io.BytesIO):
+            def __enter__(self): return self
+            def __exit__(self, *args): self.close()
+        with patch.dict(os.environ, {
+            'COOKSY_SDXL_ENDPOINT':'https://langstkip-cooksy-sdxl.hf.space/gradio_api/call/generate',
+            'COOKSY_SDXL_API_KEY':'test-hf-token',
+        }), patch.object(module.urllib.request, 'build_opener') as opener:
+            opener.return_value.open.side_effect = [
+                Response(json.dumps(receipt or {'event_id':'event123'}).encode()),
+                Response(events),
+            ]
+            result=module.generate(dict(mode='hosted',prompt='Cooked potato',negative_prompt='text',seed=10))
+            calls=opener.return_value.open.call_args_list
+        return result,calls
+
+    def test_space_queue_and_image_contract(self):
+        payload=dict(image_base64=image_data(),mime_type='image/png',
+                     model='stabilityai/stable-diffusion-xl-base-1.0',seed=10,steps=25)
+        events=b'event: heartbeat\ndata: null\n\nevent: complete\ndata: '+json.dumps([{'url':'https://never-download.example/'},payload]).encode()+b'\n\n'
+        result,calls=self.space_request(events)
+        self.assertEqual(result['status'],'ready')
+        self.assertEqual(len(calls),2)  # No third request to returned file URL.
+        self.assertEqual(json.loads(calls[0].args[0].data),{'data':['Cooked potato','text',10]})
+        self.assertTrue(calls[1].args[0].full_url.endswith('/generate/event123'))
+        for call in calls:self.assertEqual(call.args[0].get_header('Authorization'),'Bearer test-hf-token')
+        self.assertNotIn('test-hf-token',str(result))
+
+    def test_space_rejects_bad_receipt_failed_or_incomplete_events(self):
+        for events,receipt in [
+            (b'',{'event_id':'../../secret'}),
+            (b'event: error\ndata: "private details"\n\n',None),
+            (b'event: heartbeat\ndata: null\n\n',None),
+            (b'event: complete\ndata: ["https://example.com/image"]\n\n',None),
+            (b'x'*2_801_001,None),
+        ]:
+            result,_=self.space_request(events,receipt)
+            self.assertEqual(result['status'],'error')
+            self.assertNotIn('private details',str(result))
+
+    def test_space_rejects_model_mismatch_and_corrupt_image(self):
+        for model,encoded in [('other-model',image_data()),('stabilityai/stable-diffusion-xl-base-1.0','invalid')]:
+            payload=dict(image_base64=encoded,mime_type='image/png',model=model,seed=10,steps=25)
+            result,_=self.space_request(b'event: complete\ndata: '+json.dumps([{},payload]).encode()+b'\n\n')
+            self.assertEqual(result['status'],'error')
+
+    def test_space_timeout_does_not_submit_another_gpu_job(self):
+        with patch.dict(os.environ,{'COOKSY_SDXL_ENDPOINT':'https://langstkip-cooksy-sdxl.hf.space/gradio_api/call/generate'}), patch.object(module.urllib.request,'build_opener') as opener:
+            opener.return_value.open.side_effect=TimeoutError('private provider details')
+            result=module.generate(dict(mode='hosted',prompt='Cooked potato',seed=10))
+        self.assertEqual(result['status'],'error')
+        self.assertEqual(opener.return_value.open.call_count,1)
+        self.assertNotIn('private provider details',str(result))
+
     def test_demo_has_no_fabricated_image(self):
         result=module.generate(dict(mode='demo',prompt='Cooked potato pancake',seed=10))
         self.assertEqual(result['status'],'demo');self.assertEqual(result['image'],'')

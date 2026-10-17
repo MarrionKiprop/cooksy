@@ -45,3 +45,11 @@ downloads or paid inference are authorized by this decision.
 The reported sandbox uses emptyDir volumes: data may survive container restarts
 within the same pod, but is lost when that pod is removed. Persistent deployment
 support has not been established. Sample modes remain explicitly labelled.
+
+## ZeroGPU integration preparation
+
+The user created LangstKip/cooksy-sdxl to pursue a recorded SDXL demo. Upload files
+and a compatible Cooksy queued-API adapter are now prepared in
+`deploy/huggingface-sdxl/`; see DEVELOPMENT.md. This reopens SDXL integration
+preparation only. Deployment, GPU execution and quota handling remain unverified.
+The photo-recognition deferral and production-hosting limitations remain.

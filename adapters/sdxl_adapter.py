@@ -3,7 +3,9 @@ import base64
 import io
 import json
 import os
+import re
 import sys
+import time
 import urllib.parse
 import urllib.request
 import warnings
@@ -34,6 +36,43 @@ class NoRedirect(urllib.request.HTTPRedirectHandler):
         return None
 
 
+def gradio_payload(endpoint, body, headers):
+    """Use Gradio's queued API, never download a returned remote file URL."""
+    opener = urllib.request.build_opener(NoRedirect())
+    request = urllib.request.Request(endpoint, data=json.dumps({'data': [
+        body['prompt'], body['negative_prompt'], body['seed']
+    ]}).encode(), headers=headers, method='POST')
+    deadline = time.monotonic() + 85
+    with opener.open(request, timeout=15) as response:
+        raw = response.read(4097)
+        if len(raw) > 4096:
+            raise ValueError('Invalid queue receipt')
+        event_id = json.loads(raw)['event_id']
+    if not isinstance(event_id, str) or not re.fullmatch(r'[a-zA-Z0-9_-]{1,64}', event_id):
+        raise ValueError('Invalid queue event')
+    request = urllib.request.Request(endpoint + '/' + event_id, headers=headers)
+    with opener.open(request, timeout=max(1, deadline - time.monotonic())) as response:
+        event = ''
+        consumed = 0
+        while time.monotonic() < deadline:
+            line = response.readline(2_801_001)
+            consumed += len(line)
+            if consumed > 2_801_000 or not line:
+                raise ValueError('Incomplete or oversized queue response')
+            text = line.decode('utf-8').strip()
+            if text.startswith('event:'):
+                event = text[6:].strip()
+            elif text.startswith('data:'):
+                if event == 'error':
+                    raise ValueError('Space generation failed')
+                if event == 'complete':
+                    outputs = json.loads(text[5:])
+                    if not isinstance(outputs, list) or len(outputs) != 2 or not isinstance(outputs[1], dict):
+                        raise ValueError('Unexpected Space output')
+                    return outputs[1]
+    raise TimeoutError('Space queue timed out')
+
+
 def generate(request):
     mode = request.get('mode', 'off')
     prompt = request.get('prompt', '')
@@ -54,19 +93,25 @@ def generate(request):
             if parsed.scheme != 'https' or not parsed.netloc or parsed.username or parsed.password or parsed.query or parsed.fragment:
                 return result
             model = os.environ.get('COOKSY_SDXL_MODEL_ID', 'stabilityai/stable-diffusion-xl-base-1.0')
-            body = json.dumps(dict(model=model, prompt=prompt, negative_prompt=request.get('negative_prompt', ''),
-                                   seed=seed, width=768, height=768, steps=25)).encode()
+            body = dict(model=model, prompt=prompt, negative_prompt=request.get('negative_prompt', ''),
+                        seed=seed, width=768, height=768, steps=25)
             headers = {'Content-Type': 'application/json'}
             key = os.environ.get('COOKSY_SDXL_API_KEY', '')
             if key:
                 headers['Authorization'] = 'Bearer ' + key
-            req = urllib.request.Request(endpoint, data=body, headers=headers, method='POST')
-            with urllib.request.build_opener(NoRedirect()).open(req, timeout=60) as response:
-                raw = response.read(2_801_000)
-                if len(raw) >= 2_801_000:
-                    raise ValueError('Response too large')
-                payload = json.loads(raw)
-            result.update(status='ready', model=model, provider='Configured SDXL HTTPS bridge',
+            is_space = parsed.hostname.endswith('.hf.space') and parsed.path == '/gradio_api/call/generate'
+            if is_space:
+                payload = gradio_payload(endpoint, body, headers)
+                if payload.get('model') != model or payload.get('seed') != seed or payload.get('steps') != 25:
+                    raise ValueError('Space generation policy mismatch')
+            else:
+                req = urllib.request.Request(endpoint, data=json.dumps(body).encode(), headers=headers, method='POST')
+                with urllib.request.build_opener(NoRedirect()).open(req, timeout=60) as response:
+                    raw = response.read(2_801_000)
+                    if len(raw) >= 2_801_000:
+                        raise ValueError('Response too large')
+                    payload = json.loads(raw)
+            result.update(status='ready', model=model, provider='Hugging Face ZeroGPU SDXL' if is_space else 'Configured SDXL HTTPS bridge',
                           image=valid_image(payload['image_base64'], payload['mime_type']),
                           message='Generated serving illustration. Actual appearance may differ.')
         elif mode == 'local':
