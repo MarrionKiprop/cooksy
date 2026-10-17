@@ -385,3 +385,11 @@ recipe/cache reuse, no generation on load and continued cooking access on failur
 References: [ZeroGPU setup](https://huggingface.co/docs/hub/spaces-zerogpu),
 [Gradio queued API](https://www.gradio.app/guides/querying-gradio-apps-with-curl),
 [SDXL model and license](https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0).
+
+Space dependency correction: the initial Transformers4.56.2 pin required Hub<1,
+which conflicts with Gradio6.30's Hub>=1.16 requirement. The upload requirements
+now use Diffusers0.41.0, Transformers5.20.1, Safetensors0.8.0 and Hub>=1.32,<2.
+The full Python3.12 stack, including Gradio6.30/Spaces0.51.3 and datasets, resolves
+successfully in a pip dry run. No GPU runtime is installed or executed by that
+check; real build/startup and generation remain pending. Replace only the Space's
+requirements.txt with the corrected upload file, then let it rebuild.

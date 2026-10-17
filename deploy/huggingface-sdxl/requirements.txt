@@ -1,7 +1,8 @@
 spaces
 torch==2.8.0
-diffusers==0.35.1
-transformers==4.56.2
+diffusers==0.41.0
+transformers==5.20.1
 accelerate==1.10.1
-safetensors==0.6.2
+safetensors==0.8.0
 Pillow>=11.3.0,<13
+huggingface-hub>=1.32.0,<2.0
