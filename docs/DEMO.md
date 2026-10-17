@@ -12,24 +12,24 @@ No OpenAI key is required for the deterministic demo. Live SDXL remains off;
 with Pillow (configured optional vision environment); manual typed intake always
 works if vision is unavailable.
 
-## JacHammer hosted demo limitations
+## Image services for the recording
 
-Real photo recognition and SDXL generation are excluded from the hosted demo.
-Use typed ingredients for the shared pantry, then Explore/Discover, recipe selection
-and cook-along. Live culinary suggestions require server-side OpenAI configuration.
+Both image features have been verified by the user through local Cooksy with the
+[Hugging Face Space](https://huggingface.co/spaces/LangstKip/cooksy-sdxl): MobileNet
+photo review on CPU and SDXL serving-image generation on ZeroGPU. The Jac app and
+culinary graph run in Cooksy; recipe AI uses the server-configured OpenAI provider.
+JacHammer needs the same server environment settings separately; a Git pull does
+not transfer local .env values. No large model runtime is needed in JacHammer.
 
-Photo recognition has a working local integration, but the hosted CPU dependency
-installation ended with exit code137; the sandbox pod then became unavailable.
-The cause was not confirmed. Hosted packages, verified MobileNet weights and worker
-configuration were not completed or tested. Do not retry installation for this demo.
+For a live recording, review a clear photo of one ingredient, explicitly correct
+or accept suggestions, then follow discovery, selected recipe, image preview and
+cook-along. Real image generation consumes shared GPU quota. Reopening a cached
+preview should not generate another image. Samples are a distinct fallback.
 
-Real SDXL generation has not been verified locally or in JacHammer. No suitable
-hosted GPU/model runtime or external SDXL provider is configured. The explicit
-sample layout is an illustration placeholder, not an SDXL-generated image.
-Neither sample photo suggestions nor sample layouts demonstrate real inference.
-
-These are deployment/inference follow-ups, not completed hosted capabilities.
-The user has deferred both features for the JacHammer demonstration.
+State that photo classification can be wrong, dish images are illustrative, and
+Hugging Face availability/queues/quotas limit the demo. Recipe text and explicitly
+reviewed photos are sent to that provider. Avoid private images. See DEVELOPMENT.md
+for configuration. The no-paid-call sample walkthrough below remains available.
 
 ## Five-minute walkthrough
 
@@ -48,7 +48,7 @@ The user has deferred both features for the JacHammer demonstration.
    references and follow an ingredient's USDA source link.
 6. In **Picture your plate**, select **View sample layout**. Show the explicit
    no-image-generated disclosure. The recipe-grounded prompt remains in server metadata.
-   Reload to demonstrate cached state without generation. Real SDXL is deferred.
+   Reload to demonstrate cached state without generation. Live SDXL uses the separately configured hosted flow.
 7. **Start cook-along**, mark step1done, reload at step2, then finish the session.
    Back/restart/recovery controls work. Help requires live provider or browser-test
    mock; never fake a live help answer in a no-paid-call demo.

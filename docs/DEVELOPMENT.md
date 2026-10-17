@@ -7,7 +7,8 @@ Cooksy is a Jac-native culinary discovery and cook-along application in developm
 shared ingredient pantry, Explore15regions or Discover varied meals worldwide,
 choose from five validated dishes, then open the selected recipe and cook along.
 Recipe pages include sourced nutrition estimates/subtotals and an optional preview
-panel. Live SDXL is deferred; its demo never pretends to be a generated food image.
+panel. Hosted SDXL is available when configured; the separate sample layout never
+pretends to be a generated food image.
 AI culinary output and recipe quantities remain unverified.
 
 Start with the [demo walkthrough](DEMO.md), [architecture](ARCHITECTURE.md),
@@ -280,9 +281,10 @@ against a live paid provider configuration.
 
 A selected full recipe has an optional “Picture your plate” panel. Page load only
 checks the process cache. “Generate serving preview” requests generation explicitly;
-“Try demo layout” shows an abstract plate with no generated food photograph. Demo
+“View sample layout” shows an abstract plate with no generated food photograph. Demo
 mode exercises the recipe-grounded prompt and graph cache, clearly labelled as no
-SDXL inference. With the current environment, real SDXL remains unconfigured.
+SDXL inference. The user has verified real images through the configured Hugging
+Face provider; fresh installations keep generation off until configured.
 
 Jac constructs the prompt from actual recipe name/context, quantities/preparation
 and ordered steps. It does not ask the culinary LLM to invent a visual brief. Cache
@@ -311,15 +313,17 @@ weights. The [official Diffusers SDXL guide](https://huggingface.co/docs/diffuse
 describes the pipeline. This local provider has not been live-verified here. Update model identity/version
 when replacing model weights, so cached images are invalidated.
 
-Mode `hosted` needs Pillow in the configured worker Python and a server-configured
-HTTPS bridge, no redirects. It POSTs JSON
+Mode `hosted` needs Pillow in the configured worker Python and either the Hugging
+Face queued API described below or a generic HTTPS JSON bridge. The generic bridge
+does not follow redirects and POSTs JSON
 `{model,prompt,negative_prompt,seed,width:768,height:768,steps:25}` with an optional
 server-only Bearer key. The bridge must return
 `{image_base64:"...",mime_type:"image/png"}` (JPEG also accepted), not an image URL.
 Vendor APIs with different contracts need a bridge/adapter; do not paste arbitrary
 provider URLs expecting this shape to work. The host receives selected recipe text
-on explicit request, never pantry photographs. No hosted provider is configured or
-live-tested. Failures leave the recipe and cooking progress usable. Network timeout
+on explicit request, never pantry photographs. The generic bridge has mocked
+coverage; the Hugging Face path has user-verified live generation. Failures leave
+the recipe and cooking progress usable. Generic-bridge network timeout
 is60seconds, process timeout100seconds; no automatic generation retries. Images are
 bounded to2MiB/1.5megapixels and validated before use. Runtime fallback demo is explicit.
 
@@ -334,19 +338,22 @@ Source: [MarrionKiprop/cooksy](https://github.com/MarrionKiprop/cooksy).
 Keep credentials, model weights, user photos and generated runtime files out of Git.
 Historical development notes, evidence and design references are local-only.
 
-## Hugging Face ZeroGPU SDXL demo
+## Hugging Face image services
 
-The upload bundle is in `deploy/huggingface-sdxl/`. Run `python deploy/huggingface-sdxl/prepare_upload.py`. Upload the **four files**
-(`app.py`, `requirements.txt`, `README.md`, `vision_adapter.py`) from
-`build/huggingface-sdxl/` to the **root** of the Gradio Space
-[LangstKip/cooksy-sdxl](https://huggingface.co/spaces/LangstKip/cooksy-sdxl).
-Do not upload the enclosing folder or the whole Cooksy application. Keep ZeroGPU
-selected. Uploading starts a build and downloads the pinned official SDXL model;
-no GPU inference occurs on page load. First build/startup can take several minutes.
-The user has verified image generation in the running Space UI. Cooksy-to-Space
-end-to-end generation remains to be verified.
+Image-service source is maintained in the separate
+[LangstKip/cooksy-sdxl Space](https://huggingface.co/spaces/LangstKip/cooksy-sdxl/tree/main),
+not duplicated in Cooksy. The verified deployed revision at cleanup was
+`ff831982a26d714f427c2ba4b138324064b14d25`. Its four root files were checked against
+the local upload before local deployment copies were removed. Service updates
+belong in the Space repository. Cooksy keeps only the adapters needed to call it.
 
-After the Space reports Running, configure **Cooksy's server**, not the Space:
+The user verified both photo review and generated serving images through local
+Cooksy. SDXL runs on ZeroGPU; MobileNet runs on the Space CPU. The Jac app still
+handles graph traversal, matching, validation, pantry confirmation and cooking;
+culinary AI uses OpenAI. This is not a claim of permanent production hosting or
+comprehensive model accuracy testing.
+
+Configure these values in Cooksy's server environment, never client code or Git:
 
 ```dotenv
 COOKSY_SDXL_MODE=hosted
@@ -354,80 +361,44 @@ COOKSY_SDXL_ENDPOINT=https://langstkip-cooksy-sdxl.hf.space/gradio_api/call/gene
 COOKSY_SDXL_MODEL_ID=stabilityai/stable-diffusion-xl-base-1.0
 COOKSY_SDXL_PYTHON=/absolute/path/to/python-with-Pillow
 COOKSY_SDXL_API_KEY=
-```
-
-Leave the API key blank for an initial public-Space test. Where Hugging Face
-requires authentication, use a least-privilege Hugging Face token with access to
-this Space in the server environment, never an OpenAI key. Never put tokens into
-Space code, client code or Git. Quota/account behavior must be verified live.
-Cooksy's hosted worker only needs Pillow; torch/Diffusers run in the Space.
-`COOKSY_SDXL_MODE=off` remains the default until deliberately configured.
-
-Restart Cooksy after changing configuration. Open a selected full recipe and click
-**Generate serving preview**. This submits one Gradio job and consumes GPU quota;
-page load does not generate. The adapter accepts only bounded inline PNG/JPEG bytes
-from the completed queue output; it never fetches a returned Gradio file URL.
-The standard HTTPS JSON bridge and local/off/sample paths are unchanged.
-
-The queue deadline is85seconds inside the existing100second subprocess limit.
-A long queue, cold start, quota error or timeout returns an honest failure without
-blocking cooking; no automatic retry is made. A remote queued job may still finish
-and consume quota after a local timeout. Warm the Space before recording and do
-not repeatedly click while awaiting a result. Public access, quotas, sleeping,
-startup time and availability make this a demo service, not permanent hosting.
-Only selected recipe text is sent; generated images may be temporarily cached by
-Gradio. SDXL can truncate long text and invent visual details. Keep the mandatory
-illustrative caption; do not represent sample layouts as generated images.
-
-Checks without model calls:
-`python tests/sdxl_adapter_tests.py` and `python tests/space_sdxl_tests.py` in a
-Pillow-equipped environment. Live success must additionally verify one real image,
-recipe/cache reuse, no generation on load and continued cooking access on failure.
-
-References: [ZeroGPU setup](https://huggingface.co/docs/hub/spaces-zerogpu),
-[Gradio queued API](https://www.gradio.app/guides/querying-gradio-apps-with-curl),
-[SDXL model and license](https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0).
-
-Space dependency correction: the initial Transformers4.56.2 pin required Hub<1,
-which conflicts with Gradio6.30's Hub>=1.16 requirement. The upload requirements
-now use Diffusers0.41.0, Transformers5.20.1, Safetensors0.8.0 and Hub>=1.32,<2.
-The full Python3.12 stack, including Gradio6.30/Spaces0.51.3 and datasets, resolves
-successfully in a pip dry run. No GPU runtime is installed or executed by that
-check; real build/startup and generation remain pending. Replace only the Space's
-requirements.txt with the corrected upload file, then let it rebuild.
-
-## Hosted MobileNet in the same Space
-
-The user has reopened photo integration for the recording. Re-upload the four-file
-bundle above to add the separate CPU `/review_photo` endpoint. Torchvision0.23.0
-matches Torch2.8.0; neither is needed in Cooksy's hosted-photo worker.
-
-After the Space is Running, set these **server-only** Cooksy values:
-
-```dotenv
 COOKSY_VISION_MODE=hosted
 COOKSY_VISION_ENDPOINT=https://langstkip-cooksy-sdxl.hf.space/gradio_api/call/review_photo
 COOKSY_VISION_PYTHON=/absolute/path/to/python-with-Pillow
 COOKSY_VISION_API_KEY=
 ```
 
-Use an HF access token only if needed; never use an OpenAI key for this endpoint.
-Restart Cooksy to refresh configuration and the client processing notice. The
-visible photo notice must identify Hugging Face before review; the real-review
-button stays disabled if the processing notice cannot load. Selecting a file only
-previews it locally. Explicit sample suggestions never invoke the hosted provider.
+Public access may work without a token. If authentication is needed, use a
+least-privilege Hugging Face token with access to the Space; never an OpenAI key.
+Local environment settings do not transfer to JacHammer through Git. Restart
+Cooksy and refresh the page after changing settings. Hosted workers need Pillow,
+not torch, torchvision or Diffusers. Local inference modes remain available with
+their separately installed dependencies and weights.
 
-Cooksy validates JPEG/PNG bytes, size and dimensions before sending the data URL.
-The Space repeats validation and uses the exact original conservative MobileNet
-label map/checkpoint SHA. First valid review downloads a small verified checkpoint;
-failure affects photo review only, not SDXL. The JSON result is revalidated in
-Cooksy before producing the signed, expiring review receipt. All acceptance, edits,
-rejection, graph confirmation and pantry sharing stay in Jac. Photos are not saved
-by Cooksy or deliberately written to disk by the Space classifier; Hugging Face
-processes the image and may retain platform request data. Avoid private images.
-Queue/process bounds are85/100seconds for hosted vision; local remains25seconds.
-This improves hosting availability, not classifier accuracy. Prefer one prominent
-ingredient. Hosted photo inference remains unverified until the updated Space is
-uploaded and a real user review succeeds. Local inference remains available with
-mode=local; do not run real photo tests against hosted mode without intent to send
-that photo externally.
+Both adapters use Gradio's receipt/SSE queue API with an85second queue bound inside
+a100second worker limit. SDXL receives selected recipe text only on explicit
+request and returns validated inline PNG/JPEG bytes; returned file URLs are never
+fetched. Successful serving previews use Cooksy's bounded process graph cache.
+No image generation is triggered by page load. A timed-out remote job may still
+complete and consume quota; there is no automatic retry.
+
+Photos are validated for JPEG/PNG decoding, size and dimensions before explicit
+hosted review. The visible processing notice identifies Hugging Face; failure to
+load that notice blocks real photo review. File selection alone sends nothing.
+The Space repeats validation and checks official MobileNet weights. Its result is
+revalidated before Cooksy creates a signed, expiring review receipt. Every accepted
+or corrected ingredient requires user confirmation. Samples never invoke hosted
+recognition. Local photo workers retain their25second limit.
+
+MobileNet classifies a prominent object, not every item in a scene. SDXL may
+truncate long text and invent visual details. Keep the serving-image disclaimer.
+Cooksy does not persist photos; provider processing and request retention are
+subject to Hugging Face policies. Public access, quotas, sleeping, startup and
+queues remain demo limitations. Avoid private photos and rehearse before recording.
+
+Adapter checks (Pillow-equipped Python): `python tests/sdxl_adapter_tests.py` and
+`python tests/vision_adapter_tests.py`. Browser regressions include
+`node tests/hosted-vision-smoke.mjs` (external photo calls mocked). The local
+`vision-smoke.mjs` expects actual local vision configuration; do not run it against
+hosted mode unless intentionally sending its test image externally. Real GPU tests
+consume quota and require explicit intent. Detailed shared-service dependencies
+and startup code are maintained in the Space itself.
